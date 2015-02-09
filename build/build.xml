@@ -1,0 +1,572 @@
+<?xml version="1.0"?>
+
+<!--
+    Narvaro Ant Build Script
+-->
+
+<!--
+    Build Requirements:
+    
+        * Ant 1.7 or greater
+        * JDK 1.8 or greater
+-->
+
+<project name="Narvaro" default="narvaro" basedir="..">
+
+    <description>
+        Narvaro build script.
+    </description>
+
+    <!-- ======================================================================================= -->
+    <!-- GLOBAL PROPERTIES                                                                       -->
+    <!-- ======================================================================================= -->
+
+    <property name="version.major" value="0"/>
+    <property name="version.minor" value="1"/>
+    <property name="version.revision" value="0"/>
+
+    <property name="javac.source" value="1.8"/>
+    <property name="javac.target" value="1.8"/>
+
+    <property name="dist.prefix" value="narvaro"/>
+
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="src.java.dir" value="${src.dir}/java"/>
+    <property name="docs.dir" value="${basedir}/documentation"/>
+    <property name="lib.ant.dir" value="${basedir}/build/lib/ant"/>
+    <property name="lib.build.dir" value="${basedir}/build/lib"/>
+    <property name="lib.merge.dir" value="${lib.build.dir}/merge"/>
+    <property name="lib.dist.dir" value="${lib.build.dir}/dist"/>
+    
+    <property name="work.dir" value="${basedir}/work"/>
+    <property name="temp.build.dir" value="${work.dir}/tempbuild"/>
+    
+    <property name="target.dir" value="${basedir}/target"/>
+    <property name="target.narvaroHome" value="${target.dir}/narvaro"/>
+    
+    <property name="compile.dir" value="${work.dir}/classes"/>
+    <property name="jar.name" value="narvaro.jar"/>
+    <property name="jar.starter.name" value="startup.jar"/>
+    <property name="jar.dest.dir" value="${work.dir}/lib"/>
+    <property name="resources.dir" value="${src.dir}/resources"/>
+    
+    <property name="javadoc.src.dir" value="${src.dir}/javadoc"/>
+    <property name="javadoc.dest.dir" value="${work.dir}/javadoc"/>
+    
+    <property name="release.dest.dir" value="${target.dir}/release"/>
+    <property name="package.dest.dir" value="${release.dest.dir}"/>
+    <property name="overwrite" value="false"/>
+    <property name="deploy.jar.dir" value="${jar.dest.dir}"/>
+    <property name="anttools.src.dir" value="${src.dir}/tools"/>
+    <property name="anttools.target.dir" value="${work.dir}/tools"/>
+    <property name="copy.dbscripts" value="true"/>
+    <property name="overwrite" value="true"/>
+    
+    <property name="license.file.path" value="${docs.dir}/dist"/>
+    
+    <available file=".git" type="dir" property="git.present"/>
+    <antversion property="antversion"/>
+    
+    <!-- ======================================================================================= -->
+    <!-- PATHs / PATTERNSETs / FILTERSETs                                                        -->
+    <!-- ======================================================================================= -->
+    
+    <path id="ant.dependencies">
+        <fileset dir="${lib.ant.dir}" includes="*.jar"/>
+        <fileset dir="${ant.home}/lib" includes="ant.jar"/>
+    </path>
+    
+    <path id="javadoc.dependencies">
+        <fileset dir="${lib.build.dir}" includes="*.jar"/>
+        <fileset dir="${lib.merge.dir}" includes="*.jar"/>
+        <fileset dir="${lib.dist.dir}" includes="*.jar"/>
+    </path>
+    
+    <path id="compile.dependencies">
+        <path refid="ant.dependencies"/>
+        <path refid="javadoc.dependencies"/>
+    </path>
+    
+    <patternset id="compile.sources">
+        <include name="**/*.java"/>
+    </patternset>
+    
+    <presetdef name="narvaro.javac">
+        <javac encoding="utf8" source="${javac.source}" target="${javac.target}"/>
+    </presetdef>
+    
+    <!-- ======================================================================================= -->
+    <!-- GLOBAL TASKDEFs                                                                         -->
+    <!-- ======================================================================================= -->
+    
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath refid="ant.dependencies"/>
+    </taskdef>
+    
+    <!-- ======================================================================================= -->
+    <!-- TARGETs                                                                                 -->
+    <!-- ======================================================================================= -->
+    
+    <!-- init ================================================================================== -->
+    <target name="init">
+        
+        <!-- Check for min build requirements -->
+        
+        <condition property="ant.not.ok" value="true">
+            <not>
+                <or>
+                    <contains string="${ant.version}" substring="1.7"/>
+                    <contains string="${ant.version}" substring="1.8"/>
+                    <contains string="${ant.version}" substring="1.9"/>
+                </or>
+            </not>
+        </condition>
+        <condition property="java.not.ok" value="true">
+            <not>
+                <or>
+                    <contains string="${ant.java.version}" substring="1.8"/>
+                </or>
+            </not>
+        </condition>
+        <fail if="ant.not.ok" message="Must use Ant 1.7.x or higher to build Narvaro"/>
+        <fail if="java.not.ok" message="Must use JDK 1.8.x or higher to build Narvaro"/>
+        
+        <tstamp>
+            <format property="builddate" pattern="yyyy-MM-dd" locale="en"/>
+        </tstamp>
+        
+        <mkdir dir="${work.dir}"/>
+        
+        <!-- Setup the full version property correctly -->
+        <property name="version" value="${version.major}.${version.minor}.${version.revision}"/>
+        <property name="version.filename" value="${version.major}_${version.minor}_${version.revision}"/>
+        
+    </target>
+    
+    <!-- compile =============================================================================== -->
+    <target name="compile" depends="init" description="Compiles Narvaro app code">
+        
+        <mkdir dir="${compile.dir}"/>
+        
+        <narvaro.javac destdir="${compile.dir}" includeAntRuntime="no" debug="on">
+            <src path="${src.java.dir}"/>
+            <patternset refid="compile.sources"/>
+            <classpath>
+                <path refid="compile.dependencies"/>
+            </classpath>
+        </narvaro.javac>
+        
+    </target>
+    
+    <!-- narvaro =============================================================================== -->
+    <target name="narvaro" depends="compile" description="Compiles and generates runnable target/narvaro directory">
+        
+        <mkdir dir="${jar.dest.dir}"/>
+        
+        <!-- Make main Narvaro jar -->
+        <jar jarfile="${jar.dest.dir}/${jar.name}" index="true" duplicate="preserve">
+            <fileset dir="${compile.dir}" includes="**/*.class" excludes="edu/csus/ecs/moneybeets/narvaro/starter/ClientStarter*.class"/>
+            <fileset dir="${resources.dir}/jar" includes="*"/>
+            <zipgroupfileset dir="${lib.merge.dir}" includes="*.jar"/>
+            <manifest>
+                <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
+            </manifest>
+        </jar>
+        
+        <!-- Make startup jar -->
+        <jar jarfile="${jar.dest.dir}/${jar.starter.name}">
+            <fileset dir="${compile.dir}">
+                <include name="edu/csus/ecs/moneybeets/narvaro/starter/ClientStarter*.class"/>
+                <include name="edu/csus/ecs/moneybeets/narvaro/starter/NarvaroClassLoader*.class"/>
+            </fileset>
+            <manifest>
+                <attribute name="Main-Class" value="edu.csus.ecs.moneybeats.narvaro.starter.ClientStarter"/>
+                <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
+            </manifest>
+        </jar>
+        
+        <!-- Copy application dependent files -->
+        <copy todir="${jar.dest.dir}">
+            <fileset dir="${lib.dist.dir}" includes="*.*"/>
+        </copy>
+        
+        <!-- Update/create target/narvaro directory -->
+        <antcall target="narvaroHome"/>
+        
+    </target>
+    
+    <!-- javadoc =================================================================================== -->
+    <target name="javadoc" depends="init" description="Produces Narvaro Javadocs">
+        
+        <mkdir dir="${javadoc.dest.dir}"/>
+        <antcall target="-javadoc-impl"/>
+        
+    </target>
+    
+    <target name="-javadoc-impl" unless="no.javadoc">
+        
+        <!-- Starting with Java8 Javadoc checks for valid html. 
+              We disable it only for Java8 because older versions don't know the property -->
+        <condition property="javadoc.additionalparams" value="-Xdoclint:none">
+            <contains string="${ant.java.version}" substring="1.8"/>
+        </condition>
+        <condition property="javadoc.additionalparams" value="">
+            <not>
+                <contains string="${ant.java.version}" substring="1.8"/>
+            </not>
+        </condition>
+        
+        <!-- Run javadoc over all source code -->
+        <javadoc packagenames="edu.csus.ecs.moneybeets.*" 
+                 destdir="${javadoc.dest.dir}" 
+                 windowtitle="Narvaro ${version} Javadoc"
+                 overview="${src.java.dir}/overview.html"
+                 failonerror="yes"
+                 additionalparam="${javadoc.additionalparams}"
+        >
+            <sourcepath>
+                <path location="${src.java.dir}"/>
+            </sourcepath>
+            <doctitle>
+                <![CDATA[<font face="arial,helvetica,sans-serif">Narvaro ${version} Javadoc</font>]]>
+            </doctitle>
+            <header>
+                <![CDATA[<b>Narvaro ${version} Javadoc</b>]]>
+            </header>
+            <bottom>
+                <![CDATA[<i>Copyright &copy; 2015 Money Beets, Inc.</i>]]>
+            </bottom>
+            <classpath>
+                <path refid="javadoc.dependencies"/>
+            </classpath>
+            <link offline="true" href="http://docs.oracle.com/javase/8/docs/api/" packagelistLoc="${javadoc.src.dir}/jdk18"/>
+        </javadoc>
+        
+    </target>
+    
+    <!-- narvaroHome ========================================================================== -->
+    <target name="narvaroHome" unless="narvaroHome.no.update" depends="git.revision">
+        
+        <!-- Set this true to enable a pre-setup narvaroHome directory -->
+        <property name="narvaroHome.preconfigured" value="false"/>
+        
+        <mkdir dir="${target.narvaroHome}"/>
+        
+        <!-- Copy conf directory -->
+        <copy todir="${target.narvaroHome}">
+            <fileset dir="${src.dir}" includes="conf/**/*.*"/>
+        </copy>
+        
+        <!-- Add build information to the main configuration file -->
+        <!-- We use regex here to avoid clobbering the config file formatting -->
+        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+            match=" Narvaro: "
+            replace=" Narvaro: ${version}                  #"
+            byline="false"
+        />
+        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+            match=" Build Date: "
+            replace=" Build Date: ${builddate}            #"
+            byline="false"
+        />
+        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+            match=" Commit: "
+            replace=" Commit: ${repository.version}                   #"
+            byline="false"
+        />
+        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+            match=" JDK: "
+            replace=" JDK: ${java.version}                     #"
+            byline="false"
+        />
+        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+            match=" ANT: "
+            replace=" ANT: ${antversion}                        #"
+            byline="false"
+        />
+        
+        <!-- Copy database scripts -->
+        <if>
+            <equals arg1="${copy.dbscripts}" arg2="true"/>
+            <then>
+                <copy todir="${target.narvaroHome}/resources">
+                    <fileset dir="${src.dir}" includes="database/**/*.sql"/>
+                </copy>
+            </then>
+        </if>
+        
+        <!-- Copy lib directory -->
+        <copy todir="${target.narvaroHome}/lib">
+            <fileset dir="${jar.dest.dir}" includes="*.*"/>
+        </copy>
+        
+        <!-- Overwrite config with build/narvaroHome directory, if requested -->
+        <if>
+            <equals arg1="${narvaroHome.preconfigured}" arg2="true"/>
+            <then>
+                <!-- Copy pre-configured narvaroHome directory -->
+                <copy todir="${target.narvaroHome}">
+                    <fileset dir="${basedir}/build/narvaroHome" includes="**/*.*"/>
+                </copy>
+            </then>
+        </if>
+        
+        <!-- Copy bin directory -->
+        <copy todir="${target.narvaroHome}">
+            <fileset dir="${src.dir}" includes="bin/**/*"/>
+            <filterset>
+                <filter token="DATE" value="${builddate}"/>
+                <filter token="VERSION" value="${version}"/>
+                <filter token="HEAD" value="${repository.version}"/>
+                <filter token="JDK" value="${java.version}"/>
+                <filter token="ANT" value="${antversion}"/>
+            </filterset>
+        </copy>
+        <!-- Make stuff under bin executable -->
+        <chmod perm="+x">
+            <fileset dir="${target.narvaroHome}/bin" includes="**/*">
+                <exclude name="**/*.bat"/>
+                <exclude name="**/*.rc"/>
+                <exclude name="**/*-sysconfig"/>
+            </fileset>
+        </chmod>
+        <fixcrlf srcdir="${target.narvaroHome}/bin" eol="lf" eof="remove"/>
+        
+        <!-- Create a logs directory in the binary release -->
+        <mkdir dir="${target.narvaroHome}/logs"/>
+        
+    </target>
+    
+    <!-- dist.init ============================================================================== -->
+    <target name="dist.init">
+        
+        <!-- ie: narvaro_src -->
+        <property name="release.name.src" value="${dist.prefix}_src"/>
+        <!-- ie: narvaro_src_0_1_0 -->
+        <property name="release.fullname.src" value="${dist.prefix}_src_${version.filename}"/>
+        <property name="package.dest.filename.zip" value="${package.dest.dir}/${release.fullname.src}.zip"/>
+        <property name="package.dest.filename.tar" value="${package.dest.dir}/${release.fullname.src}.tar"/>
+        <property name="package.dest.filename.tar.gz" value="${package.dest.filename.tar}.gz"/>
+        <property name="release.src.out.dir" value="${release.dest.dir}/${release.name.src}"/>
+        
+        <!-- ie: narvaro -->
+        <property name="release.name" value="${dist.prefix}"/>
+        <!-- ie: narvaro_0_1_0 -->
+        <property name="release.fullname" value="${dist.prefix}_${version.filename}"/>
+        <property name="release.out.dir" value="${release.dest.dir}/${release.name}"/>
+        
+    </target>
+    
+    <target name="clean.dist.folders" depends="init, dist.init">
+        
+        <!-- Removes the expanded release directories, makes for easier automation of builds -->
+        <delete dir="${release.src.out.dir}"/>
+        <delete dir="${release.out.dir}"/>
+        
+    </target>
+    
+    <!-- dist.src =============================================================================== -->
+    <target name="dist.src" depends="init, dist.init, javadoc, git.revision" description="Creates a source distribution package">
+        
+        <mkdir dir="${release.dest.dir}"/>
+        
+        <!-- Create a new property for final release directories then create the directories -->
+        <mkdir dir="${release.src.out.dir}"/>
+        <!-- Copy dist docs, use filtering -->
+        <copy todir="${release.src.out.dir}">
+            <fileset dir="${docs.dir}/dist" includes="*.*" excludes="LICENSE.html"/>
+            <filterset>
+                <filter token="builddate" value="${builddate}"/>
+                <filter token="version" value="${version}"/>
+            </filterset>
+        </copy>
+        <!-- Copy the license -->
+        <copy todir="${release.src.out.dir}" file="${license.file.path}/LICENSE.html"/>
+        <!-- Copy text docs -->
+        <copy todir="${release.src.out.dir}/documentation">
+            <fileset dir="${docs.dir}" includes="**/*.html,**/*.txt"/>
+            <filterset>
+                <filter token="version" value="${version}"/>
+            </filterset>
+        </copy>
+        <!-- Copy the rest of the docs -->
+        <copy todir="${release.src.out.dir}/documentation">
+            <fileset dir="${docs.dir}" excludes="**/*.html,**/*.txt"/>
+        </copy>
+        <!-- Copy Javadocs -->
+        <copy todir="${release.src.out.dir}/documentation/docs/javadoc">
+            <fileset dir="${javadoc.dest.dir}"/>
+        </copy>
+        <!-- Copy non-java source -->
+        <copy todir="${release.src.out.dir}/src">
+            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        </copy>
+        
+        <!-- Copy java source replacing '@DATE@' and '@VERSION@' strings -->
+        <copy todir="${release.src.out.dir}/src">
+            <fileset dir="${src.dir}">
+                <include name="**/*.java"/>
+            </fileset>
+            <filterset>
+                <filter token="DATE" value="${builddate}"/>
+                <filter token="VERSION" value="${version}"/>
+                <filter token="HEAD" value="${repository.version}"/>
+                <filter token="JDK" value="${java.version}"/>
+                <filter token="ANT" value="${antversion}"/>
+            </filterset>
+        </copy>
+        
+        <!-- Copy build -->
+        <copy todir="${release.src.out.dir}/build">
+            <fileset dir="${basedir}/build"/>
+        </copy>
+        
+        <if>
+            <not>
+                <isset property="no.package"/>
+            </not>
+            <then>
+                <parallel>
+                    <!-- Source Packages -->
+                    <zip zipfile="${package.dest.filename.zip}"
+                        basedir="${release.src.out.dir}/.."
+                        includes="${release.fullname.src}/**/*, ${release.name.src}/**/*"
+                    />
+                    <tar tarfile="${package.dest.filename.tar.gz}"
+                        basedir="${release.src.out.dir}/.."
+                        includes="${release.fullname.src}/**/*, ${release.name.src}/**/*"
+                        compression="gzip"
+                        longfile="gnu"
+                    />
+                </parallel>
+            </then>
+        </if>
+        
+    </target>
+    <target name="git.revision" description="Store git revision in ${repository.version}" if="git.present">
+        <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+            <arg value="describe"/>
+            <arg value="--tags"/>
+            <arg value="--always"/>
+            <arg value="HEAD"/>
+        </exec>
+        <condition property="repository.version" value="${git.revision}" else="unknown">
+            <and>
+                <isset property="git.revision"/>
+                <length string="${git.revision}" trim="yes" length="0" when="greater"/>
+            </and>
+        </condition>
+    </target>
+    
+    <!-- dist.bin =============================================================================== -->
+    <target name="dist.bin" depends="init, dist.init, anttasks, javadoc" description="Creates a binary distribution package">
+        
+        <mkdir dir="${release.out.dir}"/>
+        
+        <!-- Copy all prepare directories to the binary dist -->
+        <antcall target="narvaroHome">
+            <param name="target.narvaroHome" value="${release.out.dir}"/>
+        </antcall>
+        
+        <!-- Copy dist docs, use filtering -->
+        <copy todir="${release.out.dir}">
+            <fileset dir="${docs.dir}/dist" includes="*.*" excludes="LICENSE.html"/>
+            <filterset>
+                <filter token="builddate" value="${builddate}"/>
+                <filter token="version" value="${version}"/>
+            </filterset>
+        </copy>
+        
+        <!-- Copy the license -->
+        <copy todir="${release.out.dir}" file="${license.file.path}/LICENSE.html"/>
+        <mkdir dir="${release.out.dir}/logs"/>
+        <touch file="${release.out.dir}/logs/stderr.out"/>
+        
+        <!-- Copy docs -->
+        <copy todir="${release.out.dir}/documentation">
+            <fileset dir="${docs.dir}/docs"/>
+            <filterset>
+                <filter token="version" value="${version}"/>
+            </filterset>
+        </copy>
+        <copy todir="${release.out.dir}/documentation/images" filtering="false" overwrite="true">
+            <fileset dir="${docs.dir}/docs/images"/>
+        </copy>
+        
+        <!-- Copy Javadocs -->
+        <copy todir="${release.out.dir}/documentation/javadoc">
+            <fileset dir="${javadoc.dest.dir}"/>
+        </copy>
+        
+        <!-- Package the release -->
+        <property name="package.dest.dir" value="${release.dest.dir}"/>
+        
+        <if>
+            <not>
+                <isset property="no.package"/>
+            </not>
+            <then>
+                <parallel>
+                    <!-- Binary packages -->
+                    <zip zipfile="${package.dest.dir}/${release.fullname}.zip"
+                        basedir="${release.out.dir}/.."
+                        includes="${release.fullname}/**/*, ${release.name}/**/*"
+                    />
+                    <tar tarfile="${package.dest.dir}/${release.fullname}.tar.gz"
+                        basedir="${release.out.dir}/.."
+                        includes="${release.fullname}/**/*, ${release.name}/**/*"
+                        compression="gzip"
+                        longfile="gnu"
+                    />
+                </parallel>
+            </then>
+        </if>
+        
+    </target>
+    
+    <!-- anttasks ============================================================================== -->
+    <target name="anttasks" depends="init">
+    
+        <!-- Call jar task, can't do this as a 'depends' call of this target because
+             of the way class loading works.
+        -->
+        <antcall target="narvaro">
+            <param name="narvaroHome.no.update" value="true"/>
+        </antcall>
+        
+        <mkdir dir="${anttools.target.dir}"/>
+        <mkdir dir="${anttools.target.dir}/classes"/>
+        
+        <narvaro.javac
+            destdir="${anttools.target.dir}/classes"
+            includeAntRuntime="no"
+            debug="on"
+        >
+            <src path="${anttools.src.dir}"/>
+            <patternset refid="compile.sources"/>
+            <classpath>
+                <path refid="compile.dependencies"/>
+            </classpath>
+        </narvaro.javac>
+        
+        <jar jarfile="${anttools.target.dir}/ant-subdirtask.jar">
+            <fileset dir="${anttools.target.dir}/classes" includes="**/*.class"/>
+        </jar>
+        
+        <taskdef name="subdirinfo" classname="edu.csus.ecs.moneybeets.ant.SubDirInfoTask">
+            <classpath>
+                <pathelement location="${anttools.target.dir}/ant-subdirtask.jar"/>
+            </classpath>
+        </taskdef>
+        
+    </target>
+    
+    <!-- clean ================================================================================= -->
+    <target name="clean" description="Cleans up all build-generated output">
+        
+        <delete dir="${work.dir}"/>
+        <delete dir="${target.dir}"/>
+        
+    </target>
+    
+</project>

@@ -1,0 +1,11 @@
+.classpath
+.project
+.settings
+bin/*
+*.class
+log/
+tmp/
+doc/
+/bin/
+target/
+work/

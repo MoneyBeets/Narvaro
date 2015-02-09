@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<Libraries>
+    <Library>
+        <FileName>log4j-1.2.17.jar</FileName>
+        <Version>1.2.17</Version>
+        <ReleaseDate>2012-05-06</ReleaseDate>
+        <URL>http://logging.apache.org/log4j/1.2/</URL>
+        <Description>log4j Logging Driver</Description>
+        <Required>True</Required>
+        <RequiredReason>Dependency for logging throughout program.</RequiredReason>
+    </Library>
+    <Library>
+        <FileName>mysql-connector-java-5.1.34-bin.jar</FileName>
+        <Version>5.1.34</Version>
+        <ReleaseDate>2014-11-04</ReleaseDate>
+        <URL>http://dev.mysql.com/downloads/connector/j/</URL>
+        <Description>MySQL Java JDBC driver.</Description>
+        <Required>True</Required>
+        <RequiredReason>Driver for making JDBC connections to MySQL.</RequiredReason>
+    </Library>
+    <Library>
+        <FileName>c3p0-0.9.5-pre10.jar</FileName>
+        <Version>0.9.5</Version>
+        <ReleaseDate>2015-01-02</ReleaseDate>
+        <URL>http://www.mchange.com/projects/c3p0/</URL>
+        <Description>c3p0 is an easy-to-use library for pooling JDBC driver connections.</Description>
+        <Required>True</Required>
+        <RequiredReason>Pools database connections.</RequiredReason>
+    </Library>
+    <Library>
+        <FileName>mchange-commons-java-0.2.8.jar</FileName>
+        <Version>0.2.8</Version>
+        <ReleaseDate>2015-01-02</ReleaseDate>
+        <URL>http://www.mchange.com/projects/c3p0/</URL>
+        <Description>Commons library c3p0 depends on.</Description>
+        <Required>True</Required>
+        <RequiredReason>c3p0 depends on this commons library.</RequiredReason>
+    </Library>
+    <Library>
+        <FileName>ant.jar</FileName>
+        <Version>1.9.4</Version>
+        <ReleaseDate>2014-05-05</ReleaseDate>
+        <URL>http://ant.apache.org/</URL>
+        <Description>A build tool used to create testable and repeatable build processes.</Description>
+        <Required>True</Required>
+        <RequiredReason>Required to build Narvaro.</RequiredReason>
+    </Library>
+    <Library>
+        <FileName>ant-conrib-1.0b3.jar</FileName>
+        <Version>1.0b3</Version>
+        <ReleaseDate>2006-11-02</ReleaseDate>
+        <URL>http://ant-contrib.sourceforge.net/</URL>
+        <Description>A collection of tasks for Apache Ant.</Description>
+        <Required>True</Required>
+        <RequiredReason>Required to build Narvaro.</RequiredReason>
+    </Library>
+</Libraries>

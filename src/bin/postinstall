@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+#
+# Narvaro: @VERSION@
+# Build Date: @DATE@
+# Commit Head: @HEAD@
+# JDK: @JDK@
+# ANT: @ANT@
+#
+# Post Installation Script
+#
+# This script executes any post-installation tasks.
+#
+# Run this script as root after installation of Narvaro.
+# It is expected that you are executing this script from the bin directory.
+#
+
+#####
+# Fail on any error
+#####
+set -e
+
+# Check that we are root ... so non-root users stop here.
+if [ "$(id -u)" != "0" ]; then
+    echo "${0} must be run as root"
+    exit 1
+fi
+
+###################################
+# Do post-installation stuff here #
+###################################
+
+echo "Narvaro post-installation execution complete."
