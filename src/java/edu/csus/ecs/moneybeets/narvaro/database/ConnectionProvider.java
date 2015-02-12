@@ -9,6 +9,7 @@
 
 package edu.csus.ecs.moneybeets.narvaro.database;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -47,8 +48,7 @@ public interface ConnectionProvider {
     public Connection getConnection() throws SQLException;
     
     /**
-     * Starts the connection provider. For some connection providers, this
-     * will be a no-op. However, connection provider users should always call
+     * Starts the connection provider. Connection provider users should always call
      * this method to make sure the connection provider is started.
      */
     public void start();
@@ -60,11 +60,8 @@ public interface ConnectionProvider {
     public void restart();
     
     /**
-     * Tells the connection provider to destroy itself. For many connection
-     * providers, this will essentially result in a no-op. However, connection
-     * providers users should always call this method when changing from one
-     * connection provider to another to ensure that there are no dangling
-     * database connections.
+     * Tells the connection provider to destroy itself. Connection provider
+     * users should terminate all open connections when this method is called.
      */
     public void destroy();
     

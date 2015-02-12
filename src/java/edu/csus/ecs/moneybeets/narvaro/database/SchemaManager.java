@@ -16,17 +16,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import edu.csus.ecs.moneybeets.narvaro.Narvaro;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 
 /**
- * Manages database schemas for Narvaro and Narvaro plugins. The manager
+ * Manages database schemas for Narvaro. The manager
  * uses the narvaroVersion database table to figure out which database schema is
  * currently installed and then attempts to automatically apply database schema changes
  * as necessary.
@@ -37,7 +37,7 @@ import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
  * and users will be prompted to apply database changes manually.
  * </p>
  * 
- * @see DefaultConnectionManager#getSchemaManager()
+ * @see DatabaseManager#getSchemaManager()
  *
  */
 public class SchemaManager {
@@ -81,7 +81,6 @@ public class SchemaManager {
      * be called once every time the application starts up.
      * 
      * @param con The database connection to use to check the schema with.
-     * @param poolName The database pool name.
      * @param schemaKey The database schema key (name).
      * @param requiredVersion The version that the schema should be at.
      * @param resourceLoader A resource loader that knows how to load schema files.
@@ -90,12 +89,6 @@ public class SchemaManager {
      */
     private boolean checkSchema(final Connection con, final String schemaKey, 
                         final int requiredVersion, final ResourceLoader resourceLoader) throws Exception {
-        // We currently only support MySQL Database as
-        // the Narvaro backend, so return early if
-        // we are not working with MySQL
-        if (con.getDatabaseType() != DatabaseType.mysql) {
-            return false;
-        }
 
         int currentVersion = -1;
         PreparedStatement ps = null;
@@ -110,9 +103,9 @@ public class SchemaManager {
         } catch (SQLException e) {
             // The database schema must not be installed.
             LOG.debug("SchemaManager: Error verifying " + schemaKey + " version, probably ignorable", e);
-            DbConnectionManager.Narvaro.closeStatement(rs, ps);
+            DatabaseManager.Narvaro.closeStatement(rs, ps);
         } finally {
-            DbConnectionManager.Narvaro.closeStatement(rs, ps);
+            DatabaseManager.Narvaro.closeStatement(rs, ps);
         }
         // If already up to date, return
         if (currentVersion >= requiredVersion) {
@@ -122,7 +115,7 @@ public class SchemaManager {
         else if (currentVersion == -1) {
             LOG.info("Missing database schema for " + schemaKey + ". Attempting to install...");
             // Resource will be like "/database/narvaro_mysql.sql"
-            String resourceName = schemaKey + "_" + con.getDatabaseType() + ".sql";
+            String resourceName = schemaKey + "_" + "mysql.sql";
             InputStream resource = resourceLoader.loadResource(resourceName);
             if (resource == null) {
                 return false;
@@ -147,15 +140,10 @@ public class SchemaManager {
             // The database is an old version that needs to be upgraded.
             LOG.info("Found old database version " + currentVersion + " for " 
                     + schemaKey + ". Upgrading to version " + requiredVersion + "...");
-            // If the database type is unknown, we don't know how to upgrade it.
-            if (con.getDatabaseType() == DatabaseType.unknown) {
-                LOG.warn("Database type unknown. You must manually upgrade your database.");
-                return false;
-            }
             
             // Run all upgrade scripts until we're up to the latest schema.
             for (int i = currentVersion  +1; i <= requiredVersion; i++) {
-                InputStream resource = getUpgradeResource(con.getDatabaseType(), resourceLoader, i, schemaKey);
+                InputStream resource = getUpgradeResource(resourceLoader, i, schemaKey);
                 
                 if (resource == null) {
                     continue;
@@ -178,14 +166,13 @@ public class SchemaManager {
         }
     }
     
-    private InputStream getUpgradeResource(final DatabaseType dbType, 
-            final ResourceLoader resourceLoader, final int upgradeVersion, final String schemaKey) {
+    private InputStream getUpgradeResource(final ResourceLoader resourceLoader, final int upgradeVersion, final String schemaKey) {
         InputStream resource = null;
         if ("narvaro".equals(schemaKey)) {
             // Resource will be like "/database/upgrade/3/narvaro_mysql.sql"
             String path = ConfigurationManager.NARVARO.getHomeDirectory() + File.separator 
                     + "resources" + File.separator + "database" + File.separator + "upgrade" + File.separator + upgradeVersion;
-            String filename = schemaKey + "_" + dbType + ".sql";
+            String filename = schemaKey + "_" + "mysql.sql";
             File file = new File(path, filename);
             try {
                 resource = new FileInputStream(file);
@@ -194,7 +181,7 @@ public class SchemaManager {
             }
         }
         else {
-            String resourceName = "upgrade" + File.separator + upgradeVersion + File.separator + schemaKey + "_" + dbType + ".sql";
+            String resourceName = "upgrade" + File.separator + upgradeVersion + File.separator + schemaKey + "_" + "mysql.sql";
             resource = resourceLoader.loadResource(resourceName);
         }
         return resource;
@@ -204,7 +191,6 @@ public class SchemaManager {
      * Executes a SQL script.
      * 
      * @param con Database connection.
-     * @param poolName The database connection poolname.
      * @param resource An input stream for the script to execute.
      * @throws IOException If an IOException occurs.
      * @throws SQLException If an SQLException occurs.
@@ -243,7 +229,7 @@ public class SchemaManager {
                         LOG.error("SchemaManager: Failed to execute SQL:\n" + command.toString());
                         throw e;
                     } finally {
-                        DbConnectionManager.Narvaro.closeStatement(ps);
+                       DatabaseManager.Narvaro.closeStatement(ps);
                     }
                 }
             }
@@ -270,14 +256,10 @@ public class SchemaManager {
             return false;
         }
         // Check to see if the line is a comment. Valid comment types:
-        // "//"
         // "--"
         // "#"
-        // "REM"
         // "/*"
-        return !(line.startsWith("//") || line.startsWith("--")
-                || line.startsWith("#") || line.startsWith("REM")
-                || line.startsWith("/*") || line.startsWith("*"));
+        return !(line.startsWith("--") || line.startsWith("#") || line.startsWith("/*"));
     }
     
     private static abstract class ResourceLoader {
