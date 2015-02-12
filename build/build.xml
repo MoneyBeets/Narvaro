@@ -165,7 +165,6 @@
         <!-- Make main Narvaro jar -->
         <jar jarfile="${jar.dest.dir}/${jar.name}" index="true" duplicate="preserve">
             <fileset dir="${compile.dir}" includes="**/*.class"/>
-            <fileset dir="${resources.dir}/jar" includes="*"/>
             <zipgroupfileset dir="${lib.merge.dir}" includes="*.jar"/>
             <manifest>
                 <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
