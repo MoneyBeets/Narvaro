@@ -46,7 +46,6 @@
     
     <property name="compile.dir" value="${work.dir}/classes"/>
     <property name="jar.name" value="narvaro.jar"/>
-    <property name="jar.starter.name" value="startup.jar"/>
     <property name="jar.dest.dir" value="${work.dir}/lib"/>
     <property name="resources.dir" value="${src.dir}/resources"/>
     
@@ -165,22 +164,10 @@
         
         <!-- Make main Narvaro jar -->
         <jar jarfile="${jar.dest.dir}/${jar.name}" index="true" duplicate="preserve">
-            <fileset dir="${compile.dir}" includes="**/*.class" excludes="edu/csus/ecs/moneybeets/narvaro/starter/ClientStarter*.class"/>
+            <fileset dir="${compile.dir}" includes="**/*.class"/>
             <fileset dir="${resources.dir}/jar" includes="*"/>
             <zipgroupfileset dir="${lib.merge.dir}" includes="*.jar"/>
             <manifest>
-                <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
-            </manifest>
-        </jar>
-        
-        <!-- Make startup jar -->
-        <jar jarfile="${jar.dest.dir}/${jar.starter.name}">
-            <fileset dir="${compile.dir}">
-                <include name="edu/csus/ecs/moneybeets/narvaro/starter/ClientStarter*.class"/>
-                <include name="edu/csus/ecs/moneybeets/narvaro/starter/NarvaroClassLoader*.class"/>
-            </fileset>
-            <manifest>
-                <attribute name="Main-Class" value="edu.csus.ecs.moneybeats.narvaro.starter.ClientStarter"/>
                 <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
             </manifest>
         </jar>
@@ -310,27 +297,6 @@
                 </copy>
             </then>
         </if>
-        
-        <!-- Copy bin directory -->
-        <copy todir="${target.narvaroHome}">
-            <fileset dir="${src.dir}" includes="bin/**/*"/>
-            <filterset>
-                <filter token="DATE" value="${builddate}"/>
-                <filter token="VERSION" value="${version}"/>
-                <filter token="HEAD" value="${repository.version}"/>
-                <filter token="JDK" value="${java.version}"/>
-                <filter token="ANT" value="${antversion}"/>
-            </filterset>
-        </copy>
-        <!-- Make stuff under bin executable -->
-        <chmod perm="+x">
-            <fileset dir="${target.narvaroHome}/bin" includes="**/*">
-                <exclude name="**/*.bat"/>
-                <exclude name="**/*.rc"/>
-                <exclude name="**/*-sysconfig"/>
-            </fileset>
-        </chmod>
-        <fixcrlf srcdir="${target.narvaroHome}/bin" eol="lf" eof="remove"/>
         
         <!-- Create a logs directory in the binary release -->
         <mkdir dir="${target.narvaroHome}/logs"/>
