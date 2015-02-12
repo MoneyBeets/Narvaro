@@ -9,77 +9,70 @@
 
 package edu.csus.ecs.moneybeets.narvaro.database;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
-/**
- * Core database connection manager.
- */
-public enum DbConnectionManager {
+import edu.csus.ecs.moneybeets.narvaro.database.provider.MySQLConnectionProvider;
 
+/**
+ * Central manager of database connections.
+ * 
+ * <p>
+ * This manager also provides a set of utility methods
+ * that abstract out operations that may not work on all databases
+ * such as setting the max number of rows that a query should return.
+ * </p>
+ *
+ */
+public enum DatabaseManager {
+    
     Narvaro,
     ;
     
-    private DbConnectionManager() {
-        connectionManagers = new ConcurrentHashMap<String, DefaultConnectionManager>();
+    private DatabaseManager() {
     }
     
-    private static final Logger LOG = Logger.getLogger(DbConnectionManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(DatabaseManager.class.getName());
     
-    private Map<String, DefaultConnectionManager> connectionManagers;
+    private ConnectionProvider connectionProvider = new MySQLConnectionProvider();
     
-    /**
-     * Registers a DefaultConnectionManager to be managed by
-     * this DbConnectionManager.
-     * 
-     * <p>
-     * A unique name should be provided with each registered
-     * DefaultConnectionManager.
-     * </p>
-     * 
-     * @param name The name of the DefaultConnectionManager instance.
-     * @param connectionManager The DefaultConnectionManager to be managed.
-     */
-    public void registerConnectionManager(final String name, final DefaultConnectionManager connectionManager) {
-        LOG.debug("DbConnectionManager: Registering DefaultConnectionManager " + name);
-        connectionManagers.put(name, connectionManager);
-    }
-    
-    /**
-     * Unregisters a DefaultConnectionManager from this manager.
-     * 
-     * <p>
-     * This method call will destroy the underlying ConnectionProvider
-     * resulting in any open connections managed by this DefaultConnectionManager
-     * being terminated.
-     * </p>
-     * 
-     * @param name The DefaultConnectionManager to unregister.
-     */
-    public void unregisterConnectionManager(final String name) {
-        LOG.debug("DbConnectionManager: Unregistering DefaultConnectionManager " + name);
-        connectionManagers.get(name).destroyConnectionProvider();
-        connectionManagers.remove(name);
-    }
-    
-    /**
-     * Returns a database connection from the specified manager by name.
-     * 
-     * @param poolName The manager name to return a database connection from.
-     * @return A connection to the database managed by the named manager.
-     * @throws SQLException If an error occurs.
-     */
-    public Connection getConnection(final String poolName) throws SQLException {
-        LOG.debug("DbConnectionManager: Obtaining connection from manager '" + poolName + "'");
-        return connectionManagers.get(poolName).getConnection();
+    private static SchemaManager schemaManager = new SchemaManager();
+
+    public Connection getConnection() throws SQLException {
+        
+        Integer retryCount = 0;
+        Integer retryMax = 10;
+        Integer retryWait = 250; // milliseconds
+        Connection con = null;
+        SQLException lastException = null;
+        do {
+            try {
+                con = connectionProvider.getConnection();
+                if (con != null) {
+                    // got one, let's hand it off.
+                    return con;
+                }
+            } catch (SQLException e) {
+                lastException = e;
+                LOG.info("Unable to get a connection from the database pool (attempt " 
+                            + retryCount + " out of " + retryMax + ")", e);
+            }
+            
+            try {
+                Thread.sleep(retryWait);
+            } catch (Exception e) {
+                // ignore
+            }
+            retryCount++;
+        } while (retryCount <= retryMax);
+        
+        // if we made it to here, it means we did not get a connection. throw an exception
+        throw new SQLException("DatabaseManager.getConnection() failed to obtain a connection after " 
+                        + retryCount + " retries. The exception from the last attept is as follows" + lastException);
     }
     
     /**
@@ -89,8 +82,10 @@ public enum DbConnectionManager {
      * @return A connection with transactions enabled.
      * @throws SQLException If a SQL exception occurs.
      */
-    public Connection getTransactionConnection(final String poolName) throws SQLException {
-        return connectionManagers.get(poolName).getTransactionConnection();
+    public Connection getTransactionConnection() throws SQLException {
+        Connection con = getConnection();
+        con.setAutoCommit(false);
+        return con;
     }
     
     /**
@@ -115,7 +110,23 @@ public enum DbConnectionManager {
      * @param abortTransaction True if the transaction should be rolled back.
      */
     public void closeTransactionConnection(final Connection con, final boolean abortTransaction) {
-        getConnectionManager(con.getPoolName()).closeTransactionConnection(con, abortTransaction);
+        // rollback or commit the transaction
+        try {
+            if (abortTransaction) {
+                con.rollback();
+            } else {
+                con.commit();
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        // reset the connection to auto-commit mode.
+        try {
+            con.setAutoCommit(true);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        closeConnection(con);
     }
     
     /**
@@ -133,8 +144,8 @@ public enum DbConnectionManager {
      *     } catch (SQLException e) {
      *         LOG.error(e.getMessage(), e);
      *     } finally {
-     *         ConnectionManager.closeResultSet(rs);
-     *         ConnectionManager.closeStatement(ps);
+     *         DatabaseManager.closeResultSet(rs);
+     *         DatabaseManager.closeStatement(ps);
      *     }
      * }
      * </pre>
@@ -164,17 +175,17 @@ public enum DbConnectionManager {
      *     } catch (SQLException e) {
      *         LOG.error(e.getMessage(), e);
      *     } finally {
-     *         ConnectionManager.closeStatement(ps);
+     *         DatabaseManager.closeStatement(ps);
      *     }
      * }
      * </pre>
      * 
      * @param stmt The statement.
      */
-    public void closeStatement(final Statement stmt) {
-        if (stmt != null) {
+    public void closeStatement(final PreparedStatement ps) {
+        if (ps != null) {
             try {
-                stmt.close();
+                ps.close();
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
             }
@@ -196,7 +207,7 @@ public enum DbConnectionManager {
      *     } catch (SQLException e) {
      *         LOG.error(e.getMessage(), e);
      *     } finally {
-     *         ConnectionManager.closeStatement(rs, ps);
+     *         DatabaseManager.closeStatement(rs, ps);
      *     }
      * }
      * </pre>
@@ -204,9 +215,9 @@ public enum DbConnectionManager {
      * @param rs The result set.
      * @param stmt The statement.
      */
-    public void closeStatement(final ResultSet rs, final Statement stmt) {
+    public void closeStatement(final ResultSet rs, final PreparedStatement ps) {
         closeResultSet(rs);
-        closeStatement(stmt);
+        closeStatement(ps);
     }
     
     /**
@@ -221,7 +232,7 @@ public enum DbConnectionManager {
      *         ps = con.prepareStatement("SELECT foo FROM bar");
      *         ps.execute();
      *         ....
-     *         <b>ConnectionManager.fastCloseStatement(ps);</b>
+     *         <b>DatabaseManager.fastCloseStatement(ps);</b>
      *         ps = con.prepareStatement("SELECT * FROM blah");
      *         ....
      *     }
@@ -249,7 +260,7 @@ public enum DbConnectionManager {
      *         ps = con.prepareStatement("SELECT foo FROM bar");
      *         rs = ps.executeQuery();
      *         ....
-     *         <b>ConnectionManager.fastCloseStatement(rs, ps);</b>
+     *         <b>DatabaseManager.fastCloseStatement(rs, ps);</b>
      *         ps = con.prepareStatement("SELECT * FROM blah");
      *         ....
      *     }
@@ -276,7 +287,7 @@ public enum DbConnectionManager {
      * PreparedStatement ps = null;
      * ResultSet rs = null;
      * try {
-     *     con = ConnectionManager.getConnection();
+     *     con = DatabaseManager.getConnection();
      *     ps = con.prepareStatement("SELECT foo FROM bar");
      *     rs = ps.executeQuery();
      *     ....
@@ -289,8 +300,10 @@ public enum DbConnectionManager {
      * @param stmt The statement.
      * @param con The connection.
      */
-    public void closeConnection(final ResultSet rs, final Statement stmt, final Connection con) {
-        getConnectionManager(con.getPoolName()).closeConnection(rs, stmt, con);
+    public void closeConnection(final ResultSet rs, final PreparedStatement ps, final Connection con) {
+        closeResultSet(rs);
+        closeStatement(ps);
+        closeConnection(con);
     }
     
     /**
@@ -302,21 +315,22 @@ public enum DbConnectionManager {
      * Connection con = null;
      * PreparedStatement ps = null;
      * try {
-     *     con = ConnectionManager.getConnection();
+     *     con = DatabaseManager.getConnection();
      *     ps = con.prepareStatement("SELECT foo FROM bar");
      *     ....
      * } catch (SQLException e) {
      *     LOG.error(e.getMessage(), e);
      * } finally {
-     *     ConnectionManager.closeConnection(ps, con);
+     *     DatabaseManager.closeConnection(ps, con);
      * }
      * </pre>
      * 
      * @param stmt The statement.
      * @param con The connection.
      */
-    public void closeConnection(final Statement stmt, final Connection con) {
-        getConnectionManager(con.getPoolName()).closeConnection(stmt, con);
+    public void closeConnection(final PreparedStatement ps, final Connection con) {
+        closeStatement(ps);
+        closeConnection(con);
     }
     
     /**
@@ -328,66 +342,60 @@ public enum DbConnectionManager {
      * <pre>
      * Connection con = null;
      * try {
-     *     con = ConnectionManager.getConnection();
+     *     con = DatabaseManager.getConnection();
      *     ....
      * } catch (SQLException e) {
      *     LOG.error(e.getMessage(), e);
      * } finally {
-     *     ConnectionManager.closeConnection(con);
+     *     DatabaseManager.closeConnection(con);
      * }
      * </pre>
      * 
      * @param con The connection.
      */
     public void closeConnection(final Connection con) {
-        getConnectionManager(con.getPoolName()).closeConnection(con);
+        if (con != null) {
+            try {
+                con.close();
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
     }
     
     /**
-     * Returns the DefaultConnectionManager specified by name.
+     * Returns the current connection provider. The only case in which
+     * this method should be called is if more information about the current
+     * connection provider is needed. Database connections should always be
+     * obtained by calling the <code>getConnection()</code> method of this class.
      * 
-     * @param name The name of the DefaultConnectionManager.
-     * @return The DefaultConnectionManager.
+     * @return The connection provider.
      */
-    public DefaultConnectionManager getConnectionManager(final String name) {
-        return connectionManagers.get(name);
+    public ConnectionProvider getConnectionProvider() {
+        return connectionProvider;
     }
     
     /**
-     * Returns a Collection of all registered Connection Managers.
+     * Returns a SchemaManager instance, which can be used to manage
+     * the database schema information for Narvaro.
      * 
-     * @return A Collection of all registered Connection Managers.
+     * @return A SchemaManager instance.
      */
-    public Collection<DefaultConnectionManager> getConnectionManagers() {
-        return Collections.unmodifiableCollection(connectionManagers.values());
+    public static SchemaManager getSchemaManager() {
+        return schemaManager;
     }
     
     /**
-     * Returns a Collection of all registered pool names.
-     * 
-     * @return A Collection of all registered pool names.
-     */
-    public Collection<String> getPoolNames() {
-        return Collections.unmodifiableCollection(connectionManagers.keySet());
-    }
-    
-    /**
-     * Terminates the DbConnectionManager.
+     * Terminates the DatabaseManager.
      * 
      * <p>
      * The shutdown() method call will:
      * <ol>
      *   <li>Destroy all ConnectionProvider instances, which will terminate any open connections in the pool.</li>
-     *   <li>Remove all DefaultConnectionManager instances.</li>
      * </ol>
      * </p>
      */
     public void shutdown() {
-        for (DefaultConnectionManager manager : connectionManagers.values()) {
-            manager.destroyConnectionProvider();
-        }
-        connectionManagers.clear();
-        connectionManagers = null;
+        connectionProvider.destroy();
     }
-    
 }
