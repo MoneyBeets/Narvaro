@@ -269,7 +269,7 @@ public class MySQLConnectionProvider implements ConnectionProvider {
     /**
      * Sets whether connections will be tested before being handed over to be used.
      * 
-     * @param testBeforeUse True of false if connections are to be tested before use.
+     * @param testBeforeUse True or false if connections are to be tested before use.
      */
     public void setTestBeforeUse(final Boolean testBeforeUse) {
         this.testBeforeUse = testBeforeUse;
@@ -288,7 +288,7 @@ public class MySQLConnectionProvider implements ConnectionProvider {
     /**
      * Sets whether connections will be tested after being returned to the pool.
      * 
-     * @param testAfterUse True of false if connections are to be tested after use.
+     * @param testAfterUse True or false if connections are to be tested after use.
      */
     public void setTestAfterUse(final Boolean testAfterUse) {
         this.testAfterUse = testAfterUse;
