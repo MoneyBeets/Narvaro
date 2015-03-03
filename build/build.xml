@@ -303,7 +303,7 @@
     </target>
     
     <!-- dist.init ============================================================================== -->
-    <target name="dist.init" depends="checkstyle">
+    <target name="dist.init">
         
         <!-- ie: narvaro_src -->
         <property name="release.name.src" value="${dist.prefix}_src"/>
@@ -487,15 +487,6 @@
             </then>
         </if>
         
-    </target>
-    
-    <!-- checkstyle ============================================================================== -->
-    <target name="checkstyle" description="Checks source code style for coding standard prior to Narvaro build initiates.">
-        <taskdef resource="checkstyletask.properties" classpath="build/lib/checkstyle-6.4-all.jar"/>
-        <checkstyle maxErrors="250" config="build/google_checks.xml">
-            <fileset dir="src/java" includes="**/*.java"/>
-            <formatter type="xml" toFile="target/checkstyle_errors.xml"/>
-        </checkstyle>
     </target>
     
     <!-- anttasks ============================================================================== -->
