@@ -54,4 +54,13 @@
         <Required>True</Required>
         <RequiredReason>Required to build Narvaro.</RequiredReason>
     </Library>
+    <Library>
+        <FileName>checkstyle-6.4-all.jar</FileName>
+        <Version>6.4</Version>
+        <ReleaseDate>2015-02-28</ReleaseDate>
+        <URL>http://checkstyle.sourceforge.net/</URL>
+        <Description>Checkstyle is a development tool to help programmers write Java code that adheres to a coding standard.</Description>
+        <Required>True</Required>
+        <RequiredReason>Checks source code style for coding standard prior to Narvaro build initiates.</RequiredReason>
+    </Library>
 </Libraries>
