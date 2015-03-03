@@ -44,7 +44,7 @@ public class SchemaManager {
     
     private static final Logger LOG = Logger.getLogger(SchemaManager.class.getName());
     
-    private static final String CHECK_VERSION = "SELECT version FROM jcVersion WHERE name = ?";
+    private static final String CHECK_VERSION = "SELECT version FROM narvaroVersion WHERE name = ?";
     
     private static final int DATABASE_VERSION = ConfigurationManager.NARVARO.getInt("narvaro.database.version", -1);
     
