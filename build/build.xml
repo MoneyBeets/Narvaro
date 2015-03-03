@@ -107,7 +107,7 @@
     <!-- ======================================================================================= -->
     
     <!-- init ================================================================================== -->
-    <target name="init" depends="checkstyle">
+    <target name="init">
         
         <!-- Check for min build requirements -->
         
@@ -303,7 +303,7 @@
     </target>
     
     <!-- dist.init ============================================================================== -->
-    <target name="dist.init">
+    <target name="dist.init" depends="checkstyle">
         
         <!-- ie: narvaro_src -->
         <property name="release.name.src" value="${dist.prefix}_src"/>
