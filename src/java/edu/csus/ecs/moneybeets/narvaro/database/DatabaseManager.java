@@ -16,7 +16,8 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import edu.csus.ecs.moneybeets.narvaro.database.provider.MySQLConnectionProvider;
+import edu.csus.ecs.moneybeets.narvaro.util.ClassUtils;
+import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 
 /**
  * Central manager of database connections.
@@ -38,11 +39,38 @@ public enum DatabaseManager {
     
     private static final Logger LOG = Logger.getLogger(DatabaseManager.class.getName());
     
-    private ConnectionProvider connectionProvider = new MySQLConnectionProvider();
+    private ConnectionProvider connectionProvider;
     
     private static SchemaManager schemaManager = new SchemaManager();
 
-    public Connection getConnection() throws SQLException {
+    /**
+     * Returns a connection from the currently active connection provider. If
+     * one is not active, an attempt will be made to set it. An exception will be
+     * thrown if the connection provider is not able to be set, or if no connection
+     * was able to be made.
+     * 
+     * @return A <code>Connection</code>.
+     * @throws SQLException If an SQL Exception occurs.
+     * @throws IllegalStateException If no <code>ConnectionProvider</code> is available or capable of being set.
+     */
+    public Connection getConnection() throws SQLException, IllegalStateException {
+        
+        if (connectionProvider == null) {
+            String className = ConfigurationManager.NARVARO.getString("narvaro.connectionprovider.classname");
+            if (!"".equals(className) && className != null) {
+                // attempt to load the class
+                try {
+                    Class<?> conClass = ClassUtils.forName(className);
+                    setConnectionProvider((ConnectionProvider)conClass.newInstance());
+                } catch (Exception e) {
+                    LOG.fatal("Failed to create the connection provider specified by configuration", e);
+                    throw new IllegalStateException("No connection provider specified in configuration", e);
+                }
+            } else {
+                LOG.fatal("Failed to create the connection provider specified by configuration");
+                throw new IllegalStateException("No connection provider specified in configuration");
+            }
+        }
         
         Integer retryCount = 0;
         Integer retryMax = 10;
@@ -373,6 +401,46 @@ public enum DatabaseManager {
      */
     public ConnectionProvider getConnectionProvider() {
         return connectionProvider;
+    }
+    
+    /**
+     * Sets the connection provider. The old provider (if it exists) is
+     * shut down before the new one is started. A connection provider
+     * <b>should not</b> be started before being passed to the connection
+     * manager because the manager will call the start() method automatically.
+     * 
+     * @param provider The ConnectionProvider that the manager should obtain connections from.
+     */
+    private void setConnectionProvider(final ConnectionProvider provider) {
+        // guarantee there is not 
+        // an active connection provider...
+        // if there is, destroy it...
+        destroyConnectionProvider();
+        connectionProvider = provider;
+        connectionProvider.start();
+        // Now, check the provider schema for updates
+        Connection con = null;
+        try {
+            con = connectionProvider.getConnection();
+            schemaManager.checkNarvaroSchema(con);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(),e);
+        } finally {
+            closeConnection(con);
+        }
+    }
+    
+    /**
+     * Destroys the current connection provider. Future calls to
+     * {@link #getConnectionProvider()} will return <code>null</code>
+     * until a new ConnectionProvider is set, or one is automatically loaded
+     * by a call to {@link #getConnection()}.
+     */
+    public void destroyConnectionProvider() {
+        if (connectionProvider != null) {
+            connectionProvider.destroy();
+            connectionProvider = null;
+        }
     }
     
     /**

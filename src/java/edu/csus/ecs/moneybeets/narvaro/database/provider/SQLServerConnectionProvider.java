@@ -16,11 +16,11 @@ import edu.csus.ecs.moneybeets.narvaro.database.DatabaseType;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 
 /**
- * Narvaro MySQL Connection Provider.
+ * Narvaro SQL Server Connection Provider.
  */
-public class MySQLConnectionProvider extends AbstractConnectionProvider {
+public class SQLServerConnectionProvider extends AbstractConnectionProvider {
     
-    private static final Logger LOG = Logger.getLogger(MySQLConnectionProvider.class.getName());
+    private static final Logger LOG = Logger.getLogger(SQLServerConnectionProvider.class.getName());
     
     @Override
     public Logger getLogger() {
@@ -32,7 +32,7 @@ public class MySQLConnectionProvider extends AbstractConnectionProvider {
      */
     @Override
     protected void loadProperties() {
-        setDatabaseType(DatabaseType.mysql);
+        setDatabaseType(DatabaseType.sqlserver);
         setServerURL(
                 ConfigurationManager.NARVARO.getString("narvaro.connectionprovider.serverurl"));
         setUsername(
