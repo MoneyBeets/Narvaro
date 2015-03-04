@@ -107,7 +107,7 @@
     <!-- ======================================================================================= -->
     
     <!-- init ================================================================================== -->
-    <target name="init">
+    <target name="init" depends="source.checkstyle">
         
         <!-- Check for min build requirements -->
         
@@ -487,6 +487,18 @@
             </then>
         </if>
         
+    </target>
+    
+    <!-- checkstyle ============================================================================== -->
+    <target name="source.checkstyle" description="Enforces source code standard prior to building Narvaro.">
+        <taskdef resource="checkstyletask.properties" classpath="${lib.build.dir}/checkstyle-6.4-all.jar"/>
+    	<!-- ensure logging output dir is avaialble -->
+    	<mkdir dir="${target.dir}"/>
+    	<!-- check source -->
+        <checkstyle maxErrors="300" config="${basedir}/build/google_checks.xml">
+            <fileset dir="${src.java.dir}" includes="**/*.java"/>
+            <formatter type="xml" toFile="${target.dir}/checkstyle_errors.xml"/>
+        </checkstyle>
     </target>
     
     <!-- anttasks ============================================================================== -->
