@@ -7,17 +7,17 @@
  * 
  */
 
-package edu.csus.ecs.moneybeets.narvaro.launcher;
+package edu.csus.ecs.moneybeets.narvaro.startup;
 
 import java.io.File;
 import java.lang.reflect.Method;
 
-public class Startup {
+public class Launcher {
 
     private static final String DEFAULT_LIB_DIR = "../lib";
     
     public static void main(String[] args) {
-        new Startup().start();
+        new Launcher().start();
     }
     
     private void start() {

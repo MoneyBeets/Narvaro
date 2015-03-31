@@ -7,7 +7,7 @@
  * 
  */
 
-package edu.csus.ecs.moneybeets.narvaro.launcher;
+package edu.csus.ecs.moneybeets.narvaro.startup;
 
 import java.io.File;
 import java.io.FilenameFilter;

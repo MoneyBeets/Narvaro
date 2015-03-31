@@ -165,7 +165,7 @@
         
         <!-- Make main Narvaro jar -->
         <jar jarfile="${jar.dest.dir}/${jar.name}" index="true" duplicate="preserve">
-            <fileset dir="${compile.dir}" includes="**/*.class" excludes="edu/csus/ecs/moneybeets/narvaro/launcher/Startup*.class"/>
+            <fileset dir="${compile.dir}" includes="**/*.class" excludes="edu/csus/ecs/moneybeets/narvaro/startup/Launcher*.class"/>
             <zipgroupfileset dir="${lib.merge.dir}" includes="*.jar"/>
             <manifest>
                 <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
@@ -175,8 +175,8 @@
     	<!-- Make startup jar -->
     	<jar jarfile="${jar.dest.dir}/${jar.starter.name}">
     		<fileset dir="${compile.dir}">
-    			<include name="edu/csus/ecs/moneybeets/narvaro/launcher/Startup*.class"/>
-    			<include name="edu/csus/ecs/moneybeets/narvaro/launcher/NarvaroClassLoader*.class"/>
+    			<include name="edu/csus/ecs/moneybeets/narvaro/startup/Launcher*.class"/>
+    			<include name="edu/csus/ecs/moneybeets/narvaro/startup/NarvaroClassLoader*.class"/>
     		</fileset>
     		<manifest>
     			<attribute name="Main-Class" value="edu.csus.ecs.moneybeets.narvaro.launcher.Startup"/>
