@@ -52,11 +52,11 @@ public class Startup {
             
             // get the main app class
             Class<?> narvaroClass = loader.loadClass("edu.csus.ecs.moneybeets.narvaro.Narvaro");
-            Object instance = narvaroClass.newInstance();
             
             // start Narvaro
-            Method startupMethod = narvaroClass.getMethod("startup");
-            startupMethod.invoke(instance);
+            Method startupMethod = narvaroClass.getDeclaredMethod("startup");
+            startupMethod.invoke(new Object[0], new Object[0]);
+
         } catch (Exception e) {
             // there's no logging yet...
             e.printStackTrace();

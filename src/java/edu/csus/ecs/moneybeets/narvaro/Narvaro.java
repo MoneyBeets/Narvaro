@@ -27,6 +27,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+/**
+ * The main application which loads, initializes, and starts
+ * the GUI and supporting classes.
+ *
+ */
 public class Narvaro extends Application {
     
     private static final Logger LOG = Logger.getLogger(Narvaro.class.getName());
@@ -43,19 +48,29 @@ public class Narvaro extends Application {
      */
     private Path narvaroHome;
     
+    /**
+     * True if the application has started.
+     */
     private boolean started = false;
     
     /**
      * Creates an instance of Narvaro and starts it.
      */
     public Narvaro() {
-        // only allow a single instance to run
         if (instance != null) {
-            //throw new IllegalStateException("Narvaro is already running");
+            throw new IllegalStateException("Narvaro is already initialized");
         }
         instance = this;
     }
     
+    /**
+     * Launches the JavaFX platform
+     *   and invokes the start method.
+     */
+    public static void startup() {
+        Application.launch();
+    }
+
     /**
      * Returns a singleton instance of Narvaro.
      * 
@@ -64,11 +79,12 @@ public class Narvaro extends Application {
     public static Narvaro getInstance() {
         return instance;
     }
-    
-    public void startup() {
-        // don't allow this method to be called
-        //   more than once
-        synchronized (this) {
+
+    @Override
+    public void start(final Stage stage) throws Exception {
+
+        // only allow startup once
+        synchronized (Narvaro.class) {
             if (started == true) {
                 throw new IllegalStateException("Narvaro is already running");
             }
@@ -78,17 +94,9 @@ public class Narvaro extends Application {
         } catch (Exception e) {
             // failed to locate home directory
             //   terminate app.
-            e.printStackTrace();
             LOG.fatal(e.getMessage(), e);
             return;
         }
-        // launches JavaFX application
-        launch();
-        started = true;
-    }
-
-    @Override
-    public void start(final Stage stage) throws Exception {
         
         this.stage = stage;
 
@@ -118,6 +126,7 @@ public class Narvaro extends Application {
         
         stage.show();
         
+        started = true;
         LOG.info("Narvaro Started");
         
     }
@@ -215,6 +224,7 @@ public class Narvaro extends Application {
      */
     private void shutdown() {
         
+        LOG.info("Narvaro Shutting down");
         Platform.exit();
         System.exit(0);
     }
