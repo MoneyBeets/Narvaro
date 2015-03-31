@@ -46,6 +46,7 @@
     
     <property name="compile.dir" value="${work.dir}/classes"/>
     <property name="jar.name" value="narvaro.jar"/>
+    <property name="jar.starter.name" value="startup.jar"/>
     <property name="jar.dest.dir" value="${work.dir}/lib"/>
     <property name="resources.dir" value="${src.dir}/resources"/>
     
@@ -164,12 +165,25 @@
         
         <!-- Make main Narvaro jar -->
         <jar jarfile="${jar.dest.dir}/${jar.name}" index="true" duplicate="preserve">
-            <fileset dir="${compile.dir}" includes="**/*.class"/>
+            <fileset dir="${compile.dir}" includes="**/*.class" excludes="edu/csus/ecs/moneybeets/narvaro/startup/Launcher*.class"/>
             <zipgroupfileset dir="${lib.merge.dir}" includes="*.jar"/>
             <manifest>
                 <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
             </manifest>
         </jar>
+        
+        <!-- Make startup jar -->
+        <jar jarfile="${jar.dest.dir}/${jar.starter.name}">
+            <fileset dir="${compile.dir}">
+                <include name="edu/csus/ecs/moneybeets/narvaro/startup/Launcher*.class"/>
+                <include name="edu/csus/ecs/moneybeets/narvaro/startup/NarvaroClassLoader*.class"/>
+            </fileset>
+            <manifest>
+                <attribute name="Main-Class" value="edu.csus.ecs.moneybeets.narvaro.launcher.Startup"/>
+                <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
+            </manifest>
+        </jar>
+                
         
         <!-- Copy application dependent files -->
         <copy todir="${jar.dest.dir}">
@@ -280,6 +294,16 @@
                 </copy>
             </then>
         </if>
+        
+        <!-- Copy FXML -->
+        <copy todir="${target.narvaroHome}/resources">
+            <fileset dir="${src.java.dir}/edu/csus/ecs/moneybeets/narvaro/ui" includes="NarvaroUISceneBuilder.fxml"/>
+        </copy>
+        
+        <!-- Copy CSS -->
+        <copy todir="${target.narvaroHome}">
+            <fileset dir="${src.dir}" includes="resources/*.css"/>
+        </copy>
         
         <!-- Copy lib directory -->
         <copy todir="${target.narvaroHome}/lib">
@@ -492,9 +516,9 @@
     <!-- checkstyle ============================================================================== -->
     <target name="source.checkstyle" description="Enforces source code standard prior to building Narvaro.">
         <taskdef resource="checkstyletask.properties" classpath="${lib.build.dir}/checkstyle-6.4-all.jar"/>
-    	<!-- ensure logging output dir is avaialble -->
-    	<mkdir dir="${target.dir}"/>
-    	<!-- check source -->
+        <!-- ensure logging output dir is avaialble -->
+        <mkdir dir="${target.dir}"/>
+        <!-- check source -->
         <checkstyle maxErrors="300" config="${basedir}/build/google_checks.xml">
             <fileset dir="${src.java.dir}" includes="**/*.java"/>
             <formatter type="xml" toFile="${target.dir}/checkstyle_errors.xml"/>
