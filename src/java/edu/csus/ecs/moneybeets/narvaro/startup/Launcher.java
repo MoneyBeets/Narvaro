@@ -12,6 +12,14 @@ package edu.csus.ecs.moneybeets.narvaro.startup;
 import java.io.File;
 import java.lang.reflect.Method;
 
+/**
+ * The main application launcher for Narvaro.
+ * 
+ * This class uses a custom classloader to dynamically
+ * load all libraries into the classpath then attempts to
+ * startup the main Narvaro application.
+ *
+ */
 public class Launcher {
 
     private static final String DEFAULT_LIB_DIR = "../lib";
@@ -20,6 +28,9 @@ public class Launcher {
         new Launcher().start();
     }
     
+    /**
+     * Starts Narvaro after loading all found libraries onto the classpath.
+     */
     private void start() {
         
         // setup the classpath using NarvaroClassLoader
