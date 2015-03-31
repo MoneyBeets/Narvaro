@@ -1,4 +1,4 @@
-
+@echo off
 
 REM #
 REM # Narvaro: @VERSION@
