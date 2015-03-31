@@ -179,7 +179,7 @@
                 <include name="edu/csus/ecs/moneybeets/narvaro/startup/NarvaroClassLoader*.class"/>
             </fileset>
             <manifest>
-                <attribute name="Main-Class" value="edu.csus.ecs.moneybeets.narvaro.launcher.Startup"/>
+                <attribute name="Main-Class" value="edu.csus.ecs.moneybeets.narvaro.startup.Launcher"/>
                 <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
             </manifest>
         </jar>
