@@ -305,6 +305,25 @@
             <fileset dir="${src.dir}" includes="resources/*.css"/>
         </copy>
         
+        <!-- Copy bin directory -->
+        <copy todir="${target.narvaroHome}">
+            <fileset dir="${src.dir}" includes="bin/**/*"/>
+            <filterset>
+                <filter token="DATE" value="${builddate}"/>
+                <filter token="VERSION" value="${version}"/>
+                <filter token="HEAD" value="${repository.version}"/>
+                <filter token="JDK" value="${java.version}"/>
+                <filter token="ANT" value="${antversion}"/>
+            </filterset>
+        </copy>
+        <!-- Make stuff under bin executable -->
+        <chmod perm="+x">
+            <fileset dir="${target.narvaroHome}/bin" includes="**/*">
+                <exclude name="**/*.bat"/>
+            </fileset>
+        </chmod>
+        <fixcrlf srcdir="${target.narvaroHome}/bin" eol="lf" eof="remove"/>
+        
         <!-- Copy lib directory -->
         <copy todir="${target.narvaroHome}/lib">
             <fileset dir="${jar.dest.dir}" includes="*.*"/>
