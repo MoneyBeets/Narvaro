@@ -12,7 +12,7 @@
 
 set -o errexit
 
-if [ ! -d "${JAVA_HOME}" ]; then
+if [ ! -d "${JAVA_HOME}" ] || [ ! -f "${JAVA_HOME}/bin/java" ]; then
     echo ""
     echo "JAVA_HOME environment variable not set"
     echo ""

@@ -12,7 +12,7 @@ REM #
 REM # This script launches the Narvaro application.
 REM #
 
-if "&JAVA_HOME%" == "" goto javaerror
+if "%JAVA_HOME%" == "" goto javaerror
 if not exist "%JAVA_HOME%\bin\java.exe" goto javaerror
 set NARVARO_HOME="%CD%\.."
 

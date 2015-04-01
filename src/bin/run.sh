@@ -13,18 +13,11 @@
 
 set -o errexit
 
-javaNotSet() {
+if [ ! -d "${JAVA_HOME}" ] || [ ! -f "${JAVA_HOME}/bin/java" ]; then
     echo ""
     echo "JAVA_HOME environment variable not set."
     echo ""
     exit 1 
-}
-
-if [ ! -d "${JAVA_HOME}" ]; then
-    javaNotSet
-fi
-if [ ! -f "${JAVA_HOME}/bin/java" ]; then
-     javaNotSet
 fi
 
 NARVARO_HOME="$(basename pwd)"
