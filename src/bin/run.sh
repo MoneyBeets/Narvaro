@@ -27,4 +27,6 @@ if [ ! -f "${JAVA_HOME}/bin/java" ]; then
      javaNotSet
 fi
 
+NARVARO_HOME="$(basename pwd)"
+
 "${JAVA_HOME}/bin/java" -DnarvaroHome="${NARVARO_HOME}" -jar ../lib/startup.jar
