@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="812.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -80,6 +81,12 @@
                         <TextField layoutX="719.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
                         <TextField layoutX="719.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
                         <TextField layoutX="719.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
+                        <MenuButton layoutX="21.0" layoutY="126.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Park 1">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Action 1" />
+                              <MenuItem mnemonicParsing="false" text="Action 2" />
+                           </items>
+                        </MenuButton>
                      </children>
                   </AnchorPane>
             </content>
@@ -91,7 +98,53 @@
           </Tab>
             <Tab text="Graph Data">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="40.0" layoutY="59.0" text="Select a Date" />
+                        <DatePicker layoutX="42.0" layoutY="76.0" prefHeight="26.0" prefWidth="135.0" />
+                        <Label layoutX="40.0" layoutY="36.0" text="X" />
+                        <Label layoutX="204.0" layoutY="36.0" text="Y" />
+                        <Label layoutX="204.0" layoutY="59.0" text="Select a Date" />
+                        <DatePicker layoutX="206.0" layoutY="76.0" prefHeight="26.0" prefWidth="135.0" />
+                        <Label layoutX="204.0" layoutY="122.0" text="Select a Park" />
+                        <Label layoutX="40.0" layoutY="122.0" text="Select a Park" />
+                        <Label layoutX="136.0" layoutY="211.0" text="Select a Category" />
+                        <Label layoutX="136.0" layoutY="272.0" text="Graph Type" />
+                        <RadioButton layoutX="136.0" layoutY="298.0" mnemonicParsing="false" text="Bar" />
+                        <RadioButton layoutX="137.0" layoutY="315.0" mnemonicParsing="false" text="Line" />
+                        <RadioButton layoutX="137.0" layoutY="332.0" mnemonicParsing="false" />
+                        <RadioButton layoutX="137.0" layoutY="349.0" mnemonicParsing="false" />
+                        <Button layoutX="42.0" layoutY="407.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="View Data" />
+                        <Button layoutX="42.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="View 449" />
+                        <Button layoutX="229.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Graph" />
+                        <Button layoutX="671.0" layoutY="487.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Print" />
+                        <LineChart layoutX="347.0" layoutY="63.0" prefHeight="436.0" prefWidth="441.0">
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </LineChart>
+                        <MenuButton layoutX="40.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Park 1">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Action 1" />
+                            <MenuItem mnemonicParsing="false" text="Action 2" />
+                          </items>
+                        </MenuButton>
+                        <MenuButton layoutX="205.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Park 1">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Action 1" />
+                              <MenuItem mnemonicParsing="false" text="Action 2" />
+                           </items>
+                        </MenuButton>
+                        <MenuButton layoutX="136.0" layoutY="228.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Category 1">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Action 1" />
+                              <MenuItem mnemonicParsing="false" text="Action 2" />
+                           </items>
+                        </MenuButton>
+                     </children></AnchorPane>
               </content>
             </Tab>
         </tabs>
