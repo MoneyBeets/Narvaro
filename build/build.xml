@@ -179,7 +179,7 @@
                 <include name="edu/csus/ecs/moneybeets/narvaro/startup/NarvaroClassLoader*.class"/>
             </fileset>
             <manifest>
-                <attribute name="Main-Class" value="edu.csus.ecs.moneybeets.narvaro.launcher.Startup"/>
+                <attribute name="Main-Class" value="edu.csus.ecs.moneybeets.narvaro.startup.Launcher"/>
                 <attribute name="Built-By" value="Money Beets, Inc. (www.ecs.csus.edu)"/>
             </manifest>
         </jar>
@@ -304,6 +304,25 @@
         <copy todir="${target.narvaroHome}">
             <fileset dir="${src.dir}" includes="resources/*.css"/>
         </copy>
+        
+        <!-- Copy bin directory -->
+        <copy todir="${target.narvaroHome}">
+            <fileset dir="${src.dir}" includes="bin/**/*"/>
+            <filterset>
+                <filter token="DATE" value="${builddate}"/>
+                <filter token="VERSION" value="${version}"/>
+                <filter token="HEAD" value="${repository.version}"/>
+                <filter token="JDK" value="${java.version}"/>
+                <filter token="ANT" value="${antversion}"/>
+            </filterset>
+        </copy>
+        <!-- Make stuff under bin executable -->
+        <chmod perm="+x">
+            <fileset dir="${target.narvaroHome}/bin" includes="**/*">
+                <exclude name="**/*.bat"/>
+            </fileset>
+        </chmod>
+        <fixcrlf srcdir="${target.narvaroHome}/bin" eol="lf" eof="remove"/>
         
         <!-- Copy lib directory -->
         <copy todir="${target.narvaroHome}/lib">
