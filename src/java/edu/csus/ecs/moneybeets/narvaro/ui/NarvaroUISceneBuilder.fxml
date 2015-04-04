@@ -20,7 +20,7 @@
                         <Label layoutX="20.0" layoutY="106.0" text="Select a Park" />
                         <Label layoutX="234.0" layoutY="26.0" text="Paid Day Use" underline="true" />
                         <Label layoutX="234.0" layoutY="53.0" text="Conversion Factor" />
-                        <TextField fx:id="ConversionFactorTF" layoutX="359.0" layoutY="48.0" prefHeight="28.0" prefWidth="44.0" AnchorPane.bottomAnchor="464.0" AnchorPane.leftAnchor="359.0" AnchorPane.rightAnchor="409.0" AnchorPane.topAnchor="48.0" />
+                        <TextField fx:id="ConversionFactorTF" layoutX="359.0" layoutY="48.0" prefHeight="28.0" prefWidth="44.0" />
                         <TextField fx:id="TotalsTF" layoutX="359.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
                         <Label layoutX="234.0" layoutY="85.0" text="Totals" />
                         <Label layoutX="231.0" layoutY="114.0" text="Special Events" />
