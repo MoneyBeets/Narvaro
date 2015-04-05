@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
@@ -13,7 +14,7 @@
         <tabs>
           <Tab fx:id="EnterDataTab" closable="false" text="Enter Data">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="779.0">
+              <AnchorPane fx:id="EnterDataPane" minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="779.0" stylesheets="@NarvaroUIStyles.css">
                      <children>
                         <DatePicker fx:id="DatePicker" layoutX="20.0" layoutY="48.0" prefHeight="26.0" prefWidth="135.0" />
                         <Label fx:id="SelectDateLabel" layoutX="20.0" layoutY="26.0" text="Select a Date" />
@@ -81,10 +82,16 @@
                         <TextField fx:id="AllStarKartingTF" layoutX="719.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
                         <TextField fx:id="HangtownTF" layoutX="719.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
                         <TextField fx:id="OtherTF" layoutX="719.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
-                        <MenuButton fx:id="SelectAParkDropDownMenu" layoutX="21.0" layoutY="126.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Park 1">
+                        <MenuButton fx:id="SelectAParkDropDownMenu" layoutX="21.0" layoutY="126.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Action 1" />
-                              <MenuItem mnemonicParsing="false" text="Action 2" />
+                              <MenuItem mnemonicParsing="false" text="Carnegie" />
+                              <MenuItem mnemonicParsing="false" text="Clay Pit" />
+                              <MenuItem mnemonicParsing="false" text="Heber Dunes" />
+                              <MenuItem mnemonicParsing="false" text="Hollister Hills" />
+                              <MenuItem mnemonicParsing="false" text="Hungry Valley" />
+                              <MenuItem mnemonicParsing="false" text="Oceano Dunes" />
+                              <MenuItem mnemonicParsing="false" text="Ocotillo Wells" />
+                              <MenuItem mnemonicParsing="false" text="Prairie City" />
                            </items>
                         </MenuButton>
                      </children>
@@ -93,12 +100,12 @@
           </Tab>
           <Tab fx:id="ViewDataTab" text="View Data">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane fx:id="ViewDataPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@NarvaroUIStyles.css" />
             </content>
           </Tab>
             <Tab fx:id="GraphDataTab" text="Graph Data">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <AnchorPane fx:id="GraphDataPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@NarvaroUIStyles.css">
                      <children>
                         <Label layoutX="40.0" layoutY="59.0" text="Select a Date" />
                         <DatePicker layoutX="42.0" layoutY="76.0" prefHeight="26.0" prefWidth="135.0" />
