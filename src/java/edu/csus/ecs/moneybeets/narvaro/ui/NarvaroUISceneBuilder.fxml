@@ -11,77 +11,77 @@
    <children>
       <TabPane layoutX="68.0" layoutY="67.0" prefHeight="490.0" prefWidth="779.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-          <Tab closable="false" text="Enter Data">
+          <Tab fx:id="EnterDataTab" closable="false" text="Enter Data">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="779.0">
                      <children>
-                        <DatePicker layoutX="20.0" layoutY="48.0" prefHeight="26.0" prefWidth="135.0" />
-                        <Label layoutX="20.0" layoutY="26.0" text="Select a Date" />
-                        <Label layoutX="20.0" layoutY="106.0" text="Select a Park" />
-                        <Label layoutX="234.0" layoutY="26.0" text="Paid Day Use" underline="true" />
-                        <Label layoutX="234.0" layoutY="53.0" text="Conversion Factor" />
+                        <DatePicker fx:id="DatePicker" layoutX="20.0" layoutY="48.0" prefHeight="26.0" prefWidth="135.0" />
+                        <Label fx:id="SelectDateLabel" layoutX="20.0" layoutY="26.0" text="Select a Date" />
+                        <Label fx:id="SelectAParkLabel" layoutX="20.0" layoutY="106.0" text="Select a Park" />
+                        <Label fx:id="PaidDayUseLabel" layoutX="234.0" layoutY="26.0" text="Paid Day Use" underline="true" />
+                        <Label fx:id="ConversionFactorLabel" layoutX="234.0" layoutY="53.0" text="Conversion Factor" />
                         <TextField fx:id="ConversionFactorTF" layoutX="359.0" layoutY="48.0" prefHeight="28.0" prefWidth="44.0" />
-                        <TextField fx:id="TotalsTF" layoutX="359.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="234.0" layoutY="85.0" text="Totals" />
-                        <Label layoutX="231.0" layoutY="114.0" text="Special Events" />
+                        <TextField fx:id="PaidDayUseTotalsTF" layoutX="359.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="PaidDayUseTotalsLabel" layoutX="234.0" layoutY="85.0" text="Totals" />
+                        <Label fx:id="SpecialEventsLabel" layoutX="231.0" layoutY="114.0" text="Special Events" />
                         <TextField fx:id="SpecialEventsTF" layoutX="359.0" layoutY="109.0" prefHeight="26.0" prefWidth="44.0" />
                         <TextField fx:id="AnnualDayUseTF" layoutX="359.0" layoutY="138.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="234.0" layoutY="143.0" text="Annual Day Use" />
-                        <Label layoutX="232.0" layoutY="175.0" text="Day Use" />
+                        <Label fx:id="AnnualDayUseLabel" layoutX="234.0" layoutY="143.0" text="Annual Day Use" />
+                        <Label fx:id="DayUseLabel" layoutX="232.0" layoutY="175.0" text="Day Use" />
                         <TextField fx:id="DayUseTF" layoutX="359.0" layoutY="170.0" prefHeight="26.0" prefWidth="44.0" />
                         <TextField fx:id="SeniorTF" layoutX="359.0" layoutY="202.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="231.0" layoutY="207.0" text="Senior" />
-                        <Label layoutX="231.0" layoutY="236.0" text="Disabled" />
-                        <TextField layoutX="359.0" layoutY="231.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="359.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="232.0" layoutY="268.0" text="Golden Bear" />
-                        <Label layoutX="231.0" layoutY="301.0" text="Disabled Veteran" />
-                        <TextField layoutX="359.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="359.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="231.0" layoutY="333.0" text="Non-Res OHV Pass" />
-                        <TextField layoutX="359.0" layoutY="360.0" prefHeight="26.0" prefWidth="45.0" />
-                        <Label layoutX="231.0" layoutY="365.0" text="Annual Pass Sale" />
-                        <TextField layoutX="359.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="231.0" layoutY="397.0" text="Camping" />
-                        <TextField layoutX="359.0" layoutY="424.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="231.0" layoutY="429.0" text="Senior Camping" />
-                        <TextField layoutX="359.0" layoutY="457.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="231.0" layoutY="462.0" text="Disabled Camping" />
-                        <Label layoutX="422.0" layoutY="26.0" text="Free Day Use" underline="true" />
-                        <Label layoutX="422.0" layoutY="53.0" text="Conversion Factor" />
-                        <TextField layoutX="543.0" layoutY="48.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="422.0" layoutY="85.0" text="Totals" />
-                        <TextField layoutX="543.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="422.0" layoutY="114.0" text="Free Safety Classes" underline="true" />
-                        <Label layoutX="422.0" layoutY="143.0" text="Total Vehicles" />
+                        <Label fx:id="SeniorLabel" layoutX="231.0" layoutY="207.0" text="Senior" />
+                        <Label fx:id="DisabledLabel" layoutX="231.0" layoutY="236.0" text="Disabled" />
+                        <TextField fx:id="DisabledTF" layoutX="359.0" layoutY="231.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="GoldenBearTF" layoutX="359.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="GoldenBearLabel" layoutX="232.0" layoutY="268.0" text="Golden Bear" />
+                        <Label fx:id="DisabledVeteranLabel" layoutX="231.0" layoutY="301.0" text="Disabled Veteran" />
+                        <TextField fx:id="DisabledVeteranTF" layoutX="359.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="NonResOHVPassTF" layoutX="359.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="NonResOHVPassLabel" layoutX="231.0" layoutY="333.0" text="Non-Res OHV Pass" />
+                        <TextField fx:id="AnnualPassSaleTF" layoutX="359.0" layoutY="360.0" prefHeight="26.0" prefWidth="45.0" />
+                        <Label fx:id="AnnualPassSaleLabel" layoutX="231.0" layoutY="365.0" text="Annual Pass Sale" />
+                        <TextField fx:id="CampingTF" layoutX="359.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="CampingLabel" layoutX="231.0" layoutY="397.0" text="Camping" />
+                        <TextField fx:id="SeniorCampingTF" layoutX="359.0" layoutY="424.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="SeniorCampingLabel" layoutX="231.0" layoutY="429.0" text="Senior Camping" />
+                        <TextField fx:id="DisabledCampingTF" layoutX="359.0" layoutY="457.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="DisabledCampingLabel" layoutX="231.0" layoutY="462.0" text="Disabled Camping" />
+                        <Label fx:id="FreeDayUseLabel" layoutX="422.0" layoutY="26.0" text="Free Day Use" underline="true" />
+                        <Label fx:id="FreeDayUseConversionFactorLabel" layoutX="422.0" layoutY="53.0" text="Conversion Factor" />
+                        <TextField fx:id="ConversionFactorTF" layoutX="543.0" layoutY="48.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="FreeDayUseTotalsLabel" layoutX="422.0" layoutY="85.0" text="Totals" />
+                        <TextField fx:id="FreeDayUseTotalsTF" layoutX="543.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="FreeSafetyClassesLabel" layoutX="422.0" layoutY="114.0" text="Free Safety Classes" underline="true" />
+                        <Label fx:id="TotalVehiclesLabel" layoutX="422.0" layoutY="143.0" text="Total Vehicles" />
                         <Label layoutX="422.0" layoutY="175.0" text="Total People" />
                         <Label layoutX="422.0" layoutY="207.0" text="Ratio" />
-                        <TextField layoutX="543.0" layoutY="138.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="543.0" layoutY="170.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="543.0" layoutY="202.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="617.0" layoutY="26.0" text="Comments" underline="true" />
-                        <TextArea layoutX="617.0" layoutY="82.0" prefHeight="113.0" prefWidth="186.0" />
+                        <TextField fx:id="TotalVehiclesTF" layoutX="543.0" layoutY="138.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="TotalPeopleTF" layoutX="543.0" layoutY="170.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="RatioTF" layoutX="543.0" layoutY="202.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="CommentsLabel" layoutX="617.0" layoutY="26.0" text="Comments" underline="true" />
+                        <TextArea fx:id="CommentsTB" layoutX="617.0" layoutY="82.0" prefHeight="113.0" prefWidth="186.0" />
                         <Label layoutX="617.0" layoutY="207.0" text="Attach 449" />
-                        <Button layoutX="558.0" layoutY="478.0" mnemonicParsing="false" text="Clear" />
-                        <Button layoutX="621.0" layoutY="478.0" mnemonicParsing="false" text="Submit" />
+                        <Button fx:id="ClearButton" layoutX="558.0" layoutY="478.0" mnemonicParsing="false" text="Clear" />
+                        <Button fx:id="SubmitButton" layoutX="621.0" layoutY="478.0" mnemonicParsing="false" text="Submit" />
                         <Label layoutX="421.0" layoutY="236.0" text="Other" underline="true" />
                         <Label layoutX="421.0" layoutY="268.0" text="MC" />
                         <Label layoutX="421.0" layoutY="301.0" text="ATV" />
                         <Label layoutX="421.0" layoutY="333.0" text="4X4" />
                         <Label layoutX="424.0" layoutY="365.0" text="ROV" />
                         <Label layoutX="422.0" layoutY="397.0" text="AQMA" />
-                        <TextField layoutX="543.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="543.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="543.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="543.0" layoutY="360.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="543.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
-                        <Label layoutX="617.0" layoutY="268.0" text="All Star Karting" />
-                        <Label layoutX="621.0" layoutY="301.0" text="Hangtown" />
-                        <Label layoutX="621.0" layoutY="333.0" text="Other" />
-                        <TextField layoutX="719.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="719.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
-                        <TextField layoutX="719.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
-                        <MenuButton layoutX="21.0" layoutY="126.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Park 1">
+                        <TextField fx:id="MCTF" layoutX="543.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="ATVTF" layoutX="543.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="FourByFourTF" layoutX="543.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="ROVTF" layoutX="543.0" layoutY="360.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="AQMATF" layoutX="543.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
+                        <Label fx:id="AllStarKartingLabel" layoutX="617.0" layoutY="268.0" text="All Star Karting" />
+                        <Label fx:id="HangtownLabel" layoutX="621.0" layoutY="301.0" text="Hangtown" />
+                        <Label fx:id="OtherLabel" layoutX="621.0" layoutY="333.0" text="Other" />
+                        <TextField fx:id="AllStarKartingTF" layoutX="719.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="HangtownTF" layoutX="719.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
+                        <TextField fx:id="OtherTF" layoutX="719.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
+                        <MenuButton fx:id="SelectAParkDropDownMenu" layoutX="21.0" layoutY="126.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Park 1">
                            <items>
                               <MenuItem mnemonicParsing="false" text="Action 1" />
                               <MenuItem mnemonicParsing="false" text="Action 2" />
@@ -91,12 +91,12 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="View Data">
+          <Tab fx:id="ViewDataTab" text="View Data">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </Tab>
-            <Tab text="Graph Data">
+            <Tab fx:id="GraphDataTab" text="Graph Data">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
