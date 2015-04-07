@@ -14,7 +14,7 @@
         <tabs>
           <Tab fx:id="EnterDataTab" closable="false" text="Enter Data">
             <content>
-              <AnchorPane fx:id="EnterDataPane" minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="779.0" stylesheets="@NarvaroUIStyles.css">
+              <AnchorPane fx:id="EnterDataPane" minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="779.0">
                      <children>
                         <DatePicker fx:id="DatePicker" layoutX="20.0" layoutY="48.0" prefHeight="26.0" prefWidth="135.0" />
                         <Label fx:id="SelectDateLabel" layoutX="20.0" layoutY="26.0" text="Select a Date" />
@@ -164,7 +164,7 @@
           </Tab>
             <Tab fx:id="GraphDataTab" text="Graph Data">
               <content>
-                <AnchorPane fx:id="GraphDataPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@NarvaroUIStyles.css">
+                <AnchorPane fx:id="GraphDataPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Label layoutX="40.0" layoutY="59.0" text="Select a Date" />
                         <DatePicker layoutX="42.0" layoutY="76.0" prefHeight="26.0" prefWidth="135.0" />

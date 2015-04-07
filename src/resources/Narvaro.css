@@ -1,0 +1,25 @@
+/* CSS for Narvaro */
+
+#EnterDataPane
+{
+    -fx-background-image: url("CALOHMVR_Fotor2.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 900 506;
+    -fx-background-position: center center;
+}
+
+#ViewDataPane
+{
+    -fx-background-image: url("CALOHMVR_Fotor2.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 900 506;
+    -fx-background-position: center center;
+}
+
+#GraphDataPane
+{
+    -fx-background-image: url("CALOHMVR_Fotor2.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 900 506;
+    -fx-background-position: center center;
+}
