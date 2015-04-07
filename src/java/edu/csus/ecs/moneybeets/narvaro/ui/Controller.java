@@ -9,7 +9,9 @@
 
 package edu.csus.ecs.moneybeets.narvaro.ui;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -47,8 +49,6 @@ public class Controller {
     @FXML private TextField totalPeopleTF;
     @FXML private TextField ratioTF;
     @FXML private TextArea commentsTB;
-    @FXML private Button clearButton;
-    @FXML private Button submitButton;
     @FXML private TextField mcTF;
     @FXML private TextField atvTF;
     @FXML private TextField fourByFourTF;
@@ -57,6 +57,9 @@ public class Controller {
     @FXML private TextField allStarKartingTF;
     @FXML private TextField hangtownTF;
     @FXML private TextField otherTF;
+    @FXML private Group userDataGroup;
+    @FXML private Button clearButton;
+    @FXML private Button submitButton;
     @FXML private MenuButton selectAParkDropDownMenu;
     /* Enter Data Tab End */
     
@@ -87,5 +90,27 @@ public class Controller {
     @FXML private MenuButton selectParkTwo;
     @FXML private MenuButton selectCategory;
     /* Graph Data Tab End */
+    
+    /**
+     * Clears all data on-screen in text fields,
+     *   text-area's, and date-picker's.
+     * 
+     * @param event The action event.
+     */
+    @FXML
+    public void handleClearButton(final ActionEvent event) {
+        Object[] o = userDataGroup.getChildren().toArray();
+        for (int i = 0; i < o.length; i++) {
+            if (o[i] instanceof TextField) {
+                ((TextField)o[i]).clear();
+            }
+            if (o[i] instanceof TextArea) {
+                ((TextArea)o[i]).clear();
+            }
+            if (o[i] instanceof DatePicker) {
+                ((DatePicker)o[i]).setValue(null);
+            }
+        }
+    }
     
 }
