@@ -104,10 +104,10 @@ public class Controller {
             if (o[i] instanceof TextField) {
                 ((TextField)o[i]).clear();
             }
-            if (o[i] instanceof TextArea) {
+            else if (o[i] instanceof TextArea) {
                 ((TextArea)o[i]).clear();
             }
-            if (o[i] instanceof DatePicker) {
+            else if (o[i] instanceof DatePicker) {
                 ((DatePicker)o[i]).setValue(null);
             }
         }
