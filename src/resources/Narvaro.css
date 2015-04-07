@@ -1,0 +1,29 @@
+/* CSS for Narvaro */
+
+#EnterDataPane
+{
+    -fx-background-image: url("background.png");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: stretch;
+    -fx-background-position: center center;
+}
+
+#ViewDataPane
+{
+    -fx-background-image: url("background.png");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: stretch;
+    -fx-background-position: center center;
+}
+
+#GraphDataPane
+{
+    -fx-background-image: url("background.png");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: stretch;
+    -fx-background-position: center center;
+}
+
+.label {
+    -fx-font-size: 1.1em;
+}

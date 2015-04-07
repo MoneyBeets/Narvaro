@@ -102,7 +102,7 @@ public class Narvaro extends Application {
 
         // locate FXML layout
         Path fxml = Paths.get(ConfigurationManager.NARVARO.getHomeDirectory() 
-                + File.separator + "resources" + File.separator + "NarvaroUISceneBuilder.fxml");
+                + File.separator + "resources" + File.separator + "Narvaro.fxml");
         root = FXMLLoader.load(fxml.toUri().toURL());
             
         scene = new Scene(root);

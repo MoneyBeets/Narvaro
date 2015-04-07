@@ -295,14 +295,9 @@
             </then>
         </if>
         
-        <!-- Copy FXML -->
-        <copy todir="${target.narvaroHome}/resources">
-            <fileset dir="${src.java.dir}/edu/csus/ecs/moneybeets/narvaro/ui" includes="NarvaroUISceneBuilder.fxml"/>
-        </copy>
-        
-        <!-- Copy CSS -->
+        <!-- Copy resources directory -->
         <copy todir="${target.narvaroHome}">
-            <fileset dir="${src.dir}" includes="resources/*.css"/>
+            <fileset dir="${src.dir}" includes="resources/*"/>
         </copy>
         
         <!-- Copy bin directory -->
