@@ -1,6 +1,6 @@
 /* CSS for Narvaro */
 
-#EnterDataPane
+#enterDataPane
 {
     -fx-background-image: url("background.png");
     -fx-background-repeat: stretch;   
@@ -8,7 +8,7 @@
     -fx-background-position: center center;
 }
 
-#ViewDataPane
+#viewDataPane
 {
     -fx-background-image: url("background.png");
     -fx-background-repeat: stretch;   
@@ -16,7 +16,7 @@
     -fx-background-position: center center;
 }
 
-#GraphDataPane
+#graphDataPane
 {
     -fx-background-image: url("background.png");
     -fx-background-repeat: stretch;   
