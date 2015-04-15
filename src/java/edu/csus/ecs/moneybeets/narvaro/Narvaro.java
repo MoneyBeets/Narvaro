@@ -14,9 +14,11 @@ import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
+import edu.csus.ecs.moneybeets.narvaro.database.DatabaseManager;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -123,6 +125,16 @@ public class Narvaro extends Application {
             }
             
         });
+        
+        // startup the database manager by requesting a connection
+        try {
+            Connection con = DatabaseManager.Narvaro.getConnection();
+            DatabaseManager.Narvaro.closeConnection(con);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            return;
+        }
+        LOG.info("Database Manager Started");
         
         stage.show();
         
