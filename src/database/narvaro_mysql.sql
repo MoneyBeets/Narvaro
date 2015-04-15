@@ -75,6 +75,6 @@ CREATE TABLE data
     oOther INT UNSIGNED,
     comment TEXT,
     form449 INT UNSIGNED,
-    FOREIGN KEY (park) REFERENCES (parks),
-    FOREIGN KEY (form449) REFERENCES (forms)
+    FOREIGN KEY (park) REFERENCES parks(id),
+    FOREIGN KEY (form449) REFERENCES forms(id)
 );
