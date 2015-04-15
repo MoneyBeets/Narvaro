@@ -20,6 +20,6 @@ if [ ! -d "${JAVA_HOME}" ] || [ ! -f "${JAVA_HOME}/bin/java" ]; then
     exit 1 
 fi
 
-NARVARO_HOME="$(basename pwd)"
+NARVARO_HOME="$(dirname $(pwd))"
 
 "${JAVA_HOME}/bin/java" -DnarvaroHome="${NARVARO_HOME}" -jar ../lib/startup.jar
