@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutX="221.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Narvaro Setup Menu" textAlignment="CENTER">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="600.0" spacing="30.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefWidth="225.0">
+                     <children>
+                        <Label text="Select Database Type:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="56.0" prefWidth="25.0" />
+                  <HBox alignment="CENTER_LEFT" prefWidth="200.0">
+                     <children>
+                        <MenuButton fx:id="databaseTypeSelector" contentDisplay="CENTER" maxHeight="30.0" maxWidth="140.0" minHeight="30.0" minWidth="140.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="140.0">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="MySQL" />
+                            <MenuItem mnemonicParsing="false" text="SQL Server" />
+                          </items>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </MenuButton>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="600.0" spacing="30.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="225.0">
+                     <children>
+                        <Label text="Server:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="42.0" prefWidth="25.0" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="serverName" alignment="CENTER" maxHeight="25.0" maxWidth="160.0" minHeight="25.0" minWidth="160.0" prefHeight="25.0" prefWidth="160.0" promptText="Server Name or IP Address " />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="600.0" spacing="30.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="225.0">
+                     <children>
+                        <Label text="Port:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="42.0" prefWidth="25.0" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="portNumber" alignment="CENTER" maxHeight="25.0" maxWidth="85.0" minHeight="25.0" minWidth="85.0" prefHeight="25.0" prefWidth="85.0" promptText="Port Number" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="600.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefWidth="225.0">
+                     <children>
+                        <Label text="Username:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="35.0" prefWidth="85.0" />
+                  <HBox alignment="CENTER_LEFT" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="databaseUser" alignment="CENTER" promptText="Database User" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="600.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="225.0">
+                     <children>
+                        <Label text="Password:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="35.0" prefWidth="85.0" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <PasswordField fx:id="databasePassword" alignment="CENTER" promptText="Database Password" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="61.0" prefWidth="600.0">
+               <children>
+                  <Button fx:id="okButton" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="75.0" text="OK">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets right="15.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
