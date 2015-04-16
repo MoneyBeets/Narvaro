@@ -72,9 +72,9 @@ public enum ConfigurationManager {
      * @return The location of the home directory.
      */
     public String getHomeDirectory() {
-        if (narvaroProperties == null) {
-            loadNarvaroProperties();
-        }
+        //if (narvaroProperties == null) {
+        //    loadNarvaroProperties();
+        //}
         return home;
     }
     

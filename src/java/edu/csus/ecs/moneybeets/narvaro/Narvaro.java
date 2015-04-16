@@ -26,6 +26,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -43,6 +44,9 @@ public class Narvaro extends Application {
     private Stage stage;
     private Parent root;
     private Scene scene;
+    
+    // stage for first-time boot setup
+    private Stage subStage;
     
     /**
      * Location of the home directory. All config files should be
@@ -149,12 +153,13 @@ public class Narvaro extends Application {
      * @throws FileNotFoundException If the home directory could not be discovered.
      */
     private void locateNarvaro() throws FileNotFoundException {
+        String narvaroDefaultConfigName = "conf" + File.separator + "default_narvaro.properties";
         String narvaroConfigName = "conf" + File.separator + "narvaro.properties";
         if (narvaroHome == null) {
             String homeProperty = System.getProperty("narvaroHome");
             try {
                 if (homeProperty != null && !"".equals(homeProperty)) {
-                    narvaroHome = verifyHome(homeProperty, narvaroConfigName);
+                    narvaroHome = verifyHome(homeProperty, narvaroDefaultConfigName);
                 }
             } catch (FileNotFoundException e) {
                 // ignore
@@ -163,7 +168,7 @@ public class Narvaro extends Application {
             String wd = System.getProperty("user.dir");
             try {
                 if (wd != null && !"".equals(wd)) {
-                    narvaroHome = verifyHome(wd, narvaroConfigName);
+                    narvaroHome = verifyHome(wd, narvaroDefaultConfigName);
                 }
             } catch (FileNotFoundException e) {
                 // ingore
@@ -172,7 +177,7 @@ public class Narvaro extends Application {
             try {
                 String wdParent = Paths.get(wd).getParent().toString();
                 if (wdParent != null && !"".equals(wdParent)) {
-                    narvaroHome = verifyHome(wdParent, narvaroConfigName);
+                    narvaroHome = verifyHome(wdParent, narvaroDefaultConfigName);
                 }
             } catch (FileNotFoundException e) {
                 // if still nothing, give up
@@ -180,6 +185,9 @@ public class Narvaro extends Application {
             }
         }
         ConfigurationManager.NARVARO.setHomeDirectory(narvaroHome.toString());
+        if (isFirstLaunch(narvaroConfigName)) {
+            doFirstTimeSetup(narvaroDefaultConfigName, narvaroConfigName);
+        }
         ConfigurationManager.NARVARO.setConfigName(narvaroConfigName);
     }
     
@@ -205,6 +213,40 @@ public class Narvaro extends Application {
                 throw new FileNotFoundException();
             }
         }
+    }
+    
+    /**
+     * Determines if this program launch is considered
+     * a first-time launch. We consider a first-time launch
+     * anytime the runtime narvaro.properties config file
+     * is not present.
+     * 
+     * @param config The path + name of the narvaro.properties file.
+     * @return True if it is a first-time launch.
+     */
+    private boolean isFirstLaunch(final String config) {
+        File f = new File(config);
+        if (f.exists()) {
+            return false;
+        }
+        return true;
+    }
+    
+    private void doFirstTimeSetup(final String defaultConfig, final String config) {
+        subStage = new Stage();
+        Pane subRoot = null;
+        try {
+            // locate FXML layout
+            Path fxml = Paths.get(ConfigurationManager.NARVARO.getHomeDirectory() 
+                    + File.separator + "resources" + File.separator + "FirstBoot.fxml");
+            LOG.error(fxml.toString());
+            subRoot = (Pane)FXMLLoader.load(fxml.toUri().toURL());
+        } catch (Exception e) {
+            LOG.error("Failed to load first-time boot setup");
+        }
+        Scene subScene = new Scene(subRoot);
+        subStage.setScene(subScene);
+        subStage.showAndWait();
     }
 
     /**
