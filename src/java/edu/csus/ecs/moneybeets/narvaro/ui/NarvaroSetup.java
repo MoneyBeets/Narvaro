@@ -74,7 +74,7 @@ public class NarvaroSetup {
     public DatabaseType getDatabaseType() throws DataFormatException {
         for (MenuItem item : databaseTypeSelector.getItems()) {
             if (((CheckMenuItem)item).isSelected()) {
-                return DatabaseType.valueOf(item.getText().toLowerCase());
+                return DatabaseType.fromString(item.getText().toLowerCase());
             }
         }
         // this should never happen
