@@ -251,6 +251,9 @@ public class Narvaro extends Application {
         return true;
     }
     
+    /**
+     * Starts the Setup menu and waits for the menu to exit.
+     */
     private void doFirstTimeSetup() {
         subStage = new Stage();
         Pane subRoot = null;
