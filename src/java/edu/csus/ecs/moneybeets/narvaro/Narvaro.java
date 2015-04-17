@@ -11,6 +11,7 @@ package edu.csus.ecs.moneybeets.narvaro;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,6 +45,8 @@ public class Narvaro extends Application {
     private Stage stage;
     private Parent root;
     private Scene scene;
+    
+    private boolean setupMode = false;
     
     // stage for first-time boot setup
     private Stage subStage;
@@ -102,6 +105,10 @@ public class Narvaro extends Application {
             //   terminate app.
             LOG.fatal(e.getMessage(), e);
             return;
+        }
+        
+        if (setupMode) {
+        	doFirstTimeSetup();
         }
         
         this.stage = stage;
@@ -186,7 +193,14 @@ public class Narvaro extends Application {
         }
         ConfigurationManager.NARVARO.setHomeDirectory(narvaroHome.toString());
         if (isFirstLaunch(narvaroConfigName)) {
-            doFirstTimeSetup(narvaroDefaultConfigName, narvaroConfigName);
+        	setupMode = true;
+        	try {
+				Files.copy(
+						Paths.get(narvaroHome.toString() + File.separator + narvaroDefaultConfigName), 
+								Paths.get(narvaroHome.toString() + File.separator + narvaroConfigName));
+			} catch (IOException e) {
+				LOG.error("Failed to create runtime configuration file", e);
+			}
         }
         ConfigurationManager.NARVARO.setConfigName(narvaroConfigName);
     }
@@ -232,14 +246,13 @@ public class Narvaro extends Application {
         return true;
     }
     
-    private void doFirstTimeSetup(final String defaultConfig, final String config) {
+    private void doFirstTimeSetup() {
         subStage = new Stage();
         Pane subRoot = null;
         try {
             // locate FXML layout
             Path fxml = Paths.get(ConfigurationManager.NARVARO.getHomeDirectory() 
                     + File.separator + "resources" + File.separator + "FirstBoot.fxml");
-            LOG.error(fxml.toString());
             subRoot = (Pane)FXMLLoader.load(fxml.toUri().toURL());
         } catch (Exception e) {
             LOG.error("Failed to load first-time boot setup");

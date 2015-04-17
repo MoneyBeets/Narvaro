@@ -5,6 +5,7 @@ import java.util.zip.DataFormatException;
 import org.apache.log4j.Logger;
 
 import edu.csus.ecs.moneybeets.narvaro.database.DatabaseType;
+import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
@@ -38,7 +39,7 @@ public class NarvaroSetup {
         if (validate()) {
             writeConfig();
         }
-        
+        portNumber.getScene().getWindow().hide();
     }
     
     private boolean validate() {
@@ -46,7 +47,24 @@ public class NarvaroSetup {
     }
     
     private void writeConfig() {
-        
+    	String dbName = "";
+    	DatabaseType dbType = null;
+    	try {
+    		dbType = getDatabaseType();
+    	} catch (Exception e) {
+    		LOG.error("Unable to determine database type", e);
+    	}
+    	if (dbType == DatabaseType.sqlserver) {
+    		dbName = "/narvaro";
+    	} else {
+    		dbName = "/narvaro?rewriteBatchedStatements=true";
+    	}
+        ConfigurationManager.NARVARO
+        	.setProperty("narvaro.connectionprovider.serverurl", 
+        			getServerName() + ":" + getPortNumber() + dbName);
+        ConfigurationManager.NARVARO.setProperty("narvaro.connectionprovider.username", getDatabaseUser());
+        ConfigurationManager.NARVARO.setProperty("narvaro.connectionprovider.password", getDatabasePassword());
+        ConfigurationManager.NARVARO.saveProperties();
     }
 
     /**
