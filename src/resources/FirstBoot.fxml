@@ -124,7 +124,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" prefHeight="61.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="okButton" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="75.0" text="OK">
+                  <Button fx:id="okButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleOKButton" prefWidth="75.0" text="OK">
                      <font>
                         <Font size="18.0" />
                      </font>
