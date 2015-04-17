@@ -8,9 +8,7 @@ import edu.csus.ecs.moneybeets.narvaro.database.DatabaseType;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -23,11 +21,18 @@ public class NarvaroSetup {
     
     private static final Logger LOG = Logger.getLogger(NarvaroSetup.class.getName());
     
-    @FXML private MenuButton databaseTypeSelector;
+    @FXML private ComboBox<String> databaseTypeSelector;
     @FXML private TextField serverName;
     @FXML private TextField portNumber;
     @FXML private TextField databaseUser;
     @FXML private PasswordField databasePassword;
+    
+    @FXML
+    public void initialize() {
+        for (DatabaseType dbType : DatabaseType.values()) {
+            databaseTypeSelector.getItems().add(dbType.getName());
+        }
+    }
 
     /**
      * This method is invoked when the OK button is pressed.
@@ -108,13 +113,8 @@ public class NarvaroSetup {
      * @throws DataFormatException If selected option is not a valid db type.
      */
     private DatabaseType getDatabaseType() throws DataFormatException {
-        for (MenuItem item : databaseTypeSelector.getItems()) {
-            if (((CheckMenuItem)item).isSelected()) {
-                return DatabaseType.fromString(item.getText().toLowerCase());
-            }
-        }
-        // this should never happen
-        throw new DataFormatException("Invalid database type");
+        return DatabaseType.fromString(
+                databaseTypeSelector.getSelectionModel().getSelectedItem().toString().toLowerCase());
     }
 
     /**
