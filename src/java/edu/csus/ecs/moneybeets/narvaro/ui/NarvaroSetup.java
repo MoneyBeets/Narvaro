@@ -46,6 +46,9 @@ public class NarvaroSetup {
         return true;
     }
     
+    /**
+     * Writes configs specified by user in the menu page back into the runtime config file.
+     */
     private void writeConfig() {
     	
         ConfigurationManager.NARVARO.setProperty("narvaro.connectionprovider.classname", getConnectionProviderClassName());
