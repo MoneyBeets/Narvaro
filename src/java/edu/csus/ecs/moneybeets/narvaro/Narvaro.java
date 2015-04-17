@@ -108,6 +108,7 @@ public class Narvaro extends Application {
         }
         
         if (setupMode) {
+            LOG.info("Setup Mode Activated");
         	doFirstTimeSetup();
         }
         
@@ -192,8 +193,9 @@ public class Narvaro extends Application {
             }
         }
         ConfigurationManager.NARVARO.setHomeDirectory(narvaroHome.toString());
-        if (isFirstLaunch(narvaroConfigName)) {
+        if (isFirstLaunch(narvaroHome.toString() + File.separator + narvaroConfigName)) {
         	setupMode = true;
+        	LOG.info("First launch - Setup Mode Activated");
         	try {
 				Files.copy(
 						Paths.get(narvaroHome.toString() + File.separator + narvaroDefaultConfigName), 
@@ -239,10 +241,13 @@ public class Narvaro extends Application {
      * @return True if it is a first-time launch.
      */
     private boolean isFirstLaunch(final String config) {
-        File f = new File(config);
-        if (f.exists()) {
+        Path path = Paths.get(config);
+        LOG.debug("Config path is: " + path.toString());
+        if (Files.exists(path)) {
+            LOG.debug("Config file found");
             return false;
         }
+        LOG.debug("Config file not found");
         return true;
     }
     
