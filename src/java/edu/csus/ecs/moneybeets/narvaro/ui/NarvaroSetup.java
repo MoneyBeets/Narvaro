@@ -47,31 +47,64 @@ public class NarvaroSetup {
     }
     
     private void writeConfig() {
-    	String dbName = "";
-    	DatabaseType dbType = null;
-    	try {
-    		dbType = getDatabaseType();
-    	} catch (Exception e) {
-    		LOG.error("Unable to determine database type", e);
-    	}
-    	if (dbType == DatabaseType.sqlserver) {
-    		dbName = "/narvaro";
-    	} else {
-    		dbName = "/narvaro?rewriteBatchedStatements=true";
-    	}
+    	
+        ConfigurationManager.NARVARO.setProperty("narvaro.connectionprovider.classname", getConnectionProviderClassName());
         ConfigurationManager.NARVARO
-        	.setProperty("narvaro.connectionprovider.serverurl", 
-        			getServerName() + ":" + getPortNumber() + dbName);
+        	.setProperty("narvaro.connectionprovider.serverurl", getDatabaseConnectionUrl());
         ConfigurationManager.NARVARO.setProperty("narvaro.connectionprovider.username", getDatabaseUser());
         ConfigurationManager.NARVARO.setProperty("narvaro.connectionprovider.password", getDatabasePassword());
         ConfigurationManager.NARVARO.saveProperties();
+    }
+    
+    /**
+     * @return The connection provider class name.
+     */
+    private String getConnectionProviderClassName() {
+        DatabaseType dbType = null;
+        try {
+            dbType = getDatabaseType();
+        } catch (Exception e) {
+            LOG.error("Unable to determine database type", e);
+        }
+        if (dbType == DatabaseType.sqlserver) {
+            return "edu.csus.ecs.moneybeets.narvaro.database.provider.SQLServerConnectionProvider";
+        } else {
+            return "edu.csus.ecs.moneybeets.narvaro.database.provider.MySQLConnectionProvider";
+        }
+    }
+    
+    /**
+     * @return The complete database connection url.
+     */
+    private String getDatabaseConnectionUrl() {
+        StringBuilder url = new StringBuilder("jdbc:");
+        DatabaseType dbType = null;
+        try {
+            dbType = getDatabaseType();
+        } catch (Exception e) {
+            LOG.error("Unable to determine database type", e);
+        }
+        if (dbType == DatabaseType.sqlserver) {
+            url.append("sqlserver://");
+            url.append(getServerName());
+            url.append(":");
+            url.append(getPortNumber());
+            url.append("/narvaro");
+        } else {
+            url.append("mysql://");
+            url.append(getServerName());
+            url.append(":");
+            url.append(getPortNumber());
+            url.append("/narvaro?rewriteBatchedStatements=true");
+        }
+        return url.toString();
     }
 
     /**
      * @return the Database type.
      * @throws DataFormatException If selected option is not a valid db type.
      */
-    public DatabaseType getDatabaseType() throws DataFormatException {
+    private DatabaseType getDatabaseType() throws DataFormatException {
         for (MenuItem item : databaseTypeSelector.getItems()) {
             if (((CheckMenuItem)item).isSelected()) {
                 return DatabaseType.fromString(item.getText().toLowerCase());
