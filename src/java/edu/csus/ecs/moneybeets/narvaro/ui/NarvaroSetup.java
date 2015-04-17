@@ -55,10 +55,10 @@ public class NarvaroSetup {
      * Writes configs specified by user in the menu page back into the runtime config file.
      */
     private void writeConfig() {
-    	
+        
         ConfigurationManager.NARVARO.setProperty("narvaro.connectionprovider.classname", getConnectionProviderClassName());
         ConfigurationManager.NARVARO
-        	.setProperty("narvaro.connectionprovider.serverurl", getDatabaseConnectionUrl());
+            .setProperty("narvaro.connectionprovider.serverurl", getDatabaseConnectionUrl());
         ConfigurationManager.NARVARO.setProperty("narvaro.connectionprovider.username", getDatabaseUser());
         ConfigurationManager.NARVARO.setProperty("narvaro.connectionprovider.password", getDatabasePassword());
         ConfigurationManager.NARVARO.saveProperties();

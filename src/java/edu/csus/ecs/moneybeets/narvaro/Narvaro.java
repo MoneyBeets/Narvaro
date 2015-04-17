@@ -109,7 +109,7 @@ public class Narvaro extends Application {
         
         if (setupMode) {
             LOG.info("Setup Mode Activated");
-        	doFirstTimeSetup();
+            doFirstTimeSetup();
         }
         
         this.stage = stage;
@@ -194,15 +194,15 @@ public class Narvaro extends Application {
         }
         ConfigurationManager.NARVARO.setHomeDirectory(narvaroHome.toString());
         if (isFirstLaunch(narvaroHome.toString() + File.separator + narvaroConfigName)) {
-        	setupMode = true;
-        	LOG.info("First launch - Setup Mode Activated");
-        	try {
-				Files.copy(
-						Paths.get(narvaroHome.toString() + File.separator + narvaroDefaultConfigName), 
-								Paths.get(narvaroHome.toString() + File.separator + narvaroConfigName));
-			} catch (IOException e) {
-				LOG.error("Failed to create runtime configuration file", e);
-			}
+            setupMode = true;
+            LOG.info("First launch - Setup Mode Activated");
+            try {
+                Files.copy(
+                        Paths.get(narvaroHome.toString() + File.separator + narvaroDefaultConfigName), 
+                        Paths.get(narvaroHome.toString() + File.separator + narvaroConfigName));
+            } catch (IOException e) {
+                LOG.error("Failed to create runtime configuration file", e);
+            }
         }
         ConfigurationManager.NARVARO.setConfigName(narvaroConfigName);
     }
