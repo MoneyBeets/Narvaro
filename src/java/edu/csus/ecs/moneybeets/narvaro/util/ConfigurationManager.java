@@ -12,6 +12,7 @@ package edu.csus.ecs.moneybeets.narvaro.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -239,6 +240,44 @@ public enum ConfigurationManager {
         } else {
             return defaultValue;
         }
+    }
+    
+    /**
+     * Sets <code>String</code> value of a key property. If the property
+     * doesn't exist, this method does nothing.
+     * 
+     * @param key The key of the property to update.
+     * @param value The value of the property to update.
+     */
+    public void setProperty(final String key, final String value) {
+    	if (narvaroProperties == null) {
+    		loadNarvaroProperties();
+    	}
+    	this.narvaroProperties.setProperty(key, value);
+    }
+    
+    /**
+     * Signals that the runtime properties should be
+     * saved to disk for persistence.
+     */
+    public void saveProperties() {
+    	FileOutputStream out = null;
+    	try {
+    		out = new FileOutputStream(
+    				getHomeDirectory() + File.separator + getConfigName());
+    		this.narvaroProperties.store(out, null);
+    	} catch (Exception e) {
+    		LOG.error("Failed to save properties out", e);
+    	} finally {
+    		if (out != null) {
+    			try {
+    				out.close();
+    			} catch (Exception e) {
+    				// ignore
+    			}
+    		}
+    	}
+    	
     }
     
     /**
