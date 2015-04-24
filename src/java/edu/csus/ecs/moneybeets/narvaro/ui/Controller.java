@@ -415,7 +415,7 @@ public class Controller {
         return temp;
     }
     public void setRatioTF(final String in) {
-        ratioTF.setText(in) {
+        ratioTF.setText(in);
     }
     public String getCommentsTB() {
         return commentsTB.getText();
@@ -460,7 +460,7 @@ public class Controller {
         return temp;
     }
     public void setFourByFourTF(final String in ) {
-        fourByFourTF.setText(in)
+        fourByFourTF.setText(in);
     }
     public int getRovTF() throws NumberFormatException {
         int temp = -1;
