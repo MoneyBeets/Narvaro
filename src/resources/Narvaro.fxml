@@ -60,6 +60,8 @@
                               <TextField fx:id="hangtownTF" layoutX="719.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="aqmaTF" layoutX="543.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="paidDayUseTotalsTF" layoutX="359.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
+                              <Button fx:id="browseFileButton" layoutX="732.0" layoutY="228.0" mnemonicParsing="false" onAction="#handleBrowseButton" text="Browse" />
+                              <TextField fx:id="browseFileTF" layoutX="617.0" layoutY="228.0" prefHeight="26.0" prefWidth="102.0" promptText="Browse for a file" />
                            </children>
                         </Group>
                         <Label fx:id="selectDateLabel" layoutX="20.0" layoutY="26.0" text="Select a Date" />

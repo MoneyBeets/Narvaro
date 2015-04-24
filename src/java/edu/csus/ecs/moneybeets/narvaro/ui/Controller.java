@@ -23,6 +23,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+
 import org.apache.log4j.Logger;
 
 public class Controller {
@@ -98,6 +100,8 @@ public class Controller {
     private Button submitButton;
     @FXML
     private MenuButton selectAParkDropDownMenu;
+    @FXML
+    private Button browseFileButton;
     /* Enter Data Tab End */
 
     /* View Data Tab Start */
@@ -248,6 +252,7 @@ public class Controller {
     public void setSeniorTF(final String in) {
         seniorTF.setText(in);
     }
+
     public int getDisabledTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -552,4 +557,12 @@ public class Controller {
     /* Graph Data Tab Start */
 
     /* Graph Data Tab End */
+    
+    @FXML
+    public void handleBrowseButton(final ActionEvent event){
+    	 FileChooser fileChooser = new FileChooser();
+    	 fileChooser.setTitle("Open 449 Form");
+    	 fileChooser.showOpenDialog(browseFileButton.getScene().getWindow());
+    }
+
 }
