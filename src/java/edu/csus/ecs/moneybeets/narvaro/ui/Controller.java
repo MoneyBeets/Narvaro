@@ -170,7 +170,6 @@ public class Controller {
         }
 
     }
-
     public int getConversionFactorPaidDayUseTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -181,7 +180,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setConversionFactorPaidDayUseTF(final String in) {
+            conversionFactorPaidDayUseTF.setText(in);
+    }
     public int getPaidDayUseTotalsTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -192,7 +193,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setPaidDayUseTotalsTF(final String in) {
+        paidDayUseTotalsTF.setText(in);
+    }
     public int getSpecialEventsTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -203,7 +206,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setSpecialEventsTF(final String in) {
+        specialEventsTF.setText(in);
+    }
     public int getAnnualDayUseTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -214,7 +219,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setAnnualDayUseTF(final String in) {
+        annualDayUseTF.setText(in);
+    }
     public int getDayUseTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -225,7 +232,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setDayUseTF(final String in) {
+        dayUseTF.setText(in);
+    }
     public int getSeniorTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -236,7 +245,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setSeniorTF(final String in) {
+        seniorTF.setText(in);
+    }
     public int getDisabledTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -247,7 +258,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setDisabledTF(final String in) {
+        disabledTF.setText(in);
+    }
     public int getGoldenBearTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -258,7 +271,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setGoldenBearTF(final String in) {
+        goldenBearTF.setText(in);
+    }
     public int getDisabledVeteranTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -269,7 +284,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setDisabledVeteranTF(final String in) {
+        disabledVeteranTF.setText(in);
+    }
     public int getNonResOHVPassTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -280,7 +297,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setNonResOHVPassTF(final String in) {
+        nonResOHVPassTF.setText(in);
+    }
     public int getAnnualPassSaleTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -291,7 +310,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setAnnualPassSaleTF(final String in) {
+        annualDayUseTF.setText(in);
+    }
     public int getCampingTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -302,7 +323,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setCampingTF(final String in) {
+        campingTF.setText(in);
+    }
     public int getSeniorCampingTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -313,7 +336,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setSeniorCampingTF(final String in) {
+        seniorCampingTF.setText(in);
+    }
     public int getDisabledCampingTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -324,7 +349,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setDisabledCampingTF(final String in) {
+        disabledCampingTF.setText(in);
+    }
     public int getConversionFactorFreeDayUseTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -335,7 +362,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setConversionFactorFreeDayUseTF(final String in) {
+        conversionFactorFreeDayUseTF.setText(in);
+    }
     public int getFreeDayUseTotalsTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -346,7 +375,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setFreeDayUseTotalsTF(final String in) {
+        freeDayUseTotalsTF.setText(in);
+    }
     public int getTotalVehiclesTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -357,7 +388,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setTotalVehiclesTF(final String in) {
+        totalVehiclesTF.setText(in);
+    }
     public int getTotalPeopleTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -368,7 +401,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setTotalPeopleTF(final String in) {
+        totalPeopleTF.setText(in);
+    }
     public int getRatioTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -379,15 +414,15 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setRatioTF(final String in) {
+        ratioTF.setText(in) {
+    }
     public String getCommentsTB() {
-        return this.commentsTB.getText();
+        return commentsTB.getText();
     }
-
     public void setCommentsTB(final String targetText) {
-        this.commentsTB.setText(targetText);
+        commentsTB.setText(targetText);
     }
-
     public int getMcTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -398,7 +433,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setMcTF(final String in) {
+        mcTF.setText(in);
+    }
     public int getAtvTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -409,7 +446,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setAtvTF(final String in) {
+        atvTF.setText(in);
+    }
     public int getFourByFourTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -420,7 +459,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setFourByFourTF(final String in ) {
+        fourByFourTF.setText(in)
+    }
     public int getRovTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -431,7 +472,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setRovTF(final String in) {
+        rovTF.setText(in);
+    }
     public int getAqmaTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -442,7 +485,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setAqmaTF(final String in) {
+        aqmaTF.setText(in);
+    }
     public int getAllStarKartingTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -453,7 +498,9 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setAllStarKartingTF(final String in) {
+        allStarKartingTF.setText(in);
+    }
     public int getHangtownTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -464,11 +511,12 @@ public class Controller {
         }
         return temp;
     }
-
+    public void setHangtownTF(final String in) {
+        hangtownTF.setText(in);
+    }
     public String getSelectAParkDropDownMenu() {
         return this.selectAParkDropDownMenu.getText();
     }
-
     public void setSelectAParkDropDownMenu(final String targetText) {
         this.selectAParkDropDownMenu.setText(targetText);
     }
@@ -478,31 +526,24 @@ public class Controller {
     public String getMonthSelectionOne() {
         return this.monthSelectionOne.getText();
     }
-
     public void setMonthSelectionOne(final String targetText) {
         this.monthSelectionOne.setText(targetText);
     }
-
     public String getYearSelectionOne() {
         return this.yearSelectionOne.getText();
     }
-
     public void setYearSelectionOne(final String targetText) {
         this.yearSelectionOne.setText(targetText);
     }
-
     public String getMonthSelectionTwo() {
         return this.monthSelectionTwo.getText();
     }
-
     public void setMonthSelectionTwo(final String targetText) {
         this.monthSelectionTwo.setText(targetText);
     }
-
     public String getYearSelectionTwo() {
         return this.yearSelectionTwo.getText();
     }
-
     public void setYearSelectionTwo(final String targetText) {
         this.yearSelectionTwo.setText(targetText);
     }
