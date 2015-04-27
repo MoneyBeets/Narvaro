@@ -534,8 +534,8 @@ public class Controller {
     public String getSelectAParkDropDownMenu() {
         return selectAParkDropDownMenu.getText();
     }
-    public void setSelectAParkDropDownMenu(final String targetText) {
-        selectAParkDropDownMenu.setText(targetText);
+    public void setSelectAParkDropDownMenu(final String in) {
+        selectAParkDropDownMenu.setText(in);
     }
     public String getFileTF() {
         return fileTF.getText();
@@ -547,28 +547,28 @@ public class Controller {
 
     /* View Data Tab Start */
     public String getMonthSelectionOne() {
-        return this.monthSelectionOne.getText();
+        return monthSelectionOne.getText();
     }
     public void setMonthSelectionOne(final String targetText) {
-        this.monthSelectionOne.setText(targetText);
+        monthSelectionOne.setText(targetText);
     }
     public String getYearSelectionOne() {
-        return this.yearSelectionOne.getText();
+        return yearSelectionOne.getText();
     }
     public void setYearSelectionOne(final String targetText) {
-        this.yearSelectionOne.setText(targetText);
+        yearSelectionOne.setText(targetText);
     }
     public String getMonthSelectionTwo() {
-        return this.monthSelectionTwo.getText();
+        return monthSelectionTwo.getText();
     }
     public void setMonthSelectionTwo(final String targetText) {
-        this.monthSelectionTwo.setText(targetText);
+        monthSelectionTwo.setText(targetText);
     }
     public String getYearSelectionTwo() {
-        return this.yearSelectionTwo.getText();
+        return yearSelectionTwo.getText();
     }
     public void setYearSelectionTwo(final String targetText) {
-        this.yearSelectionTwo.setText(targetText);
+        yearSelectionTwo.setText(targetText);
     }
     /* View Data Tab End */
 
