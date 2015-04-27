@@ -98,6 +98,10 @@ public class Controller {
     private Button submitButton;
     @FXML
     private MenuButton selectAParkDropDownMenu;
+    @FXML
+    private Button browseFileButton;
+    @FXML
+    private TextField fileTF;
     /* Enter Data Tab End */
 
     /* View Data Tab Start */
@@ -514,11 +518,30 @@ public class Controller {
     public void setHangtownTF(final String in) {
         hangtownTF.setText(in);
     }
+    public int getOtherTF() throws NumberFormatException {
+        int temp = -1;
+        try {
+            temp = Integer.parseInt(otherTF.getText());
+        } catch (NumberFormatException e) {
+            LOG.error("Not a number: " + otherTF.getText());
+            throw e;
+        }
+        return temp;
+    }
+    public void setOtherTF(final String in) {
+        otherTF.setText(in);
+    }
     public String getSelectAParkDropDownMenu() {
-        return this.selectAParkDropDownMenu.getText();
+        return selectAParkDropDownMenu.getText();
     }
     public void setSelectAParkDropDownMenu(final String targetText) {
-        this.selectAParkDropDownMenu.setText(targetText);
+        selectAParkDropDownMenu.setText(targetText);
+    }
+    public String getFileTF() {
+        return fileTF.getText();
+    }
+    public void setFileTF(String in) {
+        fileTF.setText(in);
     }
     /* Enter Data Tab End */
 
