@@ -3,25 +3,25 @@
 #enterDataPane
 {
     -fx-background-image: url("background.png");
-    -fx-background-repeat: stretch;   
-    -fx-background-size: stretch;
-    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;   
+    -fx-background-size: 60px;
+    -fx-background-position: right top;
 }
 
 #viewDataPane
 {
     -fx-background-image: url("background.png");
-    -fx-background-repeat: stretch;   
-    -fx-background-size: stretch;
-    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;   
+    -fx-background-size: 60px;
+    -fx-background-position: right top;
 }
 
 #graphDataPane
 {
     -fx-background-image: url("background.png");
-    -fx-background-repeat: stretch;   
-    -fx-background-size: stretch;
-    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;   
+    -fx-background-size: 60px;
+    -fx-background-position: right top;
 }
 
 .label {
