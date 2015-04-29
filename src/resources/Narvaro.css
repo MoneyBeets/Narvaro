@@ -2,25 +2,25 @@
 
 #enterDataPane
 {
-    -fx-background-image: url("background.png");
+    -fx-background-image: url("background_color.png");
     -fx-background-repeat: no-repeat;   
-    -fx-background-size: 60px;
+    -fx-background-size: 70px;
     -fx-background-position: right top;
 }
 
 #viewDataPane
 {
-    -fx-background-image: url("background.png");
+    -fx-background-image: url("background_color.png");
     -fx-background-repeat: no-repeat;   
-    -fx-background-size: 60px;
+    -fx-background-size: 70px;
     -fx-background-position: right top;
 }
 
 #graphDataPane
 {
-    -fx-background-image: url("background.png");
+    -fx-background-image: url("background_color.png");
     -fx-background-repeat: no-repeat;   
-    -fx-background-size: 60px;
+    -fx-background-size: 70px;
     -fx-background-position: right top;
 }
 
