@@ -7,10 +7,14 @@ import org.apache.log4j.Logger;
 import edu.csus.ecs.moneybeets.narvaro.database.DatabaseType;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 /**
  * This class acts as the controller for the 
@@ -32,7 +36,21 @@ public class NarvaroSetup {
         for (DatabaseType dbType : DatabaseType.values()) {
             databaseTypeSelector.getItems().add(dbType.getName());
         }
+        installEventHandler(serverName.getParent().getParent().getParent().getParent());
     }
+    private void installEventHandler(final Node keyNode) 
+    {
+        final EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(final KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    handleOKButton(null);
+                }
+            }
+        };
+        keyNode.setOnKeyReleased(keyEventHandler);
+    }
+
 
     /**
      * This method is invoked when the OK button is pressed.
