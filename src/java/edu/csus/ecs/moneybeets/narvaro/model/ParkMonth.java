@@ -32,4 +32,23 @@ public class ParkMonth {
         return Collections.unmodifiableCollection(monthDatas.values());
     }
     
+    /**
+     * @param yearMonth The yearMonth used as a key.
+     * @param monthData The data.
+     * @return The previous value associated with key, or null if there was no mapping for key.
+     */
+    public MonthData putMonthData(final YearMonth yearMonth, final MonthData monthData) {
+        return monthDatas.put(yearMonth, monthData);
+    }
+    
+    /**
+     * Inserts all of the pairs in the input map into the underlying map. Functionally
+     * equivalent to iteration and insertion of each element.
+     * 
+     * @param m The map.
+     */
+    public void putAllMonthData(final Map<? extends YearMonth, ? extends MonthData> m) {
+        monthDatas.putAll(m);
+    }
+    
 }
