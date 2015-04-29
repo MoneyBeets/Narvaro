@@ -13,15 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
@@ -99,7 +91,7 @@ public class Controller {
     @FXML
     private Button submitButton;
     @FXML
-    private MenuButton selectAParkDropDownMenu;
+    private ComboBox selectAParkDropDownMenu;
     @FXML
     private Button browseFileButton;
     @FXML
@@ -110,13 +102,13 @@ public class Controller {
     @FXML
     private Tab viewDataTab;
     @FXML
-    private MenuButton monthSelectionOne;
+    private ComboBox monthSelectionOne;
     @FXML
-    private MenuButton yearSelectionOne;
+    private ComboBox yearSelectionOne;
     @FXML
-    private MenuButton monthSelectionTwo;
+    private ComboBox monthSelectionTwo;
     @FXML
-    private MenuButton yearSelectionTwo;
+    private ComboBox yearSelectionTwo;
     @FXML
     private ListView<?> parkView;
     @FXML
