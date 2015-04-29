@@ -22,6 +22,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
@@ -99,7 +100,7 @@ public class Controller {
     @FXML
     private Button submitButton;
     @FXML
-    private MenuButton selectAParkDropDownMenu;
+    private ComboBox selectAParkDropDownMenu;
     @FXML
     private Button browseFileButton;
     @FXML
@@ -110,13 +111,13 @@ public class Controller {
     @FXML
     private Tab viewDataTab;
     @FXML
-    private MenuButton monthSelectionOne;
+    private ComboBox monthSelectionOne;
     @FXML
-    private MenuButton yearSelectionOne;
+    private ComboBox yearSelectionOne;
     @FXML
-    private MenuButton monthSelectionTwo;
+    private ComboBox monthSelectionTwo;
     @FXML
-    private MenuButton yearSelectionTwo;
+    private ComboBox yearSelectionTwo;
     @FXML
     private ListView<?> parkView;
     @FXML
@@ -535,10 +536,7 @@ public class Controller {
         otherTF.setText(in);
     }
     public String getSelectAParkDropDownMenu() {
-        return selectAParkDropDownMenu.getText();
-    }
-    public void setSelectAParkDropDownMenu(final String in) {
-        selectAParkDropDownMenu.setText(in);
+        return selectAParkDropDownMenu.getSelectionModel().getSelectedItem().toString();
     }
     public String getFileTF() {
         return fileTF.getText();
@@ -550,28 +548,16 @@ public class Controller {
 
     /* View Data Tab Start */
     public String getMonthSelectionOne() {
-        return monthSelectionOne.getText();
-    }
-    public void setMonthSelectionOne(final String targetText) {
-        monthSelectionOne.setText(targetText);
+        return monthSelectionOne.getSelectionModel().getSelectedItem().toString();
     }
     public String getYearSelectionOne() {
-        return yearSelectionOne.getText();
-    }
-    public void setYearSelectionOne(final String targetText) {
-        yearSelectionOne.setText(targetText);
+        return yearSelectionOne.getSelectionModel().getSelectedItem().toString();
     }
     public String getMonthSelectionTwo() {
-        return monthSelectionTwo.getText();
-    }
-    public void setMonthSelectionTwo(final String targetText) {
-        monthSelectionTwo.setText(targetText);
+        return monthSelectionTwo.getSelectionModel().getSelectedItem().toString();
     }
     public String getYearSelectionTwo() {
-        return yearSelectionTwo.getText();
-    }
-    public void setYearSelectionTwo(final String targetText) {
-        yearSelectionTwo.setText(targetText);
+        return yearSelectionTwo.getSelectionModel().getSelectedItem().toString();
     }
     /* View Data Tab End */
 

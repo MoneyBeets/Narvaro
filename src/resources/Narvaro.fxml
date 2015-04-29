@@ -44,24 +44,13 @@
                               <TextField fx:id="atvTF" layoutX="543.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="annualDayUseTF" layoutX="359.0" layoutY="138.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="disabledTF" layoutX="359.0" layoutY="231.0" prefHeight="26.0" prefWidth="44.0" />
-                              <MenuButton fx:id="selectAParkDropDownMenu" layoutX="21.0" layoutY="126.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0">
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" text="Carnegie" />
-                                    <MenuItem mnemonicParsing="false" text="Clay Pit" />
-                                    <MenuItem mnemonicParsing="false" text="Heber Dunes" />
-                                    <MenuItem mnemonicParsing="false" text="Hollister Hills" />
-                                    <MenuItem mnemonicParsing="false" text="Hungry Valley" />
-                                    <MenuItem mnemonicParsing="false" text="Oceano Dunes" />
-                                    <MenuItem mnemonicParsing="false" text="Ocotillo Wells" />
-                                    <MenuItem mnemonicParsing="false" text="Prairie City" />
-                                 </items>
-                              </MenuButton>
                               <TextField fx:id="campingTF" layoutX="359.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="hangtownTF" layoutX="719.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="aqmaTF" layoutX="543.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="paidDayUseTotalsTF" layoutX="359.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
                               <Button fx:id="browseFileButton" layoutX="732.0" layoutY="228.0" mnemonicParsing="false" onAction="#handleBrowseButton" text="Browse" />
                               <TextField fx:id="browseFileTF" layoutX="617.0" layoutY="228.0" prefHeight="26.0" prefWidth="102.0" promptText="Browse for a file" />
+                              <ComboBox fx:id="selectAParkDropDownMenu" layoutX="20.0" layoutY="126.0" prefWidth="150.0" />
                            </children>
                         </Group>
                         <Label fx:id="selectDateLabel" layoutX="20.0" layoutY="26.0" text="Select a Date" />
@@ -115,46 +104,17 @@
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="358.0" minWidth="10.0" prefWidth="124.0" />
                           </columnConstraints>
                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <MenuButton fx:id="monthSelectionOne" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Month" GridPane.columnIndex="1">
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" text="Overwritten" />
-                                    <MenuItem mnemonicParsing="false" text="by list" />
-                                    <MenuItem mnemonicParsing="false" text="of years" />
-                                    <MenuItem mnemonicParsing="false" text="for which" />
-                                    <MenuItem mnemonicParsing="false" text="db has data" />
-                                 </items>
-                              </MenuButton>
-                              <MenuButton fx:id="yearSelectionTwo" mnemonicParsing="false" prefHeight="23.0" prefWidth="137.0" text="Year" GridPane.rowIndex="1">
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" text="Overwritten" />
-                                    <MenuItem mnemonicParsing="false" text="by list" />
-                                    <MenuItem mnemonicParsing="false" text="of months" />
-                                    <MenuItem mnemonicParsing="false" text="for which" />
-                                    <MenuItem mnemonicParsing="false" text="db has data" />
-                                 </items>
-                              </MenuButton>
-                              <MenuButton fx:id="yearSelectionOne" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Year">
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" text="Overwritten" />
-                                    <MenuItem mnemonicParsing="false" text="by list" />
-                                    <MenuItem mnemonicParsing="false" text="of months" />
-                                    <MenuItem mnemonicParsing="false" text="for which" />
-                                    <MenuItem mnemonicParsing="false" text="db has data" />
-                                 </items>
-                              </MenuButton>
-                              <MenuButton fx:id="monthSelectionTwo" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Month" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" text="Overwritten" />
-                                    <MenuItem mnemonicParsing="false" text="by list" />
-                                    <MenuItem mnemonicParsing="false" text="of years" />
-                                    <MenuItem mnemonicParsing="false" text="for which" />
-                                    <MenuItem mnemonicParsing="false" text="db has data" />
-                                 </items>
-                              </MenuButton>
+                              <ComboBox fx:id="yearSelectionOne" prefWidth="150.0" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="monthSelectionOne" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="yearSelectionTwo" prefWidth="150.0" GridPane.rowIndex="2" />
+                              <ComboBox fx:id="monthSelectionTwo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="Year" />
+                              <Label text="Month" GridPane.columnIndex="1" />
                            </children>
                         </GridPane>
                         <Label layoutX="224.0" layoutY="14.0" prefHeight="36.0" prefWidth="296.0" text="Select date. Filling in the second set of dates will result in an accumulation." wrapText="true" />
