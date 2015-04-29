@@ -107,7 +107,7 @@
           </Tab>
           <Tab fx:id="viewDataTab" text="View Data">
             <content>
-              <AnchorPane fx:id="ViewDataPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane fx:id="viewDataPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <GridPane layoutX="224.0" layoutY="50.0" prefHeight="67.0" prefWidth="296.0">
                           <columnConstraints>

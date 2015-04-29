@@ -126,7 +126,7 @@ public class Controller {
     @FXML
     private ScrollPane scrollPane;
     @FXML
-    private AnchorPane dataPane;
+    private AnchorPane viewDataPane;
     /* View Data Tab End */
 
     /* Graph Data Tab Start */
