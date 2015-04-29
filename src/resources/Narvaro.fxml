@@ -19,38 +19,38 @@
                      <children>
                         <Group fx:id="userDataGroup">
                            <children>
-                              <TextArea fx:id="commentsTB" layoutX="617.0" layoutY="82.0" prefHeight="113.0" prefWidth="186.0" />
+                              <DatePicker fx:id="datePicker" layoutX="20.0" layoutY="48.0" prefHeight="26.0" prefWidth="135.0" />
+                              <ComboBox fx:id="selectAParkDropDownMenu" layoutX="20.0" layoutY="126.0" prefWidth="150.0" />
+                              <TextField fx:id="conversionFactorPaidDayUseTF" layoutX="359.0" layoutY="48.0" prefHeight="28.0" prefWidth="44.0" />
+                              <TextField fx:id="paidDayUseTotalsTF" layoutX="359.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="specialEventsTF" layoutX="359.0" layoutY="109.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="annualDayUseTF" layoutX="359.0" layoutY="138.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="dayUseTF" layoutX="359.0" layoutY="170.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="seniorTF" layoutX="359.0" layoutY="202.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="disabledTF" layoutX="359.0" layoutY="231.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="goldenBearTF" layoutX="359.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="disabledVeteranTF" layoutX="359.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="nonResOHVPassTF" layoutX="359.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="annualPassSaleTF" layoutX="359.0" layoutY="360.0" prefHeight="26.0" prefWidth="45.0" />
+                              <TextField fx:id="campingTF" layoutX="359.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="seniorCampingTF" layoutX="359.0" layoutY="424.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="disabledCampingTF" layoutX="359.0" layoutY="457.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="conversionFactorFreeDayUseTF" layoutX="543.0" layoutY="48.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="disabledVeteranTF" layoutX="359.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="rovTF" layoutX="543.0" layoutY="360.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="seniorTF" layoutX="359.0" layoutY="202.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="specialEventsTF" layoutX="359.0" layoutY="109.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="freeDayUseTotalsTF" layoutX="543.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="conversionFactorPaidDayUseTF" layoutX="359.0" layoutY="48.0" prefHeight="28.0" prefWidth="44.0" />
-                              <TextField fx:id="otherTF" layoutX="719.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="seniorCampingTF" layoutX="359.0" layoutY="424.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="totalPeopleTF" layoutX="543.0" layoutY="170.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="totalVehiclesTF" layoutX="543.0" layoutY="138.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="annualPassSaleTF" layoutX="359.0" layoutY="360.0" prefHeight="26.0" prefWidth="45.0" />
-                              <TextField fx:id="mcTF" layoutX="543.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
-                              <DatePicker fx:id="datePicker" layoutX="20.0" layoutY="48.0" prefHeight="26.0" prefWidth="135.0" />
-                              <TextField fx:id="nonResOHVPassTF" layoutX="359.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="allStarKartingTF" layoutX="719.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="goldenBearTF" layoutX="359.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="fourByFourTF" layoutX="543.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="dayUseTF" layoutX="359.0" layoutY="170.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="totalPeopleTF" layoutX="543.0" layoutY="170.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="ratioTF" layoutX="543.0" layoutY="202.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="mcTF" layoutX="543.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="atvTF" layoutX="543.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="annualDayUseTF" layoutX="359.0" layoutY="138.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="disabledTF" layoutX="359.0" layoutY="231.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="campingTF" layoutX="359.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="hangtownTF" layoutX="719.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="fourByFourTF" layoutX="543.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="rovTF" layoutX="543.0" layoutY="360.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="aqmaTF" layoutX="543.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="paidDayUseTotalsTF" layoutX="359.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="allStarKartingTF" layoutX="719.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="hangtownTF" layoutX="719.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="otherTF" layoutX="719.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextArea fx:id="commentsTB" layoutX="617.0" layoutY="82.0" prefHeight="113.0" prefWidth="186.0" />
+                              <TextField fx:id="browseFileTF" layoutX="617.0" layoutY="228.0" prefHeight="26.0" prefWidth="102.0" promptText="Browse for a file" />  
                               <Button fx:id="browseFileButton" layoutX="732.0" layoutY="228.0" mnemonicParsing="false" onAction="#handleBrowseButton" text="Browse" />
-                              <TextField fx:id="browseFileTF" layoutX="617.0" layoutY="228.0" prefHeight="26.0" prefWidth="102.0" promptText="Browse for a file" />
-                              <ComboBox fx:id="selectAParkDropDownMenu" layoutX="20.0" layoutY="126.0" prefWidth="150.0" />
                            </children>
                         </Group>
                         <Label fx:id="selectDateLabel" layoutX="20.0" layoutY="26.0" text="Select a Date" />
