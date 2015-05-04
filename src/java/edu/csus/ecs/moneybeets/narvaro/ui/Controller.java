@@ -9,6 +9,8 @@
 
 package edu.csus.ecs.moneybeets.narvaro.ui;
 
+import java.io.File;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -25,6 +27,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 import org.apache.log4j.Logger;
 
@@ -104,7 +107,7 @@ public class Controller {
     @FXML
     private Button browseFileButton;
     @FXML
-    private TextField fileTF;
+    private TextField browseFileTF;
     /* Enter Data Tab End */
 
     /* View Data Tab Start */
@@ -538,11 +541,11 @@ public class Controller {
     public String getSelectAParkDropDownMenu() {
         return selectAParkDropDownMenu.getSelectionModel().getSelectedItem().toString();
     }
-    public String getFileTF() {
-        return fileTF.getText();
+    public String getbrowseFileTF() {
+        return browseFileTF.getText();
     }
-    public void setFileTF(String in) {
-        fileTF.setText(in);
+    public void setbrowseFileTF(String in) {
+        browseFileTF.setText(in);
     }
     /* Enter Data Tab End */
 
@@ -569,7 +572,14 @@ public class Controller {
     public void handleBrowseButton(final ActionEvent event){
     	 FileChooser fileChooser = new FileChooser();
     	 fileChooser.setTitle("Open 449 Form");
-    	 fileChooser.showOpenDialog(browseFileButton.getScene().getWindow());
+    	 fileChooser.getExtensionFilters().addAll(
+    			         new ExtensionFilter("Excel Files", "*.xls,", "*.xlsx", "*.csv"));
+    	 File file = fileChooser.showOpenDialog(browseFileButton.getScene().getWindow());
+    	 
+    	 if (file != null){
+    		 String filePath = file.getPath();
+    		 setbrowseFileTF(filePath);
+    	 }
     }
 
 }
