@@ -9,14 +9,28 @@
 
 package edu.csus.ecs.moneybeets.narvaro.model;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.YearMonth;
 
 import org.apache.log4j.Logger;
 
+import edu.csus.ecs.moneybeets.narvaro.database.DatabaseManager;
+import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
+
 public class MonthData {
 
     private static final Logger LOG = Logger.getLogger(MonthData.class.getName());
+    
+    private static final String select449FormFile = "SELECT filename, form FROM forms WHERE id = ?";
 
     private final YearMonth month;
     private final BigDecimal pduConversionFactor;
@@ -47,7 +61,9 @@ public class MonthData {
     private final long oHangtown;
     private final long oOther;
     private final String comment;
-    private final long form449;
+    private long form449 = -1;
+    
+    private File form449File;
     
     /**
      * @param month
@@ -90,7 +106,7 @@ public class MonthData {
             long fduTotals, long fscTotalVehicles, long fscTotalPeople,
             BigDecimal fscRatio, long oMC, long oATV, long o4x4, long oROV,
             long oAQMA, long oAllStarKarting, long oHangtown, long oOther,
-            String comment, long form449) {
+            String comment, long form449, File form449File) {
         this.month = month;
         this.pduConversionFactor = pduConversionFactor;
         this.pduTotals = pduTotals;
@@ -121,6 +137,7 @@ public class MonthData {
         this.oOther = oOther;
         this.comment = comment;
         this.form449 = form449;
+        this.form449File = form449File;
     }
 
     /**
@@ -331,6 +348,77 @@ public class MonthData {
      */
     public long getForm449() {
         return form449;
+    }
+    
+    /**
+     * Retrieves the original 449 Form from the database if the current reference is
+     * null and we have a valid formId (indicating the form is already stored in the database),
+     * and stores it in the NARVARO_HOME/data directory. Else, simply returns the referenced handle.
+     * 
+     * @return A handle to the retrieved form.
+     * @throws IOException If an IO Exception occurs.
+     */
+    public File getForm449File() throws IOException {
+        File file = null;
+        if (form449File == null) {
+            // let's get the file from the database
+            if (form449 < 1) {
+                throw new IOException("Invalid reference");
+            }
+            Connection con = null;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            FileOutputStream fout = null;
+            try {
+                con = DatabaseManager.Narvaro.getConnection();
+                ps = con.prepareStatement(select449FormFile);
+                ps.setLong(1, form449);
+                rs = ps.executeQuery();
+                // should only be a single result
+                rs.next();
+                String filename = rs.getString(1);
+                Blob blob = rs.getBlob(2);
+                byte[] bytes = new byte[(int)blob.length()];
+                String pathName = getDataDir().toPath().toString() + File.separator + filename;
+                fout = new FileOutputStream(pathName);
+                fout.write(bytes);
+                fout.flush();
+                file = new File(pathName);
+            } catch (SQLException e) {
+                LOG.error(e.getMessage(), e);
+            } finally {
+                DatabaseManager.Narvaro.closeConnection(rs, ps, con);
+                try {
+                    if (fout != null) {
+                        fout.close();
+                    }
+                } catch (Exception e) {
+                    LOG.warn(e.getMessage(), e);
+                }
+                fout = null;
+            }
+        } else {
+            // we already have a valid handle to the form
+            //   this will be the case if this MonthData object
+            //   was created via data entry and the form is still on
+            //   the user's hard disk.
+            return form449File;
+        }
+        this.form449File = file;
+        return file;
+    }
+    
+    /**
+     * @return A handle to the NARVARO_HOME/data directory, 
+     *     creating it if it does not exist.
+     */
+    private File getDataDir() {
+        File home = new File(ConfigurationManager.NARVARO.getHomeDirectory());
+        File dataDir = new File(home, "data");
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
+        return dataDir;
     }
 
 }
