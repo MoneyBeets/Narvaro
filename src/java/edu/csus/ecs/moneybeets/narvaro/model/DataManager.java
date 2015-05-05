@@ -40,7 +40,7 @@ public enum DataManager {
     private Connection con;
     private ResultSet rs = null;
     
-    /**
+    /*******************************************************************************************
      * Selection queries
      */
     
@@ -204,7 +204,7 @@ public enum DataManager {
             + "JOIN forms ON data.form449 = forms.id "
             + "WHERE parks.name = ?";
     
-    /**
+    /*******************************************************************************************
      * Insertion queries
      */
     
