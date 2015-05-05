@@ -44,17 +44,105 @@ public enum DataManager {
      * Selection queries
      */
     
+    /**
+     * Gets database id of a park by name.
+     * 
+     * Input:
+     *     1) parkName
+     * 
+     * Output:
+     *     1) id
+     */
     private static final String selectParkIdByName = "SELECT id FROM parks WHERE parks.name = ?";
     
+    /**
+     * Gets the parkName of a park by id.
+     * 
+     * Input:
+     *     1) id
+     * 
+     * Output:
+     *     1) parkName
+     */
     private static final String selectParkNameById = "SELECT name FROM parks WHERE parks.id = ?";
     
+    /**
+     * Gets all park names.
+     * 
+     * Input:
+     *     none
+     * 
+     * Output:
+     *     1) parkName
+     */
     private static final String selectAllParkNames = "SELECT name FROM parks";
     
+    /**
+     * Gets all park id's and names.
+     * 
+     * Input:
+     *     none
+     * 
+     * Output:
+     *     1) id
+     *     2) parkName
+     */
     private static final String selectAllParkNamesAndIds = "SELECT id, name FROM parks";
     
+    /**
+     * Gets all park id's and names that have data within the specified date range.
+     * 
+     * Input:
+     *     1) starting date
+     *     2) ending date
+     * 
+     * Output:
+     *     1) id
+     *     2) parkName
+     */
     private static final String selectAllParkNamesAndIdsExistInRange = "SELECT DISTINCT parks.id, parks.name FROM parks "
             + "JOIN data ON parks.id = data.park WHERE data.month >= ? AND data.month <= ?";
     
+    /**
+     * Gets all park data for the specified date range.
+     * 
+     * Input:
+     *     1) starting date
+     *     2) ending date
+     * 
+     * Output:
+     *     1) parkName
+     *     2) month
+     *     3) pduConversionFactor
+     *     4) pduTotals
+     *     5) pduSpecialEvents
+     *     6) pduAnnualDayUse
+     *     7) pduDayUse
+     *     8) pduSenior
+     *     9) pduDisabled
+     *     10) pduGoldenBear
+     *     11) pduDisabledVeteran
+     *     12) pduNonResOHVPass
+     *     13) pduAnnualPassSale
+     *     14) pduCamping
+     *     15) pduSeniorCamping
+     *     16) pduDisabledCamping
+     *     17) fduConversionFactor
+     *     18) fduTotals
+     *     19) fscTotalVehicles
+     *     20) fscTotalPeople
+     *     21) fscRatio
+     *     22) oMC
+     *     23) oATV
+     *     24) o4X4
+     *     25) oROV
+     *     26) oAQMA
+     *     27) oAllStarKarting
+     *     28) oHangTown
+     *     29) oOther
+     *     30) comment
+     *     31) formId
+     */
     private static final String selectAllMonthDataByRange = "SELECT parks.name, data.month, data.pduConversionFactor, "
             + "data.pduTotals, data.pduSpecialEvents, data.pduAnnualDayUse, data.pduDayUse, data.pduSenior, "
             + "data.pduDisabled, data.pduGoldenBear, data.pduDisabledVeteran, data.pduNonResOHVPass, "
@@ -66,6 +154,45 @@ public enum DataManager {
             + "JOIN forms ON data.form449 = forms.id "
             + "WHERE data.month >= ? AND data.month <= ?";
     
+    /**
+     * Gets all park data for the specified park by name.
+     * 
+     * Input:
+     *     1) parkName
+     * 
+     * Output:
+     *     1) parkName
+     *     2) month
+     *     3) pduConversionFactor
+     *     4) pduTotals
+     *     5) pduSpecialEvents
+     *     6) pduAnnualDayUse
+     *     7) pduDayUse
+     *     8) pduSenior
+     *     9) pduDisabled
+     *     10) pduGoldenBear
+     *     11) pduDisabledVeteran
+     *     12) pduNonResOHVPass
+     *     13) pduAnnualPassSale
+     *     14) pduCamping
+     *     15) pduSeniorCamping
+     *     16) pduDisabledCamping
+     *     17) fduConversionFactor
+     *     18) fduTotals
+     *     19) fscTotalVehicles
+     *     20) fscTotalPeople
+     *     21) fscRatio
+     *     22) oMC
+     *     23) oATV
+     *     24) o4X4
+     *     25) oROV
+     *     26) oAQMA
+     *     27) oAllStarKarting
+     *     28) oHangTown
+     *     29) oOther
+     *     30) comment
+     *     31) formId
+     */
     private static final String selectMonthDataByPark = "SELECT parks.name, data.month, data.pduConversionFactor, "
             + "data.pduTotals, data.pduSpecialEvents, data.pduAnnualDayUse, data.pduDayUse, data.pduSenior, "
             + "data.pduDisabled, data.pduGoldenBear, data.pduDisabledVeteran, data.pduNonResOHVPass, "
@@ -81,10 +208,69 @@ public enum DataManager {
      * Insertion queries
      */
     
+    /**
+     * Inserts a new park by name into the database.
+     * 
+     * Input:
+     *     1) parkName
+     * 
+     * Output:
+     *     none
+     */
     private static final String insertPark = "INSERT INTO parks (name) VALUES(?)";
     
+    /**
+     * Inserts a new 449 Form into the database.
+     * 
+     * Input:
+     *     1) filename
+     *     2) InputStream of file
+     * 
+     * Output:
+     *     none
+     */
     private static final String insertForm = "INSERT INTO forms (filename, form) VALUES(?, ?)";
     
+    /**
+     * Inserts park month data into database.
+     * (Must be run after inserting 449 Form to have valid formId)
+     * 
+     * Input:
+     *     1) parkId
+     *     2) month
+     *     3) pduConversionFactor
+     *     4) pduTotals
+     *     5) pduSpecialEvents
+     *     6) pduAnnualDayUse
+     *     7) pduDayUse
+     *     8) pduSenior
+     *     9) pduDisabled
+     *     10) pduGoldenBear
+     *     11) pduDisabledVeteran
+     *     12) pduNonResOHVPass
+     *     13) pduAnnualPassSale
+     *     14) pduCamping
+     *     15) pduSeniorCamping
+     *     16) pduDisabledCamping
+     *     17) fduConversionFactor
+     *     18) fduTotals
+     *     19) fscTotalVehicles
+     *     20) fscTotalPeople
+     *     21) fscRatio
+     *     22) oMC
+     *     23) oATV
+     *     24) o4X4
+     *     25) oROV
+     *     26) oAQMA
+     *     27) oAllStarKarting
+     *     28) oHangTown
+     *     29) oOther
+     *     30) comment
+     *     31) formId
+     * 
+     * Output:
+     *     none
+     */
     private static final String insertMonthData = "INSERT INTO data (park, month, pduConversionFactor, pduTotals, "
             + "pduSpecialEvents, pduAnnualDayUse, pduDayUse, pduSenior, pduDisabled, pduGoldenBear, pduDisabledVeteran, "
             + "pduNonResOHVPass, pduAnnualPassSale, pduCamping, pduSeniorCamping, pduDisabledCamping, fduConversionFactor, "
