@@ -30,8 +30,8 @@ CREATE TABLE parks
 CREATE TABLE forms
 (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    filename VARCHAR(80),
-    form MEDIUMBLOB
+    filename VARCHAR(80) NOT NULL,
+    form MEDIUMBLOB NOT NULL
 );
 
 # This table holds monthly park data

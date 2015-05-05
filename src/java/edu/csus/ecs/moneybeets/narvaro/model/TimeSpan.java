@@ -1,3 +1,12 @@
+/**
+ * Narvaro: @VERSION@
+ * Build Date: @DATE@
+ * Commit Head: @HEAD@
+ * JDK: @JDK@
+ * ANT: @ANT@
+ * 
+ */
+
 package edu.csus.ecs.moneybeets.narvaro.model;
 
 import java.time.YearMonth;
@@ -51,6 +60,16 @@ public class TimeSpan {
      */
     public Collection<String> getAllParkNames() {
         return Collections.unmodifiableCollection(parkMonths.keySet());
+    }
+    
+    /**
+     * Stores a parkmonth in this time span by park name.
+     * 
+     * @param parkName The park name.
+     * @param parkMonth The park month.
+     */
+    public void putParkMonth(final String parkName, final ParkMonth parkMonth) {
+        parkMonths.put(parkName, parkMonth);
     }
     
 }

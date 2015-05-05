@@ -1,5 +1,15 @@
+/**
+ * Narvaro: @VERSION@
+ * Build Date: @DATE@
+ * Commit Head: @HEAD@
+ * JDK: @JDK@
+ * ANT: @ANT@
+ * 
+ */
+
 package edu.csus.ecs.moneybeets.narvaro.model;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,6 +59,61 @@ public class ParkMonth {
      */
     public void putAllMonthData(final Map<? extends YearMonth, ? extends MonthData> m) {
         monthDatas.putAll(m);
+    }
+    
+    /**
+     * Convenience method to create a <code>MonthData</code> and register it
+     *   with this <code>ParkMonth</code>.
+     *   
+     * @param month
+     * @param pduConversionFactor
+     * @param pduTotals
+     * @param pduSpecialEvents
+     * @param pduAnnualDayUse
+     * @param pduDayUse
+     * @param pduSenior
+     * @param pduDisabled
+     * @param pduGoldenBear
+     * @param pduDisabledVeteran
+     * @param pduNonResOHVPass
+     * @param pduAnnualPassSale
+     * @param pduCamping
+     * @param pduSeniorCamping
+     * @param pduDisabledCamping
+     * @param fduConversionFactor
+     * @param fduTotals
+     * @param fscTotalVehicles
+     * @param fscTotalPeople
+     * @param fscRatio
+     * @param oMC
+     * @param oATV
+     * @param o4x4
+     * @param oROV
+     * @param oAQMA
+     * @param oAllStarKarting
+     * @param oHangtown
+     * @param oOther
+     * @param comment
+     * @param form449
+     */
+    public void createAndPutMonthData(YearMonth month, BigDecimal pduConversionFactor,
+            long pduTotals, long pduSpecialEvents, long pduAnnualDayUse,
+            long pduDayUse, long pduSenior, long pduDisabled,
+            long pduGoldenBear, long pduDisabledVeteran, long pduNonResOHVPass,
+            long pduAnnualPassSale, long pduCamping, long pduSeniorCamping,
+            long pduDisabledCamping, BigDecimal fduConversionFactor,
+            long fduTotals, long fscTotalVehicles, long fscTotalPeople,
+            BigDecimal fscRatio, long oMC, long oATV, long o4x4, long oROV,
+            long oAQMA, long oAllStarKarting, long oHangtown, long oOther,
+            String comment, long form449) {
+        
+        putMonthData(month, new MonthData(
+                                month, pduConversionFactor, pduTotals, pduSpecialEvents, 
+                                pduAnnualDayUse, pduDayUse, pduSenior, pduDisabled, pduGoldenBear, 
+                                pduDisabledVeteran, pduNonResOHVPass, pduAnnualPassSale, pduCamping, 
+                                pduSeniorCamping, pduDisabledCamping, fduConversionFactor, fduTotals, 
+                                fscTotalVehicles, fscTotalPeople, fscRatio, oMC, oATV, o4x4, oROV, 
+                                oAQMA, oAllStarKarting, oHangtown, oOther, comment, form449));
     }
     
 }

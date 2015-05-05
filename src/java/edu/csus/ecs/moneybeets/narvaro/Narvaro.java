@@ -20,6 +20,7 @@ import java.sql.Connection;
 import org.apache.log4j.Logger;
 
 import edu.csus.ecs.moneybeets.narvaro.database.DatabaseManager;
+import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -153,6 +154,14 @@ public class Narvaro extends Application {
             return;
         }
         LOG.info("Database Manager Started");
+        
+        // startup DataManager
+        try {
+            DataManager.Narvaro.start();
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        LOG.info("Data Manager Started");
         
         stage.show();
         
@@ -306,6 +315,17 @@ public class Narvaro extends Application {
     private void shutdown() {
         
         LOG.info("Narvaro Shutting down");
+        
+        // shutdown the data manager
+        LOG.info("Shutting down Data Manager");
+        DataManager.Narvaro.shutdown();
+        
+        // shutdown the database manager
+        LOG.info("Shutting down Database Manager");
+        DatabaseManager.Narvaro.shutdown();
+        
+        LOG.info("Narvaro halted");
+        
         Platform.exit();
         System.exit(0);
     }
