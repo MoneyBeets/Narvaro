@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
@@ -266,7 +267,7 @@ public enum DataManager {
      *     28) oHangTown
      *     29) oOther
      *     30) comment
-     *     31) formId
+     *     31) formId (automagically gotten from last insert)
      * 
      * Output:
      *     none
@@ -416,6 +417,7 @@ public enum DataManager {
         return timeSpan;
     }
     
+    // TODO implement these convenience methods
     //public final TimeSpan getTimeSpanForPark(
     //        final YearMonth start, final YearMonth end, final String parkName) {
     //    
@@ -425,6 +427,81 @@ public enum DataManager {
     //        final YearMonth start, final YearMonth end, final String ... parkNames) {
     //    
     //}
+    
+    public void storeParkMonth(final ParkMonth pm) throws SQLException {
+        int parkId = -1;
+        if (pm != null) {
+            try {
+                // get the parkId from the database
+                psSelectParkIdByName.setString(1, pm.getParkName());
+                rs = psSelectParkIdByName.executeQuery();
+                // should only have a single result
+                rs.next();
+                parkId = rs.getInt(1);
+            } catch (SQLException e) {
+                LOG.error(e.getMessage(), e);
+                throw new SQLException(e);
+            } finally {
+                try {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                } catch (Exception e) {
+                    LOG.warn(e.getMessage(), e);
+                }
+                rs = null;
+            }
+            if (parkId > 0) {
+                for (MonthData md : pm.getAllMonthData()) {
+                    psInsertMonthData.setLong(1, parkId);
+                    psInsertMonthData.setDate(2, yearMonthToDate(md.getMonth()));
+                    psInsertMonthData.setBigDecimal(3, md.getPduConversionFactor());
+                    psInsertMonthData.setLong(4, md.getPduTotals());
+                    psInsertMonthData.setLong(5, md.getPduSpecialEvents());
+                    psInsertMonthData.setLong(6, md.getPduAnnualDayUse());
+                    psInsertMonthData.setLong(7, md.getPduDayUse());
+                    psInsertMonthData.setLong(8, md.getPduSenior());
+                    psInsertMonthData.setLong(9, md.getPduDisabled());
+                    psInsertMonthData.setLong(10, md.getPduGoldenBear());
+                    psInsertMonthData.setLong(11, md.getPduDisabledVeteran());
+                    psInsertMonthData.setLong(12, md.getPduNonResOHVPass());
+                    psInsertMonthData.setLong(13, md.getPduAnnualPassSale());
+                    psInsertMonthData.setLong(14, md.getPduCamping());
+                    psInsertMonthData.setLong(15, md.getPduSeniorCamping());
+                    psInsertMonthData.setLong(16, md.getPduDisabledCamping());
+                    psInsertMonthData.setBigDecimal(17, md.getFduConversionFactor());
+                    psInsertMonthData.setLong(18, md.getFduTotals());
+                    psInsertMonthData.setLong(19, md.getFscTotalVehicles());
+                    psInsertMonthData.setLong(20, md.getFscTotalPeople());
+                    psInsertMonthData.setBigDecimal(21, md.getFscRatio());
+                    psInsertMonthData.setLong(22, md.getoMC());
+                    psInsertMonthData.setLong(23, md.getoATV());
+                    psInsertMonthData.setLong(24, md.getO4X4());
+                    psInsertMonthData.setLong(25, md.getoROV());
+                    psInsertMonthData.setLong(26, md.getoAQMA());
+                    psInsertMonthData.setLong(27, md.getoAllStarKarting());
+                    psInsertMonthData.setLong(28, md.getoHangtown());
+                    psInsertMonthData.setLong(29, md.getoOther());
+                    psInsertMonthData.setString(30, md.getComment());
+                    
+                    // store in a batch to save on network round-trips
+                    psInsertMonthData.addBatch();
+                }
+            } else {
+                throw new SQLException("Park Id not found for park: " + pm.getParkName());
+            }
+            // now run the batch
+            psInsertMonthData.executeBatch();
+        }
+    }
+    
+    public void storeAllParkMonth(final ParkMonth ... pm) {
+        
+    }
+    
+    public void storeAllParkMonth(final Collection<ParkMonth> pm) {
+        
+    }
     
     /**
      * Utility method to convert a <code>YearMonth</code> into a <code>java.sql.Date</code>.
