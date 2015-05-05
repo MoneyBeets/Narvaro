@@ -9,6 +9,8 @@
 
 package edu.csus.ecs.moneybeets.narvaro.ui;
 
+import java.io.File;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -22,8 +24,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 import org.apache.log4j.Logger;
 
@@ -99,24 +103,24 @@ public class Controller {
     @FXML
     private Button submitButton;
     @FXML
-    private MenuButton selectAParkDropDownMenu;
+    private ComboBox selectAParkDropDownMenu;
     @FXML
     private Button browseFileButton;
     @FXML
-    private TextField fileTF;
+    private TextField browseFileTF;
     /* Enter Data Tab End */
 
     /* View Data Tab Start */
     @FXML
     private Tab viewDataTab;
     @FXML
-    private MenuButton monthSelectionOne;
+    private ComboBox monthSelectionOne;
     @FXML
-    private MenuButton yearSelectionOne;
+    private ComboBox yearSelectionOne;
     @FXML
-    private MenuButton monthSelectionTwo;
+    private ComboBox monthSelectionTwo;
     @FXML
-    private MenuButton yearSelectionTwo;
+    private ComboBox yearSelectionTwo;
     @FXML
     private ListView<?> parkView;
     @FXML
@@ -535,43 +539,28 @@ public class Controller {
         otherTF.setText(in);
     }
     public String getSelectAParkDropDownMenu() {
-        return selectAParkDropDownMenu.getText();
+        return selectAParkDropDownMenu.getSelectionModel().getSelectedItem().toString();
     }
-    public void setSelectAParkDropDownMenu(final String in) {
-        selectAParkDropDownMenu.setText(in);
+    public String getbrowseFileTF() {
+        return browseFileTF.getText();
     }
-    public String getFileTF() {
-        return fileTF.getText();
-    }
-    public void setFileTF(String in) {
-        fileTF.setText(in);
+    public void setbrowseFileTF(String in) {
+        browseFileTF.setText(in);
     }
     /* Enter Data Tab End */
 
     /* View Data Tab Start */
     public String getMonthSelectionOne() {
-        return monthSelectionOne.getText();
-    }
-    public void setMonthSelectionOne(final String targetText) {
-        monthSelectionOne.setText(targetText);
+        return monthSelectionOne.getSelectionModel().getSelectedItem().toString();
     }
     public String getYearSelectionOne() {
-        return yearSelectionOne.getText();
-    }
-    public void setYearSelectionOne(final String targetText) {
-        yearSelectionOne.setText(targetText);
+        return yearSelectionOne.getSelectionModel().getSelectedItem().toString();
     }
     public String getMonthSelectionTwo() {
-        return monthSelectionTwo.getText();
-    }
-    public void setMonthSelectionTwo(final String targetText) {
-        monthSelectionTwo.setText(targetText);
+        return monthSelectionTwo.getSelectionModel().getSelectedItem().toString();
     }
     public String getYearSelectionTwo() {
-        return yearSelectionTwo.getText();
-    }
-    public void setYearSelectionTwo(final String targetText) {
-        yearSelectionTwo.setText(targetText);
+        return yearSelectionTwo.getSelectionModel().getSelectedItem().toString();
     }
     /* View Data Tab End */
 
@@ -583,7 +572,14 @@ public class Controller {
     public void handleBrowseButton(final ActionEvent event){
     	 FileChooser fileChooser = new FileChooser();
     	 fileChooser.setTitle("Open 449 Form");
-    	 fileChooser.showOpenDialog(browseFileButton.getScene().getWindow());
+    	 fileChooser.getExtensionFilters().addAll(
+    			         new ExtensionFilter("Excel Files", "*.xls,", "*.xlsx", "*.csv"));
+    	 File file = fileChooser.showOpenDialog(browseFileButton.getScene().getWindow());
+    	 
+    	 if (file != null){
+    		 String filePath = file.getPath();
+    		 setbrowseFileTF(filePath);
+    	 }
     }
 
 }
