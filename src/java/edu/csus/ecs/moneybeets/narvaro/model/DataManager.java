@@ -9,6 +9,10 @@
 
 package edu.csus.ecs.moneybeets.narvaro.model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -393,7 +397,7 @@ public enum DataManager {
                             rs.getLong(14), rs.getLong(15), rs.getLong(16), rs.getBigDecimal(17), rs.getLong(18), 
                             rs.getLong(19), rs.getLong(20), rs.getBigDecimal(21), rs.getLong(22), rs.getLong(23), 
                             rs.getLong(24), rs.getLong(25), rs.getLong(26), rs.getLong(27), rs.getLong(28), 
-                            rs.getLong(29), rs.getString(30), rs.getLong(31));
+                            rs.getLong(29), rs.getString(30), rs.getLong(31), null);
                     
                     // store it in the timepsan for the proper park
                     timeSpan.getParkMonth(rs.getString(1)).putMonthData(dateToYearMonth(rs.getDate(2)), md);
@@ -428,6 +432,13 @@ public enum DataManager {
     //    
     //}
     
+    /**
+     * Stores a <code>ParkMonth</code> into the database.
+     * First writes a MonthData's 449 Form then writes the MonthData.
+     * 
+     * @param pm The ParkMonth
+     * @throws SQLException If an SQL Exception occurs.
+     */
     public void storeParkMonth(final ParkMonth pm) throws SQLException {
         int parkId = -1;
         if (pm != null) {
@@ -453,6 +464,26 @@ public enum DataManager {
             }
             if (parkId > 0) {
                 for (MonthData md : pm.getAllMonthData()) {
+                    // insert 449 Form into database
+                    InputStream in = null;
+                    try {
+                        in = new FileInputStream(md.getForm449File().toPath().toFile());
+                        psInsertForm.setString(1, md.getForm449File().getName());
+                        psInsertForm.setBlob(2, in);
+                        psInsertForm.execute();
+                    } catch (IOException e) {
+                        LOG.error(e.getMessage(), e);
+                    } finally {
+                        try {
+                            if (in != null) {
+                                in.close();
+                            }
+                        } catch (Exception ex) {
+                            LOG.warn(ex.getMessage(), ex);
+                        }
+                        in = null;
+                    }
+                    // insert monthdata
                     psInsertMonthData.setLong(1, parkId);
                     psInsertMonthData.setDate(2, yearMonthToDate(md.getMonth()));
                     psInsertMonthData.setBigDecimal(3, md.getPduConversionFactor());
@@ -484,23 +515,26 @@ public enum DataManager {
                     psInsertMonthData.setLong(29, md.getoOther());
                     psInsertMonthData.setString(30, md.getComment());
                     
-                    // store in a batch to save on network round-trips
-                    psInsertMonthData.addBatch();
+                    psInsertMonthData.execute();
                 }
             } else {
                 throw new SQLException("Park Id not found for park: " + pm.getParkName());
             }
-            // now run the batch
-            psInsertMonthData.executeBatch();
         }
     }
     
-    public void storeAllParkMonth(final ParkMonth ... pm) {
-        
+    public void storeAllParkMonth(final ParkMonth ... pms) throws SQLException {
+        // cheating for now, can probably make this less hacky
+        for (ParkMonth pm : pms) {
+            storeParkMonth(pm);
+        }
     }
     
-    public void storeAllParkMonth(final Collection<ParkMonth> pm) {
-        
+    public void storeAllParkMonth(final Collection<ParkMonth> pms) throws SQLException {
+        // cheating for now, can probably make this less hacky
+        for (ParkMonth pm : pms) {
+            storeParkMonth(pm);
+        }
     }
     
     /**
