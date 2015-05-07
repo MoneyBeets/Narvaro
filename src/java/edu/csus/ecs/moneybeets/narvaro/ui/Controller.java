@@ -12,7 +12,10 @@ package edu.csus.ecs.moneybeets.narvaro.ui;
 import java.io.File;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.YearMonth;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
@@ -48,9 +51,9 @@ public class Controller {
     @FXML
     private ComboBox<String> selectAParkDropDownMenu;
     @FXML
-    private ComboBox<?> enterYear;
+    private ComboBox<Integer> enterYear;
     @FXML
-    private ComboBox<?> enterMonth;
+    private ComboBox<Month> enterMonth;
     @FXML
     private TextField conversionFactorPaidDayUseTF;
     @FXML
@@ -168,6 +171,20 @@ public class Controller {
     @FXML
     private MenuButton selectCategory;
     /* Graph Data Tab End */
+    
+    @FXML
+    public void initialize() {
+        // populate year field on enter data tab
+        LocalDateTime ldt = LocalDateTime.now();
+        int year = ldt.getYear();
+        for (; year >= 1984; year--) {
+            enterYear.getItems().add(year);
+        }
+        // populate month field on enter data tab
+        // we'll wrap around and end on the current month - 1
+        //   so that the current month is always the default selected
+        enterMonth.getItems().addAll(Arrays.asList(Month.values()));
+    }
     
     @FXML
     public void handleEnterParkDropDown(final Event event) {
