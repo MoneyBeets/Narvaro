@@ -19,7 +19,7 @@
                      <children>
                         <Group fx:id="userDataGroup">
                            <children>
-                              <ComboBox fx:id="selectAParkDropDownMenu" layoutX="20.0" layoutY="49.0" onAction="#handleEnterParkDropDown" onMouseClicked="#handleEnterParkDropDown" prefWidth="150.0" promptText="Park" />
+                              <ComboBox fx:id="selectAParkDropDownMenu" layoutX="20.0" layoutY="49.0" prefWidth="150.0" promptText="Park" />
                               <TextField fx:id="conversionFactorPaidDayUseTF" layoutX="359.0" layoutY="48.0" prefHeight="28.0" prefWidth="44.0" />
                               <TextField fx:id="paidDayUseTotalsTF" layoutX="359.0" layoutY="80.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="specialEventsTF" layoutX="359.0" layoutY="109.0" prefHeight="26.0" prefWidth="44.0" />
