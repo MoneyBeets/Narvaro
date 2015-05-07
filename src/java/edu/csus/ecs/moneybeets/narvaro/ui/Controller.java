@@ -42,11 +42,11 @@ public class Controller {
     @FXML
     private Tab enterDataTab;
     @FXML
-    private ComboBox enterPark;
+    private ComboBox<?> enterPark;
     @FXML
-    private ComboBox enterYear;
+    private ComboBox<?> enterYear;
     @FXML
-    private ComboBox enterMonth;
+    private ComboBox<?> enterMonth;
     @FXML
     private TextField conversionFactorPaidDayUseTF;
     @FXML
@@ -119,13 +119,13 @@ public class Controller {
     @FXML
     private Tab viewDataTab;
     @FXML
-    private ComboBox monthSelectionOne;
+    private ComboBox<?> monthSelectionOne;
     @FXML
-    private ComboBox yearSelectionOne;
+    private ComboBox<?> yearSelectionOne;
     @FXML
-    private ComboBox monthSelectionTwo;
+    private ComboBox<?> monthSelectionTwo;
     @FXML
-    private ComboBox yearSelectionTwo;
+    private ComboBox<?> yearSelectionTwo;
     @FXML
     private ListView<?> parkView;
     @FXML
@@ -177,6 +177,7 @@ public class Controller {
                 getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
                 -1, getbrowseFile());
     }
+    
     @FXML
     public void handleBrowseButton(final ActionEvent event){
         FileChooser fileChooser = new FileChooser();
@@ -190,6 +191,7 @@ public class Controller {
             setbrowseFileTF(filePath);
         }
     }
+    
     /**
      * Clears all data on-screen in text fields,
      * text-area's, and date-picker's.
@@ -211,9 +213,18 @@ public class Controller {
     }
 
     /* Getter and Setter Forest. Abandon all hope, ye who enter */
-    public String getEnterPark() {return enterPark.getSelectionModel().getSelectedItem().toString();}
-    public int getEnterYear() {return Integer.parseInt(enterYear.getSelectionModel().getSelectedItem().toString());}
-    public int getEnterMonth() {return Integer.parseInt(enterMonth.getSelectionModel().getSelectedItem().toString());}
+    public String getEnterPark() {
+        return enterPark.getSelectionModel().getSelectedItem().toString();
+    }
+    
+    public int getEnterYear() {
+        return Integer.parseInt(enterYear.getSelectionModel().getSelectedItem().toString());
+    }
+    
+    public int getEnterMonth() {
+        return Integer.parseInt(enterMonth.getSelectionModel().getSelectedItem().toString());
+    }
+    
     public BigDecimal getConversionFactorPaidDayUseTF() throws NumberFormatException {
         BigDecimal temp;
         try {
@@ -224,9 +235,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setConversionFactorPaidDayUseTF(final String in) {
             conversionFactorPaidDayUseTF.setText(in);
     }
+    
     public long getPaidDayUseTotalsTF() throws NumberFormatException {
         long temp;
         try {
@@ -237,9 +250,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setPaidDayUseTotalsTF(final String in) {
         paidDayUseTotalsTF.setText(in);
     }
+    
     public int getSpecialEventsTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -250,9 +265,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setSpecialEventsTF(final String in) {
         specialEventsTF.setText(in);
     }
+    
     public int getAnnualDayUseTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -263,9 +280,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setAnnualDayUseTF(final String in) {
         annualDayUseTF.setText(in);
     }
+    
     public int getDayUseTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -276,9 +295,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setDayUseTF(final String in) {
         dayUseTF.setText(in);
     }
+    
     public int getSeniorTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -289,9 +310,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setSeniorTF(final String in) {
         seniorTF.setText(in);
     }
+    
     public int getDisabledTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -302,9 +325,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setDisabledTF(final String in) {
         disabledTF.setText(in);
     }
+    
     public int getGoldenBearTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -315,9 +340,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setGoldenBearTF(final String in) {
         goldenBearTF.setText(in);
     }
+    
     public int getDisabledVeteranTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -328,9 +355,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setDisabledVeteranTF(final String in) {
         disabledVeteranTF.setText(in);
     }
+    
     public int getNonResOHVPassTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -341,9 +370,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setNonResOHVPassTF(final String in) {
         nonResOHVPassTF.setText(in);
     }
+    
     public int getAnnualPassSaleTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -354,9 +385,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setAnnualPassSaleTF(final String in) {
         annualDayUseTF.setText(in);
     }
+    
     public int getCampingTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -367,9 +400,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setCampingTF(final String in) {
         campingTF.setText(in);
     }
+    
     public int getSeniorCampingTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -380,9 +415,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setSeniorCampingTF(final String in) {
         seniorCampingTF.setText(in);
     }
+    
     public int getDisabledCampingTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -393,9 +430,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setDisabledCampingTF(final String in) {
         disabledCampingTF.setText(in);
     }
+    
     public BigDecimal getConversionFactorFreeDayUseTF() throws NumberFormatException {
         BigDecimal temp;
         try {
@@ -406,9 +445,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setConversionFactorFreeDayUseTF(final String in) {
         conversionFactorFreeDayUseTF.setText(in);
     }
+    
     public int getFreeDayUseTotalsTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -419,9 +460,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setFreeDayUseTotalsTF(final String in) {
         freeDayUseTotalsTF.setText(in);
     }
+    
     public int getTotalVehiclesTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -432,9 +475,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setTotalVehiclesTF(final String in) {
         totalVehiclesTF.setText(in);
     }
+    
     public int getTotalPeopleTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -445,9 +490,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setTotalPeopleTF(final String in) {
         totalPeopleTF.setText(in);
     }
+    
     public BigDecimal getRatioTF() throws NumberFormatException {
         BigDecimal temp;
         try {
@@ -458,15 +505,19 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setRatioTF(final String in) {
         ratioTF.setText(in);
     }
+    
     public String getCommentsTB() {
         return commentsTB.getText();
     }
+    
     public void setCommentsTB(final String targetText) {
         commentsTB.setText(targetText);
     }
+    
     public int getMcTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -477,9 +528,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setMcTF(final String in) {
         mcTF.setText(in);
     }
+    
     public int getAtvTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -490,9 +543,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setAtvTF(final String in) {
         atvTF.setText(in);
     }
+    
     public int getFourByFourTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -503,9 +558,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setFourByFourTF(final String in ) {
         fourByFourTF.setText(in);
     }
+    
     public int getRovTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -516,9 +573,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setRovTF(final String in) {
         rovTF.setText(in);
     }
+    
     public int getAqmaTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -529,9 +588,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setAqmaTF(final String in) {
         aqmaTF.setText(in);
     }
+    
     public int getAllStarKartingTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -542,9 +603,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setAllStarKartingTF(final String in) {
         allStarKartingTF.setText(in);
     }
+    
     public int getHangtownTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -555,9 +618,11 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setHangtownTF(final String in) {
         hangtownTF.setText(in);
     }
+    
     public int getOtherTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -568,15 +633,19 @@ public class Controller {
         }
         return temp;
     }
+    
     public void setOtherTF(final String in) {
         otherTF.setText(in);
     }
+    
     public String getbrowseFileTF() {
         return browseFileTF.getText();
     }
+    
     public void setbrowseFileTF(String in) {
         browseFileTF.setText(in);
     }
+    
     public File getbrowseFile() {
         File file = new File(getbrowseFileTF());
         if(file.exists()) {
@@ -595,12 +664,15 @@ public class Controller {
     public String getMonthSelectionOne() {
         return monthSelectionOne.getSelectionModel().getSelectedItem().toString();
     }
+    
     public String getYearSelectionOne() {
         return yearSelectionOne.getSelectionModel().getSelectedItem().toString();
     }
+    
     public String getMonthSelectionTwo() {
         return monthSelectionTwo.getSelectionModel().getSelectedItem().toString();
     }
+    
     public String getYearSelectionTwo() {
         return yearSelectionTwo.getSelectionModel().getSelectedItem().toString();
     }
