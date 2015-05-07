@@ -199,8 +199,6 @@ public class Controller {
             enterYear.getItems().add(year);
         }
         // populate month field on enter data tab
-        // we'll wrap around and end on the current month - 1
-        //   so that the current month is always the default selected
         enterMonth.getItems().addAll(Arrays.asList(Month.values()));
     }
 
