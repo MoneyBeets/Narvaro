@@ -10,7 +10,10 @@
 package edu.csus.ecs.moneybeets.narvaro.ui;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.time.YearMonth;
 
+import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -39,7 +42,11 @@ public class Controller {
     @FXML
     private Tab enterDataTab;
     @FXML
-    private DatePicker datePicker;
+    private ComboBox enterPark;
+    @FXML
+    private ComboBox enterYear;
+    @FXML
+    private ComboBox enterMonth;
     @FXML
     private TextField conversionFactorPaidDayUseTF;
     @FXML
@@ -103,8 +110,6 @@ public class Controller {
     @FXML
     private Button submitButton;
     @FXML
-    private ComboBox selectAParkDropDownMenu;
-    @FXML
     private Button browseFileButton;
     @FXML
     private TextField browseFileTF;
@@ -160,6 +165,31 @@ public class Controller {
     private MenuButton selectCategory;
     /* Graph Data Tab End */
 
+    @FXML
+    public void handleSubmitButton(final ActionEvent event) {
+        ParkMonth parkMonth = new ParkMonth(getEnterPark());
+        parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
+                getConversionFactorPaidDayUseTF(), getPaidDayUseTotalsTF(), getSpecialEventsTF(), getAnnualDayUseTF(),
+                getDayUseTF(), getSeniorTF(), getDisabledTF(), getGoldenBearTF(), getDisabledVeteranTF(),
+                getNonResOHVPassTF(), getAnnualPassSaleTF(), getCampingTF(), getSeniorCampingTF(),
+                getDisabledCampingTF(), getConversionFactorFreeDayUseTF(), getFreeDayUseTotalsTF(),
+                getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getAllStarKartingTF(),
+                getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
+                -1, getbrowseFile());
+    }
+    @FXML
+    public void handleBrowseButton(final ActionEvent event){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open 449 Form");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Excel Files", "*.xls,", "*.xlsx", "*.csv"));
+        File file = fileChooser.showOpenDialog(browseFileButton.getScene().getWindow());
+
+        if (file != null){
+            String filePath = file.getPath();
+            setbrowseFileTF(filePath);
+        }
+    }
     /**
      * Clears all data on-screen in text fields,
      * text-area's, and date-picker's.
@@ -178,12 +208,16 @@ public class Controller {
                 ((DatePicker) o[i]).setValue(null);
             }
         }
-
     }
-    public int getConversionFactorPaidDayUseTF() throws NumberFormatException {
-        int temp = -1;
+
+    /* Getter and Setter Forest. Abandon all hope, ye who enter */
+    public String getEnterPark() {return enterPark.getSelectionModel().getSelectedItem().toString();}
+    public int getEnterYear() {return Integer.parseInt(enterYear.getSelectionModel().getSelectedItem().toString());}
+    public int getEnterMonth() {return Integer.parseInt(enterMonth.getSelectionModel().getSelectedItem().toString());}
+    public BigDecimal getConversionFactorPaidDayUseTF() throws NumberFormatException {
+        BigDecimal temp;
         try {
-            temp = Integer.parseInt(conversionFactorPaidDayUseTF.getText());
+            temp = new BigDecimal(conversionFactorPaidDayUseTF.getText());
         } catch (NumberFormatException e) {
             LOG.error("Not a number: " + conversionFactorPaidDayUseTF.getText());
             throw e;
@@ -193,8 +227,8 @@ public class Controller {
     public void setConversionFactorPaidDayUseTF(final String in) {
             conversionFactorPaidDayUseTF.setText(in);
     }
-    public int getPaidDayUseTotalsTF() throws NumberFormatException {
-        int temp = -1;
+    public long getPaidDayUseTotalsTF() throws NumberFormatException {
+        long temp;
         try {
             temp = Integer.parseInt(paidDayUseTotalsTF.getText());
         } catch (NumberFormatException e) {
@@ -258,7 +292,6 @@ public class Controller {
     public void setSeniorTF(final String in) {
         seniorTF.setText(in);
     }
-
     public int getDisabledTF() throws NumberFormatException {
         int temp = -1;
         try {
@@ -363,10 +396,10 @@ public class Controller {
     public void setDisabledCampingTF(final String in) {
         disabledCampingTF.setText(in);
     }
-    public int getConversionFactorFreeDayUseTF() throws NumberFormatException {
-        int temp = -1;
+    public BigDecimal getConversionFactorFreeDayUseTF() throws NumberFormatException {
+        BigDecimal temp;
         try {
-            temp = Integer.parseInt(conversionFactorFreeDayUseTF.getText());
+            temp = new BigDecimal(conversionFactorFreeDayUseTF.getText());
         } catch (NumberFormatException e) {
             LOG.error("Not a number: " + conversionFactorFreeDayUseTF.getText());
             throw e;
@@ -415,10 +448,10 @@ public class Controller {
     public void setTotalPeopleTF(final String in) {
         totalPeopleTF.setText(in);
     }
-    public int getRatioTF() throws NumberFormatException {
-        int temp = -1;
+    public BigDecimal getRatioTF() throws NumberFormatException {
+        BigDecimal temp;
         try {
-            temp = Integer.parseInt(ratioTF.getText());
+            temp = new BigDecimal(ratioTF.getText());
         } catch (NumberFormatException e) {
             LOG.error("Not a number: " + ratioTF.getText());
             throw e;
@@ -538,14 +571,23 @@ public class Controller {
     public void setOtherTF(final String in) {
         otherTF.setText(in);
     }
-    public String getSelectAParkDropDownMenu() {
-        return selectAParkDropDownMenu.getSelectionModel().getSelectedItem().toString();
-    }
     public String getbrowseFileTF() {
         return browseFileTF.getText();
     }
     public void setbrowseFileTF(String in) {
         browseFileTF.setText(in);
+    }
+    public File getbrowseFile() {
+        File file = new File(getbrowseFileTF());
+        if(file.exists()) {
+            return file;
+        }
+        else {
+            /*
+            Change field to red maybe?
+             */
+            return null;
+        }
     }
     /* Enter Data Tab End */
 
@@ -567,19 +609,4 @@ public class Controller {
     /* Graph Data Tab Start */
 
     /* Graph Data Tab End */
-    
-    @FXML
-    public void handleBrowseButton(final ActionEvent event){
-    	 FileChooser fileChooser = new FileChooser();
-    	 fileChooser.setTitle("Open 449 Form");
-    	 fileChooser.getExtensionFilters().addAll(
-    			         new ExtensionFilter("Excel Files", "*.xls,", "*.xlsx", "*.csv"));
-    	 File file = fileChooser.showOpenDialog(browseFileButton.getScene().getWindow());
-    	 
-    	 if (file != null){
-    		 String filePath = file.getPath();
-    		 setbrowseFileTF(filePath);
-    	 }
-    }
-
 }
