@@ -79,7 +79,7 @@
                         <Label fx:id="commentsLabel" layoutX="617.0" layoutY="26.0" text="Comments" underline="true" />
                         <Label layoutX="617.0" layoutY="207.0" text="Attach 449" />
                         <Button fx:id="clearButton" layoutX="558.0" layoutY="478.0" mnemonicParsing="false" onAction="#handleClearButton" text="Clear" />
-                        <Button fx:id="submitButton" layoutX="621.0" layoutY="478.0" mnemonicParsing="false" text="Submit" />
+                        <Button fx:id="submitButton" layoutX="621.0" layoutY="478.0" mnemonicParsing="false" onAction="#handleSubmitButton" text="Submit" />
                         <Label layoutX="421.0" layoutY="236.0" text="Other" underline="true" />
                         <Label layoutX="421.0" layoutY="268.0" text="MC" />
                         <Label layoutX="421.0" layoutY="301.0" text="ATV" />
