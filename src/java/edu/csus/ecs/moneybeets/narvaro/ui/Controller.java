@@ -17,9 +17,11 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimerTask;
 
 import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
+import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -174,6 +176,22 @@ public class Controller {
     
     @FXML
     public void initialize() {
+        // database is not initialized yet...
+        //   so send this task to a background thread and
+        //   execute it a few seconds after startup...
+        TaskEngine.INSTANCE.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // get a list of all park names in the db
+                List<String> parkNames = DataManager.Narvaro.getAllParkNames();
+                // clear old items
+                selectAParkDropDownMenu.getItems().clear();
+                // add park names to window
+                for (String parkName : parkNames) {
+                    selectAParkDropDownMenu.getItems().add(parkName);
+                }
+            }
+        }, 5000);
         // populate year field on enter data tab
         LocalDateTime ldt = LocalDateTime.now();
         int year = ldt.getYear();
@@ -184,18 +202,6 @@ public class Controller {
         // we'll wrap around and end on the current month - 1
         //   so that the current month is always the default selected
         enterMonth.getItems().addAll(Arrays.asList(Month.values()));
-    }
-    
-    @FXML
-    public void handleEnterParkDropDown(final Event event) {
-        // get a list of all park names in the db
-        List<String> parkNames = DataManager.Narvaro.getAllParkNames();
-        // clear old items
-        selectAParkDropDownMenu.getItems().clear();
-        // add park names to window
-        for (String parkName : parkNames) {
-            selectAParkDropDownMenu.getItems().add(parkName);
-        }
     }
 
     @FXML
