@@ -11,8 +11,10 @@ package edu.csus.ecs.moneybeets.narvaro.ui;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.YearMonth;
 
+import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -176,6 +178,19 @@ public class Controller {
                 getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getAllStarKartingTF(),
                 getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
                 -1, getbrowseFile());
+        
+        // attempt to write into database
+        boolean success = false;
+        try {
+            DataManager.Narvaro.storeParkMonth(parkMonth);
+            success = true;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        if (success) {
+            // clear all fields to signify OK
+            handleClearButton(null);
+        }
     }
     
     @FXML
