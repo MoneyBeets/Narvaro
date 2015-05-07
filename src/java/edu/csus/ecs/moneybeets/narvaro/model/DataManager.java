@@ -584,7 +584,7 @@ public enum DataManager {
         //    trying to work with February (29 days), we should pick a sane default... the 1st.
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.YEAR, ym.getYear());
-        return (Date) cal.getTime();
+        return new Date(cal.getTime().getTime());
     }
     
     /**
