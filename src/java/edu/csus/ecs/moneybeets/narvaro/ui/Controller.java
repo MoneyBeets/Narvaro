@@ -268,7 +268,7 @@ public class Controller {
     }
     
     public int getEnterMonth() {
-        return Integer.parseInt(enterMonth.getSelectionModel().getSelectedItem().toString());
+        return enterMonth.getSelectionModel().getSelectedItem().getValue();
     }
     
     public BigDecimal getConversionFactorPaidDayUseTF() throws NumberFormatException {
