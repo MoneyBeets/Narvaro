@@ -13,10 +13,12 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.YearMonth;
+import java.util.List;
 
 import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
@@ -44,7 +46,7 @@ public class Controller {
     @FXML
     private Tab enterDataTab;
     @FXML
-    private ComboBox<?> enterPark;
+    private ComboBox<String> selectAParkDropDownMenu;
     @FXML
     private ComboBox<?> enterYear;
     @FXML
@@ -166,6 +168,18 @@ public class Controller {
     @FXML
     private MenuButton selectCategory;
     /* Graph Data Tab End */
+    
+    @FXML
+    public void handleEnterParkDropDown(final Event event) {
+        // get a list of all park names in the db
+        List<String> parkNames = DataManager.Narvaro.getAllParkNames();
+        // clear old items
+        selectAParkDropDownMenu.getItems().clear();
+        // add park names to window
+        for (String parkName : parkNames) {
+            selectAParkDropDownMenu.getItems().add(parkName);
+        }
+    }
 
     @FXML
     public void handleSubmitButton(final ActionEvent event) {
@@ -229,7 +243,7 @@ public class Controller {
 
     /* Getter and Setter Forest. Abandon all hope, ye who enter */
     public String getEnterPark() {
-        return enterPark.getSelectionModel().getSelectedItem().toString();
+        return selectAParkDropDownMenu.getSelectionModel().getSelectedItem().toString();
     }
     
     public int getEnterYear() {
