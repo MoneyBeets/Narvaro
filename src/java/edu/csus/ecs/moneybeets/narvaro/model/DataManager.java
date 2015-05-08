@@ -9,7 +9,6 @@
 
 package edu.csus.ecs.moneybeets.narvaro.model;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,8 +19,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -538,6 +539,33 @@ public enum DataManager {
     }
     
     /**
+     * @return A <code>List</code> of park name strings.
+     */
+    public List<String> getAllParkNames() {
+        List<String> parkNames = new ArrayList<String>();
+        try {
+            rs = psSelectAllParkNames.executeQuery();
+            if (rs != null) {
+                while (rs.next()) {
+                    parkNames.add(rs.getString(1));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                LOG.warn(e.getMessage(), e);
+            }
+            rs = null;
+        }
+        return parkNames;
+    }
+    
+    /**
      * Utility method to convert a <code>YearMonth</code> into a <code>java.sql.Date</code>.
      * 
      * @param ym The <code>YearMonth</code> to convert.
@@ -556,7 +584,7 @@ public enum DataManager {
         //    trying to work with February (29 days), we should pick a sane default... the 1st.
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.YEAR, ym.getYear());
-        return (Date) cal.getTime();
+        return new Date(cal.getTime().getTime());
     }
     
     /**

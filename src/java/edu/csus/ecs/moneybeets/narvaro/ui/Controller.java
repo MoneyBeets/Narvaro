@@ -11,10 +11,19 @@ package edu.csus.ecs.moneybeets.narvaro.ui;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.YearMonth;
+import java.util.Arrays;
+import java.util.List;
+import java.util.TimerTask;
 
+import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
+import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
@@ -42,11 +51,11 @@ public class Controller {
     @FXML
     private Tab enterDataTab;
     @FXML
-    private ComboBox<?> enterPark;
+    private ComboBox<String> selectAParkDropDownMenu;
     @FXML
-    private ComboBox<?> enterYear;
+    private ComboBox<Integer> enterYear;
     @FXML
-    private ComboBox<?> enterMonth;
+    private ComboBox<Month> enterMonth;
     @FXML
     private TextField conversionFactorPaidDayUseTF;
     @FXML
@@ -164,6 +173,34 @@ public class Controller {
     @FXML
     private MenuButton selectCategory;
     /* Graph Data Tab End */
+    
+    @FXML
+    public void initialize() {
+        // database is not initialized yet...
+        //   so send this task to a background thread and
+        //   execute it a few seconds after startup...
+        TaskEngine.INSTANCE.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // get a list of all park names in the db
+                List<String> parkNames = DataManager.Narvaro.getAllParkNames();
+                // clear old items
+                selectAParkDropDownMenu.getItems().clear();
+                // add park names to window
+                for (String parkName : parkNames) {
+                    selectAParkDropDownMenu.getItems().add(parkName);
+                }
+            }
+        }, 5000);
+        // populate year field on enter data tab
+        LocalDateTime ldt = LocalDateTime.now();
+        int year = ldt.getYear();
+        for (; year >= 1984; year--) {
+            enterYear.getItems().add(year);
+        }
+        // populate month field on enter data tab
+        enterMonth.getItems().addAll(Arrays.asList(Month.values()));
+    }
 
     @FXML
     public void handleSubmitButton(final ActionEvent event) {
@@ -176,6 +213,19 @@ public class Controller {
                 getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getAllStarKartingTF(),
                 getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
                 -1, getbrowseFile());
+        
+        // attempt to write into database
+        boolean success = false;
+        try {
+            DataManager.Narvaro.storeParkMonth(parkMonth);
+            success = true;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        if (success) {
+            // clear all fields to signify OK
+            handleClearButton(null);
+        }
     }
     
     @FXML
@@ -214,7 +264,7 @@ public class Controller {
 
     /* Getter and Setter Forest. Abandon all hope, ye who enter */
     public String getEnterPark() {
-        return enterPark.getSelectionModel().getSelectedItem().toString();
+        return selectAParkDropDownMenu.getSelectionModel().getSelectedItem().toString();
     }
     
     public int getEnterYear() {
@@ -222,7 +272,7 @@ public class Controller {
     }
     
     public int getEnterMonth() {
-        return Integer.parseInt(enterMonth.getSelectionModel().getSelectedItem().toString());
+        return enterMonth.getSelectionModel().getSelectedItem().getValue();
     }
     
     public BigDecimal getConversionFactorPaidDayUseTF() throws NumberFormatException {
