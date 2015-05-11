@@ -17,11 +17,9 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
-import java.util.TimerTask;
 
 import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
-import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -176,14 +174,7 @@ public class Controller {
     @FXML
     public void initialize() {
         
-        // get a list of all park names in the db
-        List<String> parkNames = DataManager.Narvaro.getAllParkNames();
-        // clear old items
-        selectAParkDropDownMenu.getItems().clear();
-        // add park names to window
-        for (String parkName : parkNames) {
-            selectAParkDropDownMenu.getItems().add(parkName);
-        }
+        updateSelectAParkDropDownMenu();
 
         // populate year field on enter data tab
         LocalDateTime ldt = LocalDateTime.now();
@@ -252,6 +243,17 @@ public class Controller {
             } else if (o[i] instanceof DatePicker) {
                 ((DatePicker) o[i]).setValue(null);
             }
+        }
+    }
+    
+    public void updateSelectAParkDropDownMenu() {
+        // get a list of all park names in the db
+        List<String> parkNames = DataManager.Narvaro.getAllParkNames();
+        // clear old items
+        selectAParkDropDownMenu.getItems().clear();
+        // add park names to window
+        for (String parkName : parkNames) {
+            selectAParkDropDownMenu.getItems().add(parkName);
         }
     }
 
