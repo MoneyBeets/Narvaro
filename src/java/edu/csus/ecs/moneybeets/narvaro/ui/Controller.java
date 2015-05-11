@@ -43,6 +43,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -203,38 +204,315 @@ public class Controller {
     public void handleSubmitButton(final ActionEvent event) {
         ParkMonth parkMonth = null;
         boolean success = false;
-        try {
-            parkMonth = new ParkMonth(getEnterPark());
-            parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
-                    getConversionFactorPaidDayUseTF(), getPaidDayUseTotalsTF(), getSpecialEventsTF(), getAnnualDayUseTF(),
-                    getDayUseTF(), getSeniorTF(), getDisabledTF(), getGoldenBearTF(), getDisabledVeteranTF(),
-                    getNonResOHVPassTF(), getAnnualPassSaleTF(), getCampingTF(), getSeniorCampingTF(),
-                    getDisabledCampingTF(), getConversionFactorFreeDayUseTF(), getFreeDayUseTotalsTF(),
-                    getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getAllStarKartingTF(),
-                    getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
-                    -1, getbrowseFile());
-            success = true;
-        } catch (Exception e) {
-            // something was wrong with data
-            LOG.error(e.getMessage(), e);
-            showErrorOnSubmit();
-        }
-        
-        if (success) {
-            // attempt to write into database
-            success = false;
+        if(validateEnteredData()) {
             try {
-                DataManager.Narvaro.storeParkMonth(parkMonth);
+                parkMonth = new ParkMonth(getEnterPark());
+                parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
+                        getConversionFactorPaidDayUseTF(), getPaidDayUseTotalsTF(), getSpecialEventsTF(), getAnnualDayUseTF(),
+                        getDayUseTF(), getSeniorTF(), getDisabledTF(), getGoldenBearTF(), getDisabledVeteranTF(),
+                        getNonResOHVPassTF(), getAnnualPassSaleTF(), getCampingTF(), getSeniorCampingTF(),
+                        getDisabledCampingTF(), getConversionFactorFreeDayUseTF(), getFreeDayUseTotalsTF(),
+                        getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getFourByFourTF(),
+                        getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
+                        -1, getbrowseFile());
                 success = true;
-            } catch (SQLException e) {
+            } catch (Exception e) {
+                // something was wrong with data
                 LOG.error(e.getMessage(), e);
-            }
-            if (success) {
-                showOKOnSubmit();
-            } else {
                 showErrorOnSubmit();
             }
+            
+            if (success) {
+                // attempt to write into database
+                success = false;
+                try {
+                    DataManager.Narvaro.storeParkMonth(parkMonth);
+                    success = true;
+                } catch (SQLException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+                if (success) {
+                    showOKOnSubmit();
+                    resetValidation();
+                } else {
+                    showErrorOnSubmit();
+                }
+            }
         }
+    }
+    
+    private boolean validateEnteredData() {
+        boolean ok = true;
+        try {
+            getEnterPark();
+            selectAParkDropDownMenu.setStyle("-fx-background-color:#87D37C;");
+        } catch (Exception e) {
+            ok = false;
+            selectAParkDropDownMenu.setStyle("-fx-background-color:#EF4836;");
+        }
+        try {
+            getEnterYear();
+            enterYear.setStyle("-fx-background-color:#87D37C;");
+        } catch (Exception e) {
+            ok = false;
+            enterYear.setStyle("-fx-background-color:#EF4836;");
+        }
+        try {
+            getEnterMonth();
+            enterMonth.setStyle("-fx-background-color:#87D37C;");
+        } catch (Exception e) {
+            ok = false;
+            enterMonth.setStyle("-fx-background-color:#EF4836;");
+        }
+        try {
+            getConversionFactorPaidDayUseTF();
+            showValid(conversionFactorPaidDayUseTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(conversionFactorPaidDayUseTF);
+        }
+        try {
+            getPaidDayUseTotalsTF();
+            showValid(paidDayUseTotalsTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(paidDayUseTotalsTF);
+        }
+        try {
+            getSpecialEventsTF();
+            showValid(specialEventsTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(specialEventsTF);
+        }
+        try {
+            getAnnualDayUseTF();
+            showValid(annualDayUseTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(annualDayUseTF);
+        }
+        try {
+            getDayUseTF();
+            showValid(dayUseTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(dayUseTF);
+        }
+        try {
+            getSeniorTF();
+            showValid(seniorTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(seniorTF);
+        }
+        try {
+            getDisabledTF();
+            showValid(disabledTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(disabledTF);
+        }
+        try {
+            getGoldenBearTF();
+            showValid(goldenBearTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(goldenBearTF);
+        }
+        try {
+            getDisabledVeteranTF();
+            showValid(disabledVeteranTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(disabledVeteranTF);
+        }
+        try {
+            getNonResOHVPassTF();
+            showValid(nonResOHVPassTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(nonResOHVPassTF);
+        }
+        try {
+            getAnnualPassSaleTF();
+            showValid(annualPassSaleTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(annualPassSaleTF);
+        }
+        try {
+            getCampingTF();
+            showValid(campingTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(campingTF);
+        }
+        try {
+            getSeniorCampingTF();
+            showValid(seniorCampingTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(seniorCampingTF);
+        }
+        try {
+            getDisabledCampingTF();
+            showValid(disabledCampingTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(disabledCampingTF);
+        }
+        try {
+            getConversionFactorFreeDayUseTF();
+            showValid(conversionFactorFreeDayUseTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(conversionFactorFreeDayUseTF);
+        }
+        try {
+            getFreeDayUseTotalsTF();
+            showValid(freeDayUseTotalsTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(freeDayUseTotalsTF);
+        }
+        try {
+            getTotalVehiclesTF();
+            showValid(totalVehiclesTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(totalVehiclesTF);
+        }
+        try {
+            getTotalPeopleTF();
+            showValid(totalPeopleTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(totalPeopleTF);
+        }
+        try {
+            getRatioTF();
+            showValid(ratioTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(ratioTF);
+        }
+        try {
+            getMcTF();
+            showValid(mcTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(mcTF);
+        }
+        try {
+            getAtvTF();
+            showValid(atvTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(atvTF);
+        }
+        try {
+            getFourByFourTF();
+            showValid(fourByFourTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(fourByFourTF);
+        }
+        try {
+            getRovTF();
+            showValid(rovTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(rovTF);
+        }
+        try {
+            getAqmaTF();
+            showValid(aqmaTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(aqmaTF);
+        }
+        try {
+            getAllStarKartingTF();
+            showValid(allStarKartingTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(allStarKartingTF);
+        }
+        try {
+            getHangtownTF();
+            showValid(hangtownTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(hangtownTF);
+        }
+        try {
+            getOtherTF();
+            showValid(otherTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(otherTF);
+        }
+        try {
+            File f = getbrowseFile();
+            if (f.exists()) {
+                showValid(browseFileTF);
+            }
+        } catch (Exception e) {
+            ok = false;
+            showError(browseFileTF);
+        }
+        if (ok == false) {
+            showErrorOnSubmit();
+        }
+        return ok;  
+    }
+    
+    private void resetValidation() {
+        selectAParkDropDownMenu.setStyle("-fx-background-color:#FFFFFF;");
+        enterYear.setStyle("-fx-background-color:#FFFFFF;");
+        enterMonth.setStyle("-fx-background-color:#FFFFFF;");
+        resetValid(conversionFactorPaidDayUseTF);
+        resetValid(paidDayUseTotalsTF);
+        resetValid(specialEventsTF);
+        resetValid(annualDayUseTF);
+        resetValid(dayUseTF);
+        resetValid(seniorTF);
+        resetValid(disabledTF);
+        resetValid(goldenBearTF);
+        resetValid(disabledVeteranTF);
+        resetValid(nonResOHVPassTF);
+        resetValid(annualPassSaleTF);
+        resetValid(campingTF);
+        resetValid(seniorCampingTF);
+        resetValid(disabledCampingTF);
+        resetValid(conversionFactorFreeDayUseTF);
+        resetValid(freeDayUseTotalsTF);
+        resetValid(totalVehiclesTF);
+        resetValid(totalPeopleTF);
+        resetValid(ratioTF);
+        resetValid(commentsTB);
+        resetValid(mcTF);
+        resetValid(atvTF);
+        resetValid(fourByFourTF);
+        resetValid(rovTF);
+        resetValid(aqmaTF);
+        resetValid(allStarKartingTF);
+        resetValid(hangtownTF);
+        resetValid(otherTF);
+        resetValid(browseFileTF);
+    }
+    
+    private void showValid(final Region r) {
+        r.setStyle("-fx-control-inner-background:#87D37C;");
+    }
+    
+    private void showError(final Region r) {
+        r.setStyle("-fx-control-inner-background:#EF4836;");
+    }
+    
+    private void resetValid(final Region r) {
+        r.setStyle("-fx-control-inner-background:#FFFFFF;");
     }
     
     public void showOKOnSubmit() {
@@ -341,6 +619,10 @@ public class Controller {
                 ((DatePicker) o[i]).setValue(null);
             }
         }
+        selectAParkDropDownMenu.setValue(null);
+        enterYear.setValue(null);
+        enterMonth.setValue(null);
+        resetValidation();
     }
     
     public void updateSelectAParkDropDownMenu() {
