@@ -10,6 +10,8 @@
 package edu.csus.ecs.moneybeets.narvaro.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -17,9 +19,13 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimerTask;
 
 import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
+import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
+import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -34,7 +40,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -116,6 +125,8 @@ public class Controller {
     @FXML
     private Button submitButton;
     @FXML
+    private ImageView submitButtonStatusIndicator;
+    @FXML
     private Button browseFileButton;
     @FXML
     private TextField browseFileTF;
@@ -171,6 +182,10 @@ public class Controller {
     private MenuButton selectCategory;
     /* Graph Data Tab End */
     
+    private Image okImage;
+    private Image errorImage;
+    private Image busyImage;
+    
     @FXML
     public void initialize() {
         
@@ -188,27 +203,484 @@ public class Controller {
 
     @FXML
     public void handleSubmitButton(final ActionEvent event) {
-        ParkMonth parkMonth = new ParkMonth(getEnterPark());
-        parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
-                getConversionFactorPaidDayUseTF(), getPaidDayUseTotalsTF(), getSpecialEventsTF(), getAnnualDayUseTF(),
-                getDayUseTF(), getSeniorTF(), getDisabledTF(), getGoldenBearTF(), getDisabledVeteranTF(),
-                getNonResOHVPassTF(), getAnnualPassSaleTF(), getCampingTF(), getSeniorCampingTF(),
-                getDisabledCampingTF(), getConversionFactorFreeDayUseTF(), getFreeDayUseTotalsTF(),
-                getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getAllStarKartingTF(),
-                getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
-                -1, getbrowseFile());
-        
-        // attempt to write into database
-        boolean success = false;
+        // disable buttons so user don't press again
+        submitButton.setDisable(true);
+        clearButton.setDisable(true);
+        browseFileButton.setDisable(true);
+        // show busy spinner icon
+        showBusyOnSubmit();
+        // Submit processing to background task so we
+        //   don't block the UI thread and freeze the window
+        TaskEngine.INSTANCE.submit(new Runnable() {
+            ParkMonth parkMonth = null;
+            boolean success = false;
+            @Override
+            public void run() {
+                if(validateEnteredData()) {
+                    try {
+                        parkMonth = new ParkMonth(getEnterPark());
+                        parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
+                                getConversionFactorPaidDayUseTF(), getPaidDayUseTotalsTF(), getSpecialEventsTF(), getAnnualDayUseTF(),
+                                getDayUseTF(), getSeniorTF(), getDisabledTF(), getGoldenBearTF(), getDisabledVeteranTF(),
+                                getNonResOHVPassTF(), getAnnualPassSaleTF(), getCampingTF(), getSeniorCampingTF(),
+                                getDisabledCampingTF(), getConversionFactorFreeDayUseTF(), getFreeDayUseTotalsTF(),
+                                getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getFourByFourTF(),
+                                getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
+                                -1, getbrowseFile());
+                        success = true;
+                    } catch (Exception e) {
+                        // something was wrong with data
+                        LOG.error(e.getMessage(), e);
+                        showErrorOnSubmit();
+                    }
+                    
+                    if (success) {
+                        // attempt to write into database
+                        success = false;
+                        try {
+                            DataManager.Narvaro.storeParkMonth(parkMonth);
+                            success = true;
+                        } catch (SQLException e) {
+                            LOG.error(e.getMessage(), e);
+                        }
+                        if (success) {
+                            showOKOnSubmit();
+                            resetValidation();
+                        } else {
+                            showErrorOnSubmit();
+                        }
+                    }
+                }
+                // enable buttons again
+                submitButton.setDisable(false);
+                clearButton.setDisable(false);
+                browseFileButton.setDisable(false);
+            }
+        });
+    }
+    
+    private boolean validateEnteredData() {
+        boolean ok = true;
         try {
-            DataManager.Narvaro.storeParkMonth(parkMonth);
-            success = true;
-        } catch (SQLException e) {
-            LOG.error(e.getMessage(), e);
+            getEnterPark();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    selectAParkDropDownMenu.setStyle("-fx-background-color:#87D37C;");
+                }
+            });
+        } catch (Exception e) {
+            ok = false;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    selectAParkDropDownMenu.setStyle("-fx-background-color:#EF4836;");
+                }
+            });
         }
-        if (success) {
-            // clear all fields to signify OK
-            handleClearButton(null);
+        try {
+            getEnterYear();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    enterYear.setStyle("-fx-background-color:#87D37C;");
+                }
+            });
+        } catch (Exception e) {
+            ok = false;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    enterYear.setStyle("-fx-background-color:#EF4836;");
+                }
+            });
+        }
+        try {
+            getEnterMonth();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    enterMonth.setStyle("-fx-background-color:#87D37C;");
+                }
+            });
+        } catch (Exception e) {
+            ok = false;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    enterMonth.setStyle("-fx-background-color:#EF4836;");
+                }
+            });
+        }
+        try {
+            getConversionFactorPaidDayUseTF();
+            showValid(conversionFactorPaidDayUseTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(conversionFactorPaidDayUseTF);
+        }
+        try {
+            getPaidDayUseTotalsTF();
+            showValid(paidDayUseTotalsTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(paidDayUseTotalsTF);
+        }
+        try {
+            getSpecialEventsTF();
+            showValid(specialEventsTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(specialEventsTF);
+        }
+        try {
+            getAnnualDayUseTF();
+            showValid(annualDayUseTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(annualDayUseTF);
+        }
+        try {
+            getDayUseTF();
+            showValid(dayUseTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(dayUseTF);
+        }
+        try {
+            getSeniorTF();
+            showValid(seniorTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(seniorTF);
+        }
+        try {
+            getDisabledTF();
+            showValid(disabledTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(disabledTF);
+        }
+        try {
+            getGoldenBearTF();
+            showValid(goldenBearTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(goldenBearTF);
+        }
+        try {
+            getDisabledVeteranTF();
+            showValid(disabledVeteranTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(disabledVeteranTF);
+        }
+        try {
+            getNonResOHVPassTF();
+            showValid(nonResOHVPassTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(nonResOHVPassTF);
+        }
+        try {
+            getAnnualPassSaleTF();
+            showValid(annualPassSaleTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(annualPassSaleTF);
+        }
+        try {
+            getCampingTF();
+            showValid(campingTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(campingTF);
+        }
+        try {
+            getSeniorCampingTF();
+            showValid(seniorCampingTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(seniorCampingTF);
+        }
+        try {
+            getDisabledCampingTF();
+            showValid(disabledCampingTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(disabledCampingTF);
+        }
+        try {
+            getConversionFactorFreeDayUseTF();
+            showValid(conversionFactorFreeDayUseTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(conversionFactorFreeDayUseTF);
+        }
+        try {
+            getFreeDayUseTotalsTF();
+            showValid(freeDayUseTotalsTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(freeDayUseTotalsTF);
+        }
+        try {
+            getTotalVehiclesTF();
+            showValid(totalVehiclesTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(totalVehiclesTF);
+        }
+        try {
+            getTotalPeopleTF();
+            showValid(totalPeopleTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(totalPeopleTF);
+        }
+        try {
+            getRatioTF();
+            showValid(ratioTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(ratioTF);
+        }
+        try {
+            getMcTF();
+            showValid(mcTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(mcTF);
+        }
+        try {
+            getAtvTF();
+            showValid(atvTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(atvTF);
+        }
+        try {
+            getFourByFourTF();
+            showValid(fourByFourTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(fourByFourTF);
+        }
+        try {
+            getRovTF();
+            showValid(rovTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(rovTF);
+        }
+        try {
+            getAqmaTF();
+            showValid(aqmaTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(aqmaTF);
+        }
+        try {
+            getAllStarKartingTF();
+            showValid(allStarKartingTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(allStarKartingTF);
+        }
+        try {
+            getHangtownTF();
+            showValid(hangtownTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(hangtownTF);
+        }
+        try {
+            getOtherTF();
+            showValid(otherTF);
+        } catch (Exception e) {
+            ok = false;
+            showError(otherTF);
+        }
+        try {
+            File f = getbrowseFile();
+            if (f.exists()) {
+                showValid(browseFileTF);
+            }
+        } catch (Exception e) {
+            ok = false;
+            showError(browseFileTF);
+        }
+        if (ok == false) {
+            showErrorOnSubmit();
+        }
+        return ok;  
+    }
+    
+    private void resetValidation() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                selectAParkDropDownMenu.setStyle("-fx-background-color:#FFFFFF;");
+                enterYear.setStyle("-fx-background-color:#FFFFFF;");
+                enterMonth.setStyle("-fx-background-color:#FFFFFF;");
+                resetValid(conversionFactorPaidDayUseTF);
+                resetValid(paidDayUseTotalsTF);
+                resetValid(specialEventsTF);
+                resetValid(annualDayUseTF);
+                resetValid(dayUseTF);
+                resetValid(seniorTF);
+                resetValid(disabledTF);
+                resetValid(goldenBearTF);
+                resetValid(disabledVeteranTF);
+                resetValid(nonResOHVPassTF);
+                resetValid(annualPassSaleTF);
+                resetValid(campingTF);
+                resetValid(seniorCampingTF);
+                resetValid(disabledCampingTF);
+                resetValid(conversionFactorFreeDayUseTF);
+                resetValid(freeDayUseTotalsTF);
+                resetValid(totalVehiclesTF);
+                resetValid(totalPeopleTF);
+                resetValid(ratioTF);
+                resetValid(commentsTB);
+                resetValid(mcTF);
+                resetValid(atvTF);
+                resetValid(fourByFourTF);
+                resetValid(rovTF);
+                resetValid(aqmaTF);
+                resetValid(allStarKartingTF);
+                resetValid(hangtownTF);
+                resetValid(otherTF);
+                resetValid(browseFileTF);
+            }
+        });
+    }
+    
+    private void showValid(final Region r) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                r.setStyle("-fx-control-inner-background:#87D37C;");
+            }
+        });
+    }
+    
+    private void showError(final Region r) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                r.setStyle("-fx-control-inner-background:#EF4836;");
+            }
+        });
+    }
+    
+    private void resetValid(final Region r) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                r.setStyle("-fx-control-inner-background:#FFFFFF;");
+            }
+        });
+    }
+    
+    public void showBusyOnSubmit() {
+        InputStream in = null;
+        if (busyImage == null) {
+            try {
+                in = new FileInputStream(ConfigurationManager.NARVARO.getHomeDirectory() 
+                        + File.separator + "resources" + File.separator + "busy.gif");
+                busyImage = new Image(in);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                submitButtonStatusIndicator.setImage(busyImage);
+            }
+        });
+    }
+    
+    public void showOKOnSubmit() {
+        InputStream in = null;
+        if (okImage == null) {
+            try {
+                in = new FileInputStream(ConfigurationManager.NARVARO.getHomeDirectory() 
+                        + File.separator + "resources" + File.separator + "ok.png");
+                okImage = new Image(in);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                submitButtonStatusIndicator.setImage(okImage);
+            }
+        });
+        TaskEngine.INSTANCE.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        clearSubmitButtonStatusIndicator();
+                    }
+                });
+            }
+        }, 2000);
+        if (in != null) {
+            try {
+                in.close();
+            } catch (Exception ex) {
+                LOG.warn(ex.getMessage(), ex);
+            }
+        }
+    }
+    
+    public void showErrorOnSubmit() {
+        InputStream in = null;
+        if (errorImage == null) {
+            try {
+                in = new FileInputStream(ConfigurationManager.NARVARO.getHomeDirectory() 
+                        + File.separator + "resources" + File.separator + "error.png");
+                errorImage = new Image(in);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                submitButtonStatusIndicator.setImage(errorImage);
+            }
+        });
+        TaskEngine.INSTANCE.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        clearSubmitButtonStatusIndicator();
+                    }
+                });
+            }
+        }, 2000);
+        if (in != null) {
+            try {
+                in.close();
+            } catch (Exception ex) {
+                LOG.warn(ex.getMessage(), ex);
+            }
+        }
+    }
+    
+    private void clearSubmitButtonStatusIndicator() {
+        try {
+            submitButtonStatusIndicator.setImage(null);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
         }
     }
     
@@ -244,6 +716,10 @@ public class Controller {
                 ((DatePicker) o[i]).setValue(null);
             }
         }
+        selectAParkDropDownMenu.setValue(null);
+        enterYear.setValue(null);
+        enterMonth.setValue(null);
+        resetValidation();
     }
     
     public void updateSelectAParkDropDownMenu() {
