@@ -9,9 +9,11 @@
 
 package edu.csus.ecs.moneybeets.narvaro.model;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -466,24 +468,24 @@ public enum DataManager {
             if (parkId > 0) {
                 for (MonthData md : pm.getAllMonthData()) {
                     // insert 449 Form into database
-                    InputStream in = null;
+                    Blob blob = null;
                     try {
-                        in = new FileInputStream(md.getForm449File().toPath().toFile());
+                        Path path = md.getForm449File().toPath();
+                        byte[] pathBytes = Files.readAllBytes(path);
+                        blob = con.createBlob();
+                        blob.setBytes(1, pathBytes);
                         psInsertForm.setString(1, md.getForm449File().getName());
-                        psInsertForm.setBlob(2, in);
+                        psInsertForm.setBlob(2, blob);
                         psInsertForm.execute();
                     } catch (IOException e) {
                         LOG.error(e.getMessage(), e);
                     } finally {
-                        try {
-                            if (in != null) {
-                                in.close();
-                            }
-                        } catch (Exception ex) {
-                            LOG.warn(ex.getMessage(), ex);
+                        if (blob != null) {
+                            blob.free();
                         }
-                        in = null;
+                        blob = null;
                     }
+                    
                     // insert monthdata
                     psInsertMonthData.setLong(1, parkId);
                     psInsertMonthData.setDate(2, yearMonthToDate(md.getMonth()));
