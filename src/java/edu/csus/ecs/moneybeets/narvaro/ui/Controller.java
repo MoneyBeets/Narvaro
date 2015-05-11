@@ -23,7 +23,6 @@ import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
 import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
@@ -176,22 +175,16 @@ public class Controller {
     
     @FXML
     public void initialize() {
-        // database is not initialized yet...
-        //   so send this task to a background thread and
-        //   execute it a few seconds after startup...
-        TaskEngine.INSTANCE.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // get a list of all park names in the db
-                List<String> parkNames = DataManager.Narvaro.getAllParkNames();
-                // clear old items
-                selectAParkDropDownMenu.getItems().clear();
-                // add park names to window
-                for (String parkName : parkNames) {
-                    selectAParkDropDownMenu.getItems().add(parkName);
-                }
-            }
-        }, 5000);
+        
+        // get a list of all park names in the db
+        List<String> parkNames = DataManager.Narvaro.getAllParkNames();
+        // clear old items
+        selectAParkDropDownMenu.getItems().clear();
+        // add park names to window
+        for (String parkName : parkNames) {
+            selectAParkDropDownMenu.getItems().add(parkName);
+        }
+
         // populate year field on enter data tab
         LocalDateTime ldt = LocalDateTime.now();
         int year = ldt.getYear();
