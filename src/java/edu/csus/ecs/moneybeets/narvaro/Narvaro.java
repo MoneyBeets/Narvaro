@@ -114,6 +114,24 @@ public class Narvaro extends Application {
             doFirstTimeSetup();
         }
         
+        // startup the database manager by requesting a connection
+        try {
+            Connection con = DatabaseManager.Narvaro.getConnection();
+            DatabaseManager.Narvaro.closeConnection(con);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            return;
+        }
+        LOG.info("Database Manager Started");
+        
+        // startup DataManager
+        try {
+            DataManager.Narvaro.start();
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        LOG.info("Data Manager Started");
+        
         this.stage = stage;
 
         // locate FXML layout
@@ -144,24 +162,6 @@ public class Narvaro extends Application {
             }
             
         });
-        
-        // startup the database manager by requesting a connection
-        try {
-            Connection con = DatabaseManager.Narvaro.getConnection();
-            DatabaseManager.Narvaro.closeConnection(con);
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            return;
-        }
-        LOG.info("Database Manager Started");
-        
-        // startup DataManager
-        try {
-            DataManager.Narvaro.start();
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-        }
-        LOG.info("Data Manager Started");
         
         stage.show();
         
