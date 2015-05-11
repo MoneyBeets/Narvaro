@@ -10,6 +10,8 @@
 package edu.csus.ecs.moneybeets.narvaro.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -17,9 +19,13 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimerTask;
 
 import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
+import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
+import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -34,6 +40,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -116,6 +124,8 @@ public class Controller {
     @FXML
     private Button submitButton;
     @FXML
+    private ImageView submitButtonStatusIndicator;
+    @FXML
     private Button browseFileButton;
     @FXML
     private TextField browseFileTF;
@@ -171,6 +181,9 @@ public class Controller {
     private MenuButton selectCategory;
     /* Graph Data Tab End */
     
+    private Image okImage;
+    private Image errorImage;
+    
     @FXML
     public void initialize() {
         
@@ -188,27 +201,111 @@ public class Controller {
 
     @FXML
     public void handleSubmitButton(final ActionEvent event) {
-        ParkMonth parkMonth = new ParkMonth(getEnterPark());
-        parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
-                getConversionFactorPaidDayUseTF(), getPaidDayUseTotalsTF(), getSpecialEventsTF(), getAnnualDayUseTF(),
-                getDayUseTF(), getSeniorTF(), getDisabledTF(), getGoldenBearTF(), getDisabledVeteranTF(),
-                getNonResOHVPassTF(), getAnnualPassSaleTF(), getCampingTF(), getSeniorCampingTF(),
-                getDisabledCampingTF(), getConversionFactorFreeDayUseTF(), getFreeDayUseTotalsTF(),
-                getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getAllStarKartingTF(),
-                getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
-                -1, getbrowseFile());
-        
-        // attempt to write into database
+        ParkMonth parkMonth = null;
         boolean success = false;
         try {
-            DataManager.Narvaro.storeParkMonth(parkMonth);
+            parkMonth = new ParkMonth(getEnterPark());
+            parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
+                    getConversionFactorPaidDayUseTF(), getPaidDayUseTotalsTF(), getSpecialEventsTF(), getAnnualDayUseTF(),
+                    getDayUseTF(), getSeniorTF(), getDisabledTF(), getGoldenBearTF(), getDisabledVeteranTF(),
+                    getNonResOHVPassTF(), getAnnualPassSaleTF(), getCampingTF(), getSeniorCampingTF(),
+                    getDisabledCampingTF(), getConversionFactorFreeDayUseTF(), getFreeDayUseTotalsTF(),
+                    getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getAllStarKartingTF(),
+                    getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
+                    -1, getbrowseFile());
             success = true;
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            // something was wrong with data
             LOG.error(e.getMessage(), e);
+            showErrorOnSubmit();
         }
+        
         if (success) {
-            // clear all fields to signify OK
-            handleClearButton(null);
+            // attempt to write into database
+            success = false;
+            try {
+                DataManager.Narvaro.storeParkMonth(parkMonth);
+                success = true;
+            } catch (SQLException e) {
+                LOG.error(e.getMessage(), e);
+            }
+            if (success) {
+                showOKOnSubmit();
+            } else {
+                showErrorOnSubmit();
+            }
+        }
+    }
+    
+    public void showOKOnSubmit() {
+        InputStream in = null;
+        if (okImage == null) {
+            try {
+                in = new FileInputStream(ConfigurationManager.NARVARO.getHomeDirectory() 
+                        + File.separator + "resources" + File.separator + "ok.png");
+                okImage = new Image(in);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+        submitButtonStatusIndicator.setImage(okImage);
+        TaskEngine.INSTANCE.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        clearSubmitButtonStatusIndicator();
+                    }
+                });
+            }
+        }, 2000);
+        if (in != null) {
+            try {
+                in.close();
+            } catch (Exception ex) {
+                LOG.warn(ex.getMessage(), ex);
+            }
+        }
+    }
+    
+    public void showErrorOnSubmit() {
+        InputStream in = null;
+        if (errorImage == null) {
+            try {
+                in = new FileInputStream(ConfigurationManager.NARVARO.getHomeDirectory() 
+                        + File.separator + "resources" + File.separator + "error.png");
+                errorImage = new Image(in);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+        submitButtonStatusIndicator.setImage(errorImage);
+        TaskEngine.INSTANCE.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        clearSubmitButtonStatusIndicator();
+                    }
+                });
+            }
+        }, 2000);
+        if (in != null) {
+            try {
+                in.close();
+            } catch (Exception ex) {
+                LOG.warn(ex.getMessage(), ex);
+            }
+        }
+    }
+    
+    private void clearSubmitButtonStatusIndicator() {
+        try {
+            submitButtonStatusIndicator.setImage(null);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
         }
     }
     

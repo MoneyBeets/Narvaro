@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.chart.*?>
@@ -89,6 +90,7 @@
                         <Label fx:id="allStarKartingLabel" layoutX="617.0" layoutY="268.0" text="All Star Karting" />
                         <Label fx:id="hangtownLabel" layoutX="621.0" layoutY="301.0" text="Hangtown" />
                         <Label fx:id="otherLabel" layoutX="621.0" layoutY="333.0" text="Other" />
+                        <ImageView fx:id="submitButtonStatusIndicator" fitHeight="39.0" fitWidth="52.0" layoutX="688.0" layoutY="471.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </AnchorPane>
             </content>
