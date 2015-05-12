@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import edu.csus.ecs.moneybeets.narvaro.database.DatabaseType;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Region;
 
 /**
  * This class acts as the controller for the 
@@ -24,7 +26,6 @@ import javafx.scene.input.KeyEvent;
 public class NarvaroSetup {
     
     private static final Logger LOG = Logger.getLogger(NarvaroSetup.class.getName());
-	boolean success = true;
     
     @FXML private ComboBox<String> databaseTypeSelector;
     @FXML private TextField serverName;
@@ -37,10 +38,7 @@ public class NarvaroSetup {
         for (DatabaseType dbType : DatabaseType.values()) {
             databaseTypeSelector.getItems().add(dbType.getName());
         }
-        
-        do{
         installEventHandler(serverName.getParent().getParent().getParent().getParent());
-        }while(success==false);
     }
     private void installEventHandler(final Node keyNode) 
     {
@@ -60,45 +58,106 @@ public class NarvaroSetup {
      * This method is invoked when the OK button is pressed.
      * 
      * @param event The event.
-     * @throws DataFormatException 
      */
     @FXML
-    public void handleOKButton(final ActionEvent event){
-    	
-    	if(validate()){
-    		writeConfig();
-    		portNumber.getScene().getWindow().hide();
-    	}
+    public void handleOKButton(final ActionEvent event) {
+        if (validate()) {
+            writeConfig();
+            portNumber.getScene().getWindow().hide();
+        }
     }
     
-    private boolean validate(){
-    	
-		/*if(!getDatabaseType().equals("mysql")){
-		databaseTypeSelector.setStyle("-fx-background-color:#EF4836;");
-		return false;
-		}*/
-    	if(!getServerName().equals("fw.vanomaly.net")) 
-    	{
-			serverName.setStyle("-fx-background-color:#EF4836;");
-			return false;
-    	}
-    	else if(!portNumber.getText().equals("3306")){
-    		portNumber.setStyle("-fx-background-color:#EF4836;");
-    		return false;
-    	}
-    	else if(!databaseUser.getText().equals("narvaro")){
-    		databaseUser.setStyle("-fx-background-color:#EF4836;");
-    		return false;
-    	}
-    	else if(!databasePassword.getText().equals("S3cur311!!")){
-    		databasePassword.setStyle("-fx-background-color:#EF4836;");
-    		return false;
-    	}
-    	else
-    	{
-    		success = true;
-    		return true;
-    	}
+    private boolean validate() {
+        
+        boolean success = true;
+        
+        try {
+            String s = getServerName();    
+            if (!"".equals(s) && s != null) {
+                showValid(serverName);
+            }
+            else {
+                LOG.error("Server Name not valid: " + s);
+                showError(serverName);
+                success = false;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            showError(serverName);
+        }
+        
+        try {
+            String s = getDatabasePassword();
+            if (!"".equals(s) && s != null) {
+                showValid(databasePassword);
+            }
+            else {
+                LOG.error("Database Password not valid: " + s);
+                showError(databasePassword);
+                success = false;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            showError(databaseUser);
+        }
+        
+        try {
+            String s = getDatabaseUser();
+            if (!"".equals(s) && s != null) {
+                showValid(databaseUser);
+            }
+            else {
+                LOG.error("Database user not valid: " + s);
+                showError(databaseUser);
+                success = false;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            showError(databaseUser);
+        }
+        
+        try {
+            int i = getPortNumber();
+            if (i > 0) {
+                showValid(portNumber);
+            } else {
+                LOG.error("Port number not valid: " + i);
+                showError(portNumber);
+                success = false;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+
+        return success;
+    }
+
+    // helper methods
+    private void showValid(final Region r) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                r.setStyle("-fx-control-inner-background:#87D37C;");
+            }
+        });
+    }
+
+    private void showError(final Region r) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                r.setStyle("-fx-control-inner-background:#EF4836;");
+            }
+        });
+    }
+
+    private void resetValid(final Region r) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                r.setStyle("-fx-control-inner-background:#FFFFFF;");
+            }
+        });
     }
     
     /**
