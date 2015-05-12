@@ -566,7 +566,7 @@ public enum DataManager {
         }
         return parkNames;
     }
-    
+
     /**
      * Utility method to convert a <code>YearMonth</code> into a <code>java.sql.Date</code>.
      * 

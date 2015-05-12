@@ -13,33 +13,32 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.TimerTask;
 
 import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
+import edu.csus.ecs.moneybeets.narvaro.model.MonthData;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
+import edu.csus.ecs.moneybeets.narvaro.model.TimeSpan;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -47,6 +46,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
+import javafx.util.Callback;
 import org.apache.log4j.Logger;
 
 public class Controller {
@@ -136,23 +136,23 @@ public class Controller {
     @FXML
     private Tab viewDataTab;
     @FXML
-    private ComboBox<?> monthSelectionOne;
+    private ComboBox<Month> monthSelectionOne;
     @FXML
-    private ComboBox<?> yearSelectionOne;
+    private ComboBox<Integer> yearSelectionOne;
     @FXML
-    private ComboBox<?> monthSelectionTwo;
+    private ComboBox<Month> monthSelectionTwo;
     @FXML
-    private ComboBox<?> yearSelectionTwo;
+    private ComboBox<Integer> yearSelectionTwo;
     @FXML
-    private ListView<?> parkView;
+    private ListView<String> parkView;
     @FXML
-    private Button addParkButton;
-    @FXML
-    private Button removeParkButton;
+    private Button searchButton;
     @FXML
     private ScrollPane scrollPane;
     @FXML
     private AnchorPane viewDataPane;
+    @FXML
+    private TableView viewDataTable;
     /* View Data Tab End */
 
     /* Graph Data Tab Start */
@@ -189,16 +189,25 @@ public class Controller {
     @FXML
     public void initialize() {
         
-        updateSelectAParkDropDownMenu();
+        updateParkLists();
 
-        // populate year field on enter data tab
+        // populate year field on enter data tab and view data tab
         LocalDateTime ldt = LocalDateTime.now();
         int year = ldt.getYear();
         for (; year >= 1984; year--) {
             enterYear.getItems().add(year);
+            yearSelectionOne.getItems().add(year);
+            yearSelectionTwo.getItems().add(year);
         }
         // populate month field on enter data tab
         enterMonth.getItems().addAll(Arrays.asList(Month.values()));
+
+        // populate month fields on view data tab
+        monthSelectionOne.getItems().addAll(Arrays.asList(Month.values()));
+        monthSelectionTwo.getItems().addAll(Arrays.asList(Month.values()));
+
+        // permit multiple selection on park listview
+        parkView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     @FXML
@@ -214,9 +223,10 @@ public class Controller {
         TaskEngine.INSTANCE.submit(new Runnable() {
             ParkMonth parkMonth = null;
             boolean success = false;
+
             @Override
             public void run() {
-                if(validateEnteredData()) {
+                if (validateEnteredData()) {
                     try {
                         parkMonth = new ParkMonth(getEnterPark());
                         parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
@@ -233,7 +243,7 @@ public class Controller {
                         LOG.error(e.getMessage(), e);
                         showErrorOnSubmit();
                     }
-                    
+
                     if (success) {
                         // attempt to write into database
                         success = false;
@@ -722,15 +732,53 @@ public class Controller {
         resetValidation();
     }
     
-    public void updateSelectAParkDropDownMenu() {
+    public void updateParkLists() {
         // get a list of all park names in the db
         List<String> parkNames = DataManager.Narvaro.getAllParkNames();
         // clear old items
         selectAParkDropDownMenu.getItems().clear();
+        parkView.getItems().clear();
         // add park names to window
         for (String parkName : parkNames) {
             selectAParkDropDownMenu.getItems().add(parkName);
+            parkView.getItems().add(parkName);
         }
+    }
+
+    @FXML
+    public void handleSearchButton(final ActionEvent event) {
+        int startYear = yearSelectionOne.getValue();
+        Month startMonth = monthSelectionOne.getValue();
+        int endYear = yearSelectionTwo.getValue();
+        Month endMonth = monthSelectionTwo.getValue();
+        TimeSpan ts = new TimeSpan(YearMonth.of(startYear, startMonth), YearMonth.of(endYear, endMonth));
+
+        ObservableList<ObservableList> entries;
+        entries = FXCollections.observableArrayList();
+
+        Collection tempData;
+        List<String> parkNames = parkView.getSelectionModel().getSelectedItems();
+
+        for(String parkName : parkNames) {
+            TableColumn col = new TableColumn();
+            col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures, ObservableValue>() {
+                @Override
+                public ObservableValue call(TableColumn.CellDataFeatures param) {
+                    return new SimpleStringProperty();
+                }
+            });
+            viewDataTable.getColumns().addAll(col);
+        }
+        for(String parkName : parkNames) {
+            tempData = ts.getParkMonth(parkName).getAllMonthData();
+            Object data[] = tempData.toArray();
+            ObservableList<String> row = FXCollections.observableArrayList();
+            for(int i = 1; i < data.length; i++) {
+                row.add(data[i].toString());
+            }
+            entries.add(row);
+        }
+        viewDataTable.setItems(entries);
     }
 
     /* Getter and Setter Forest. Abandon all hope, ye who enter */
