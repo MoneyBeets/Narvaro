@@ -24,6 +24,7 @@ import javafx.scene.input.KeyEvent;
 public class NarvaroSetup {
     
     private static final Logger LOG = Logger.getLogger(NarvaroSetup.class.getName());
+	boolean success = true;
     
     @FXML private ComboBox<String> databaseTypeSelector;
     @FXML private TextField serverName;
@@ -36,7 +37,10 @@ public class NarvaroSetup {
         for (DatabaseType dbType : DatabaseType.values()) {
             databaseTypeSelector.getItems().add(dbType.getName());
         }
+        
+        do{
         installEventHandler(serverName.getParent().getParent().getParent().getParent());
+        }while(success==false);
     }
     private void installEventHandler(final Node keyNode) 
     {
@@ -56,17 +60,45 @@ public class NarvaroSetup {
      * This method is invoked when the OK button is pressed.
      * 
      * @param event The event.
+     * @throws DataFormatException 
      */
     @FXML
-    public void handleOKButton(final ActionEvent event) {
-        if (validate()) {
-            writeConfig();
-        }
-        portNumber.getScene().getWindow().hide();
+    public void handleOKButton(final ActionEvent event){
+    	
+    	if(validate()){
+    		writeConfig();
+    		portNumber.getScene().getWindow().hide();
+    	}
     }
     
-    private boolean validate() {
-        return true;
+    private boolean validate(){
+    	
+		/*if(!getDatabaseType().equals("mysql")){
+		databaseTypeSelector.setStyle("-fx-background-color:#EF4836;");
+		return false;
+		}*/
+    	if(!getServerName().equals("fw.vanomaly.net")) 
+    	{
+			serverName.setStyle("-fx-background-color:#EF4836;");
+			return false;
+    	}
+    	else if(!portNumber.getText().equals("3306")){
+    		portNumber.setStyle("-fx-background-color:#EF4836;");
+    		return false;
+    	}
+    	else if(!databaseUser.getText().equals("narvaro")){
+    		databaseUser.setStyle("-fx-background-color:#EF4836;");
+    		return false;
+    	}
+    	else if(!databasePassword.getText().equals("S3cur311!!")){
+    		databasePassword.setStyle("-fx-background-color:#EF4836;");
+    		return false;
+    	}
+    	else
+    	{
+    		success = true;
+    		return true;
+    	}
     }
     
     /**
