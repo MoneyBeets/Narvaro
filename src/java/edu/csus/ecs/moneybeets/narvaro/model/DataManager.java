@@ -596,7 +596,7 @@ public enum DataManager {
      * @return The converted <code>YearMonth</code>.
      */
     public static YearMonth dateToYearMonth(final Date date) {
-        return YearMonth.from(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        return YearMonth.from(date.toLocalDate());
     }
     
     

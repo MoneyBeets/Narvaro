@@ -751,7 +751,12 @@ public class Controller {
         Month startMonth = monthSelectionOne.getValue();
         int endYear = yearSelectionTwo.getValue();
         Month endMonth = monthSelectionTwo.getValue();
-        TimeSpan ts = new TimeSpan(YearMonth.of(startYear, startMonth), YearMonth.of(endYear, endMonth));
+        TimeSpan ts = null;
+        try {
+            ts = DataManager.Narvaro.getTimeSpan(YearMonth.of(startYear, startMonth), YearMonth.of(endYear, endMonth));
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
 
         ObservableList<ObservableList> entries;
         entries = FXCollections.observableArrayList();
