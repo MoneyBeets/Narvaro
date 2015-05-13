@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import edu.csus.ecs.moneybeets.narvaro.database.DatabaseType;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Region;
 
 /**
  * This class acts as the controller for the 
@@ -61,12 +63,101 @@ public class NarvaroSetup {
     public void handleOKButton(final ActionEvent event) {
         if (validate()) {
             writeConfig();
+            portNumber.getScene().getWindow().hide();
         }
-        portNumber.getScene().getWindow().hide();
     }
     
     private boolean validate() {
-        return true;
+        
+        boolean success = true;
+        
+        try {
+            String s = getServerName();    
+            if (!"".equals(s) && s != null) {
+                showValid(serverName);
+            }
+            else {
+                LOG.error("Server Name not valid: " + s);
+                showError(serverName);
+                success = false;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            showError(serverName);
+        }
+        
+        try {
+            String s = getDatabasePassword();
+            if (!"".equals(s) && s != null) {
+                showValid(databasePassword);
+            }
+            else {
+                LOG.error("Database Password not valid: " + s);
+                showError(databasePassword);
+                success = false;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            showError(databaseUser);
+        }
+        
+        try {
+            String s = getDatabaseUser();
+            if (!"".equals(s) && s != null) {
+                showValid(databaseUser);
+            }
+            else {
+                LOG.error("Database user not valid: " + s);
+                showError(databaseUser);
+                success = false;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            showError(databaseUser);
+        }
+        
+        try {
+            int i = getPortNumber();
+            if (i > 0) {
+                showValid(portNumber);
+            } else {
+                LOG.error("Port number not valid: " + i);
+                showError(portNumber);
+                success = false;
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+
+        return success;
+    }
+
+    // helper methods
+    private void showValid(final Region r) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                r.setStyle("-fx-control-inner-background:#87D37C;");
+            }
+        });
+    }
+
+    private void showError(final Region r) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                r.setStyle("-fx-control-inner-background:#EF4836;");
+            }
+        });
+    }
+
+    private void resetValid(final Region r) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                r.setStyle("-fx-control-inner-background:#FFFFFF;");
+            }
+        });
     }
     
     /**
