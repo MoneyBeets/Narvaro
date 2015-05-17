@@ -689,7 +689,7 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open 449 Form");
         fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Excel Files", "*.xls,", "*.xlsx", "*.csv"));
+                new ExtensionFilter("Excel Files", "*.xls", "*.xlsx", "*.csv"));
         File file = fileChooser.showOpenDialog(browseFileButton.getScene().getWindow());
 
         if (file != null){
