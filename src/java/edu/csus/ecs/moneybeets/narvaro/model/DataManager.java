@@ -10,7 +10,6 @@
 package edu.csus.ecs.moneybeets.narvaro.model;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Blob;
@@ -565,6 +564,22 @@ public enum DataManager {
             rs = null;
         }
         return parkNames;
+    }
+    
+    /**
+     * Inserts a new park name into the database.
+     * 
+     * If any exception is thrown, the park was not added.
+     * 
+     * @param parkName The parkname.
+     * @throws SQLException If any SQLException occurs.
+     */
+    public void insertParkName(final String parkName) throws SQLException {
+        if ("".equals(parkName) || parkName == null) {
+            throw new SQLException("Park Name cannot be empty or null");
+        }
+        psInsertPark.setString(1, parkName);
+        psInsertPark.execute();
     }
     
     /**
