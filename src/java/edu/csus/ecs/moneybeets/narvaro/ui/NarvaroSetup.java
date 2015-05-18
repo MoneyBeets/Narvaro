@@ -1,11 +1,13 @@
 package edu.csus.ecs.moneybeets.narvaro.ui;
 
+import java.util.TimerTask;
 import java.util.zip.DataFormatException;
 
 import org.apache.log4j.Logger;
 
 import edu.csus.ecs.moneybeets.narvaro.database.DatabaseType;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
+import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
+import javafx.stage.WindowEvent;
 
 /**
  * This class acts as the controller for the 
@@ -35,6 +38,18 @@ public class NarvaroSetup {
     
     @FXML
     public void initialize() {
+        TaskEngine.INSTANCE.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                serverName.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(final WindowEvent we) {
+                        Platform.exit();
+                        System.exit(0);
+                    }
+                });
+            }
+        }, 1000);
         for (DatabaseType dbType : DatabaseType.values()) {
             databaseTypeSelector.getItems().add(dbType.getName());
         }
