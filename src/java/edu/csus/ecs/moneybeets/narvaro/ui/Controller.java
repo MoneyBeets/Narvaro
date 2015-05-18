@@ -341,12 +341,18 @@ public class Controller {
     	
     	String parkName = addParkTF.getText();
     	
-		try {
-			DataManager.Narvaro.insertParkName(parkName);
-			addParkTF.setText("Park Added");
-		} catch (SQLException e) {
-		    LOG.error(e.getMessage(), e);
-		}
+    	try {
+    	    showBusyOnSubmit(); // display busy spinner in case this takes longer than a second
+    	    showValid(addParkTF); // display green area on text field
+    	    DataManager.Narvaro.insertParkName(parkName);
+    	    showOKOnSubmit(); // display green OK checkmark
+    	    addParkTF.clear(); // clear this field on success
+    	    resetValid(addParkTF); // reset back to default
+    	} catch (SQLException e) {
+    	    LOG.error(e.getMessage(), e);
+    	    showError(addParkTF); // show error on field
+    	    showErrorOnSubmit(); // display error red X
+    	}
     	
     }
     
