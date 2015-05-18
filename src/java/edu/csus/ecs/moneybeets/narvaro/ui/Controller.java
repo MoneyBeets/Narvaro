@@ -780,6 +780,7 @@ public class Controller {
             ObservableList<String> row = FXCollections.observableArrayList();
             for(int i = 1; i < data.length; i++) {
                 row.add(data[i].toString());
+                System.out.print(data[i].toString());
             }
             entries.add(row);
         }
