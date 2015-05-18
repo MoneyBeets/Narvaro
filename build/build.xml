@@ -108,7 +108,7 @@
     <!-- ======================================================================================= -->
     
     <!-- init ================================================================================== -->
-    <target name="init" depends="source.checkstyle">
+    <target name="init">
         
         <!-- Check for min build requirements -->
         
@@ -528,7 +528,7 @@
     </target>
     
     <!-- checkstyle ============================================================================== -->
-    <target name="source.checkstyle" description="Enforces source code standard prior to building Narvaro.">
+    <target name="checkstyle" description="Enforces source code standard prior to building Narvaro.">
         <taskdef resource="checkstyletask.properties" classpath="${lib.build.dir}/checkstyle-6.4-all.jar"/>
         <!-- ensure logging output dir is avaialble -->
         <mkdir dir="${target.dir}"/>
