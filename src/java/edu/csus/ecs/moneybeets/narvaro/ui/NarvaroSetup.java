@@ -278,13 +278,4 @@ public class NarvaroSetup {
     private String getDatabasePassword() {
         return databasePassword.getText();
     }
-
-    private EventHandler<KeyEvent> keyListener = new EventHandler<KeyEvent>() {
-        @Override
-        public void handle(KeyEvent event) {
-            if(event.getCode() == KeyCode.ENTER) {
-                handleOKButton(null);
-            }
-        }
-    };
 }
