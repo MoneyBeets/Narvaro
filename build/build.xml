@@ -259,27 +259,27 @@
         
         <!-- Add build information to the main configuration file -->
         <!-- We use regex here to avoid clobbering the config file formatting -->
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" Narvaro: "
             replace=" Narvaro: ${version}                  #"
             byline="false"
         />
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" Build Date: "
             replace=" Build Date: ${builddate}            #"
             byline="false"
         />
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" Commit: "
             replace=" Commit: ${repository.version}                   #"
             byline="false"
         />
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" JDK: "
             replace=" JDK: ${java.version}                     #"
             byline="false"
         />
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" ANT: "
             replace=" ANT: ${antversion}                        #"
             byline="false"

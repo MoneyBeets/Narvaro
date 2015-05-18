@@ -169,6 +169,7 @@ public class NarvaroSetup {
         });
     }
 
+    @SuppressWarnings("unused")
     private void resetValid(final Region r) {
         Platform.runLater(new Runnable() {
             @Override

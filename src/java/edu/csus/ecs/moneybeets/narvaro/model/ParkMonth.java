@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 public class ParkMonth {
 
+    @SuppressWarnings("unused")
     private static final Logger LOG = Logger.getLogger(ParkMonth.class.getName());
     
     private final String parkName;

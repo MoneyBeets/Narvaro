@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 public class TimeSpan {
     
+    @SuppressWarnings("unused")
     private static final Logger LOG = Logger.getLogger(TimeSpan.class.getName());
     
     private final YearMonth start;
