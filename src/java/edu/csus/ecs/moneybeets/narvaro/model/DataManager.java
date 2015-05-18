@@ -828,9 +828,11 @@ public enum DataManager {
             if (rs != null) {
                 // should only have a single result
                 rs.next();
-                int row = rs.getInt(1);
-                if (row > 0) {
-                    return true;
+                if (rs.isBeforeFirst()) {
+                    int row = rs.getInt(1);
+                    if (row > 0) {
+                        return true;
+                    }
                 }
                 return false;
             }
