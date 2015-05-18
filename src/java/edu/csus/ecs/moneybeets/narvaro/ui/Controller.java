@@ -133,6 +133,10 @@ public class Controller {
     private Button browseFileButton;
     @FXML
     private TextField browseFileTF;
+    @FXML
+    private Button addParkButton1;
+    @FXML
+    private TextField addParkTF;
     /* Enter Data Tab End */
 
     /* View Data Tab Start */
@@ -330,6 +334,21 @@ public class Controller {
         // Submit processing to background task so we
         //   don't block the UI thread and freeze the window
         TaskEngine.INSTANCE.submit(new StoreParkMonthTask());
+    }
+    
+    @FXML
+    public void handleAddParkButton1(final ActionEvent event) {
+    	
+    	String parkName = addParkTF.getText();
+    	
+		try {
+			DataManager.Narvaro.insertParkName(parkName);
+			addParkTF.setText("Park Added");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     }
     
     private boolean validateEnteredData() {

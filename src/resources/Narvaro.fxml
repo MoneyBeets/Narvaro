@@ -45,14 +45,20 @@
                               <TextField fx:id="fourByFourTF" layoutX="543.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="rovTF" layoutX="543.0" layoutY="360.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextField fx:id="aqmaTF" layoutX="543.0" layoutY="392.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="allStarKartingTF" layoutX="719.0" layoutY="263.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="hangtownTF" layoutX="719.0" layoutY="296.0" prefHeight="26.0" prefWidth="44.0" />
-                              <TextField fx:id="otherTF" layoutX="719.0" layoutY="328.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="allStarKartingTF" layoutX="719.0" layoutY="315.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="hangtownTF" layoutX="719.0" layoutY="347.0" prefHeight="26.0" prefWidth="44.0" />
+                              <TextField fx:id="otherTF" layoutX="719.0" layoutY="379.0" prefHeight="26.0" prefWidth="44.0" />
                               <TextArea fx:id="commentsTB" layoutX="617.0" layoutY="82.0" prefHeight="113.0" prefWidth="186.0" />
                               <TextField fx:id="browseFileTF" layoutX="617.0" layoutY="228.0" prefHeight="26.0" prefWidth="102.0" promptText="Browse for a file" />  
                               <Button fx:id="browseFileButton" layoutX="732.0" layoutY="228.0" mnemonicParsing="false" onAction="#handleBrowseButton" text="Browse" />
                               <ComboBox fx:id="enterMonth" layoutX="20.0" layoutY="114.0" prefWidth="150.0" promptText="Month" />
                               <ComboBox fx:id="enterYear" layoutX="20.0" layoutY="81.0" prefWidth="150.0" promptText="Year" />
+                              <Button fx:id="addParkButton1" layoutX="732.0" layoutY="277.0" mnemonicParsing="false" onAction="#handleAddParkButton1" prefHeight="25.0" prefWidth="52.0" text="Add" />
+                              <Label fx:id="conversionFactorLabel1" layoutX="617.0" layoutY="257.0" text="Add Park" />
+                              <Label fx:id="otherLabel" layoutX="619.0" layoutY="384.0" text="Other" />
+                              <Label fx:id="hangtownLabel" layoutX="621.0" layoutY="352.0" text="Hangtown" />
+                              <Label fx:id="allStarKartingLabel" layoutX="619.0" layoutY="320.0" text="All Star Karting" />
+                              <TextField fx:id="addParkTF" layoutX="619.0" layoutY="276.0" prefHeight="26.0" prefWidth="100.0" promptText="Park Name" />
                            </children>
                         </Group>
                         <Label fx:id="paidDayUseLabel" layoutX="234.0" layoutY="26.0" text="Paid Day Use" underline="true" />
@@ -87,9 +93,6 @@
                         <Label layoutX="421.0" layoutY="333.0" text="4X4" />
                         <Label layoutX="424.0" layoutY="365.0" text="ROV" />
                         <Label layoutX="422.0" layoutY="397.0" text="AQMA" />
-                        <Label fx:id="allStarKartingLabel" layoutX="617.0" layoutY="268.0" text="All Star Karting" />
-                        <Label fx:id="hangtownLabel" layoutX="621.0" layoutY="301.0" text="Hangtown" />
-                        <Label fx:id="otherLabel" layoutX="621.0" layoutY="333.0" text="Other" />
                         <ImageView fx:id="submitButtonStatusIndicator" fitHeight="39.0" fitWidth="52.0" layoutX="688.0" layoutY="471.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </AnchorPane>
