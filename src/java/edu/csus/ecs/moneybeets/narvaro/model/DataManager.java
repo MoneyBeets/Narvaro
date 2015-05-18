@@ -841,7 +841,7 @@ public enum DataManager {
         }
         return parkNames;
     }
-    
+
     /**
      * Inserts a new park name into the database.
      * 
