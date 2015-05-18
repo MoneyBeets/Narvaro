@@ -50,9 +50,12 @@ public class NarvaroSetup {
                 });
             }
         }, 1000);
-        for (DatabaseType dbType : DatabaseType.values()) {
-            databaseTypeSelector.getItems().add(dbType.getName());
-        }
+        // uncomment to enable multi-db support
+        //for (DatabaseType dbType : DatabaseType.values()) {
+        //    databaseTypeSelector.getItems().add(dbType.getName());
+        //}
+        // for the time being, we'll only officially support mysql
+        databaseTypeSelector.getItems().add(DatabaseType.mysql.getName());
         installEventHandler(serverName.getParent().getParent().getParent().getParent());
     }
     private void installEventHandler(final Node keyNode) 
