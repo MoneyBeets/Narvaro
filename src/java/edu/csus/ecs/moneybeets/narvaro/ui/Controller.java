@@ -22,10 +22,13 @@ import java.util.List;
 import java.util.TimerTask;
 
 import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
+import edu.csus.ecs.moneybeets.narvaro.model.MonthData;
 import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -199,6 +202,121 @@ public class Controller {
         }
         // populate month field on enter data tab
         enterMonth.getItems().addAll(Arrays.asList(Month.values()));
+        
+        // add change listener to all drop-downs in view data tab
+        selectAParkDropDownMenu.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov,
+                    String old_val, String new_val) {
+                displayStoredData();
+            }
+        });
+        enterYear.valueProperty().addListener(new ChangeListener<Integer>() {
+            @Override
+            public void changed(ObservableValue<? extends Integer> ov,
+                    Integer old_val, Integer new_val) {
+                displayStoredData();
+            }
+        });
+        enterMonth.valueProperty().addListener(new ChangeListener<Month>() {
+            @Override
+            public void changed(ObservableValue<? extends Month> ov,
+                    Month old_val, Month new_val) {
+                displayStoredData();
+            }
+        });
+    }
+    
+    /**
+     * Displays any existing data from the database in the proper
+     *   fields on the enter data tab.
+     */
+    private void displayStoredData() {
+        try {
+            String s = getEnterPark();
+            if ("".equals(s) && s == null) {
+                return;
+            } else if (s.equals("Park")) {
+                return;
+            }
+            int y = getEnterYear();
+            if (y < 1984) {
+                return;
+            }
+            int m = getEnterMonth();
+            if (m < 1 || m > 12) {
+                return;
+            }
+        } catch (Exception e) {
+            LOG.warn(e.getMessage(), e);
+            return;
+        }
+        submitButton.setDisable(true);
+        clearButton.setDisable(true);
+        browseFileButton.setDisable(true);
+        // show busy spinner icon
+        showBusyOnSubmit();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                
+                MonthData md = null;
+                try {
+                    md = DataManager.Narvaro.getMonthDataForParkAndYearMonth(YearMonth.of(getEnterYear(), getEnterMonth()), getEnterPark());
+                    
+                    // set data on view data tab
+                    conversionFactorPaidDayUseTF.setText(md.getPduConversionFactor().toString());
+                    paidDayUseTotalsTF.setText(String.valueOf(md.getPduTotals()));
+                    specialEventsTF.setText(String.valueOf(md.getPduSpecialEvents()));
+                    annualDayUseTF.setText(String.valueOf(md.getPduAnnualDayUse()));
+                    dayUseTF.setText(String.valueOf(md.getPduDayUse()));
+                    seniorTF.setText(String.valueOf(md.getPduSenior()));
+                    disabledTF.setText(String.valueOf(md.getPduDisabled()));
+                    goldenBearTF.setText(String.valueOf(md.getPduGoldenBear()));
+                    disabledVeteranTF.setText(String.valueOf(md.getPduDisabledVeteran()));
+                    nonResOHVPassTF.setText(String.valueOf(md.getPduNonResOHVPass()));
+                    annualPassSaleTF.setText(String.valueOf(md.getPduAnnualPassSale()));
+                    campingTF.setText(String.valueOf(md.getPduCamping()));
+                    seniorCampingTF.setText(String.valueOf(md.getPduSeniorCamping()));
+                    disabledCampingTF.setText(String.valueOf(md.getPduDisabledCamping()));
+                    conversionFactorFreeDayUseTF.setText(md.getFduConversionFactor().toString());
+                    freeDayUseTotalsTF.setText(String.valueOf(md.getFduTotals()));
+                    totalVehiclesTF.setText(String.valueOf(md.getFscTotalVehicles()));
+                    totalPeopleTF.setText(String.valueOf(md.getFscTotalPeople()));
+                    ratioTF.setText(md.getFscRatio().toString());
+                    commentsTB.setText(md.getComment());
+                    mcTF.setText(String.valueOf(md.getoMC()));
+                    atvTF.setText(String.valueOf(md.getoATV()));
+                    fourByFourTF.setText(String.valueOf(md.getO4X4()));
+                    rovTF.setText(String.valueOf(md.getoROV()));
+                    aqmaTF.setText(String.valueOf(md.getoAQMA()));
+                    allStarKartingTF.setText(String.valueOf(md.getoAllStarKarting()));
+                    hangtownTF.setText(String.valueOf(md.getoHangtown()));
+                    otherTF.setText(String.valueOf(md.getoOther()));
+                    browseFileTF.setText(md.getForm449File().toPath().toString());
+                    
+                    showOKOnSubmit();
+                    resetValidation();
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    Object[] o = userDataGroup.getChildren().toArray();
+                    for (int i = 0; i < o.length; i++) {
+                        if (o[i] instanceof TextField) {
+                            ((TextField) o[i]).clear();
+                        } else if (o[i] instanceof TextArea) {
+                            ((TextArea) o[i]).clear();
+                        }
+                    }
+                    resetValidation();
+                }
+                
+                // enable buttons again
+                clearSubmitButtonStatusIndicator();
+                submitButton.setDisable(false);
+                clearButton.setDisable(false);
+                browseFileButton.setDisable(false);
+            }
+        });
     }
 
     @FXML
@@ -211,52 +329,7 @@ public class Controller {
         showBusyOnSubmit();
         // Submit processing to background task so we
         //   don't block the UI thread and freeze the window
-        TaskEngine.INSTANCE.submit(new Runnable() {
-            ParkMonth parkMonth = null;
-            boolean success = false;
-            @Override
-            public void run() {
-                if(validateEnteredData()) {
-                    try {
-                        parkMonth = new ParkMonth(getEnterPark());
-                        parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
-                                getConversionFactorPaidDayUseTF(), getPaidDayUseTotalsTF(), getSpecialEventsTF(), getAnnualDayUseTF(),
-                                getDayUseTF(), getSeniorTF(), getDisabledTF(), getGoldenBearTF(), getDisabledVeteranTF(),
-                                getNonResOHVPassTF(), getAnnualPassSaleTF(), getCampingTF(), getSeniorCampingTF(),
-                                getDisabledCampingTF(), getConversionFactorFreeDayUseTF(), getFreeDayUseTotalsTF(),
-                                getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getFourByFourTF(),
-                                getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
-                                -1, getbrowseFile());
-                        success = true;
-                    } catch (Exception e) {
-                        // something was wrong with data
-                        LOG.error(e.getMessage(), e);
-                        showErrorOnSubmit();
-                    }
-                    
-                    if (success) {
-                        // attempt to write into database
-                        success = false;
-                        try {
-                            DataManager.Narvaro.storeParkMonth(parkMonth);
-                            success = true;
-                        } catch (SQLException e) {
-                            LOG.error(e.getMessage(), e);
-                        }
-                        if (success) {
-                            showOKOnSubmit();
-                            resetValidation();
-                        } else {
-                            showErrorOnSubmit();
-                        }
-                    }
-                }
-                // enable buttons again
-                submitButton.setDisable(false);
-                clearButton.setDisable(false);
-                browseFileButton.setDisable(false);
-            }
-        });
+        TaskEngine.INSTANCE.submit(new StoreParkMonthTask());
     }
     
     private boolean validateEnteredData() {
@@ -1202,4 +1275,62 @@ public class Controller {
     /* Graph Data Tab Start */
 
     /* Graph Data Tab End */
+    
+    /**
+     * This task handles storing of data
+     *
+     */
+    private class StoreParkMonthTask implements Runnable {
+        
+        ParkMonth parkMonth = null;
+        boolean success = false;
+        
+        @Override
+        public void run() {
+            if(validateEnteredData()) {
+                try {
+                    parkMonth = new ParkMonth(getEnterPark());
+                    parkMonth.createAndPutMonthData(YearMonth.of(getEnterYear(), getEnterMonth()),
+                            getConversionFactorPaidDayUseTF(), getPaidDayUseTotalsTF(), getSpecialEventsTF(), getAnnualDayUseTF(),
+                            getDayUseTF(), getSeniorTF(), getDisabledTF(), getGoldenBearTF(), getDisabledVeteranTF(),
+                            getNonResOHVPassTF(), getAnnualPassSaleTF(), getCampingTF(), getSeniorCampingTF(),
+                            getDisabledCampingTF(), getConversionFactorFreeDayUseTF(), getFreeDayUseTotalsTF(),
+                            getTotalVehiclesTF(), getTotalPeopleTF(), getRatioTF(), getMcTF(), getAtvTF(), getFourByFourTF(),
+                            getRovTF(), getAqmaTF(), getAllStarKartingTF(), getHangtownTF(), getOtherTF(), getCommentsTB(),
+                            -1, getbrowseFile());
+                    success = true;
+                } catch (Exception e) {
+                    // something was wrong with data
+                    LOG.error(e.getMessage(), e);
+                    showErrorOnSubmit();
+                }
+                
+                if (success) {
+                    // attempt to write into database
+                    success = false;
+                    try {
+                        DataManager.Narvaro.storeParkMonth(parkMonth);
+                        success = true;
+                    } catch (SQLException e) {
+                        LOG.error(e.getMessage(), e);
+                    }
+                    if (success) {
+                        showOKOnSubmit();
+                        resetValidation();
+                    } else {
+                        showErrorOnSubmit();
+                    }
+                }
+            }
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    // enable buttons again
+                    submitButton.setDisable(false);
+                    clearButton.setDisable(false);
+                    browseFileButton.setDisable(false);
+                }
+            });
+        }
+    }
 }

@@ -1,11 +1,13 @@
 package edu.csus.ecs.moneybeets.narvaro.ui;
 
+import java.util.TimerTask;
 import java.util.zip.DataFormatException;
 
 import org.apache.log4j.Logger;
 
 import edu.csus.ecs.moneybeets.narvaro.database.DatabaseType;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
+import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
+import javafx.stage.WindowEvent;
 
 /**
  * This class acts as the controller for the 
@@ -35,9 +38,24 @@ public class NarvaroSetup {
     
     @FXML
     public void initialize() {
-        for (DatabaseType dbType : DatabaseType.values()) {
-            databaseTypeSelector.getItems().add(dbType.getName());
-        }
+        TaskEngine.INSTANCE.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                serverName.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(final WindowEvent we) {
+                        Platform.exit();
+                        System.exit(0);
+                    }
+                });
+            }
+        }, 1000);
+        // uncomment to enable multi-db support
+        //for (DatabaseType dbType : DatabaseType.values()) {
+        //    databaseTypeSelector.getItems().add(dbType.getName());
+        //}
+        // for the time being, we'll only officially support mysql
+        databaseTypeSelector.getItems().add(DatabaseType.mysql.getName());
         installEventHandler(serverName.getParent().getParent().getParent().getParent());
     }
     private void installEventHandler(final Node keyNode) 
@@ -151,6 +169,7 @@ public class NarvaroSetup {
         });
     }
 
+    @SuppressWarnings("unused")
     private void resetValid(final Region r) {
         Platform.runLater(new Runnable() {
             @Override
@@ -260,13 +279,4 @@ public class NarvaroSetup {
     private String getDatabasePassword() {
         return databasePassword.getText();
     }
-
-    private EventHandler<KeyEvent> keyListener = new EventHandler<KeyEvent>() {
-        @Override
-        public void handle(KeyEvent event) {
-            if(event.getCode() == KeyCode.ENTER) {
-                handleOKButton(null);
-            }
-        }
-    };
 }

@@ -108,7 +108,7 @@
     <!-- ======================================================================================= -->
     
     <!-- init ================================================================================== -->
-    <target name="init" depends="source.checkstyle">
+    <target name="init">
         
         <!-- Check for min build requirements -->
         
@@ -259,27 +259,27 @@
         
         <!-- Add build information to the main configuration file -->
         <!-- We use regex here to avoid clobbering the config file formatting -->
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" Narvaro: "
             replace=" Narvaro: ${version}                  #"
             byline="false"
         />
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" Build Date: "
             replace=" Build Date: ${builddate}            #"
             byline="false"
         />
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" Commit: "
             replace=" Commit: ${repository.version}                   #"
             byline="false"
         />
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" JDK: "
             replace=" JDK: ${java.version}                     #"
             byline="false"
         />
-        <replaceregexp file="${target.narvaroHome}/conf/narvaro.properties"
+        <replaceregexp file="${target.narvaroHome}/conf/default_narvaro.properties"
             match=" ANT: "
             replace=" ANT: ${antversion}                        #"
             byline="false"
@@ -528,7 +528,7 @@
     </target>
     
     <!-- checkstyle ============================================================================== -->
-    <target name="source.checkstyle" description="Enforces source code standard prior to building Narvaro.">
+    <target name="checkstyle" description="Enforces source code standard prior to building Narvaro.">
         <taskdef resource="checkstyletask.properties" classpath="${lib.build.dir}/checkstyle-6.4-all.jar"/>
         <!-- ensure logging output dir is avaialble -->
         <mkdir dir="${target.dir}"/>

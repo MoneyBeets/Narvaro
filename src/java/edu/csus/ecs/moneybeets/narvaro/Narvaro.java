@@ -148,7 +148,7 @@ public class Narvaro extends Application {
         
         // add icon
         Path icon = Paths.get(ConfigurationManager.NARVARO.getHomeDirectory() 
-                + File.separator + "resources" + File.separator + "background.png");
+                + File.separator + "resources" + File.separator + "moneybeets_logo.png");
         stage.getIcons().add(new Image(icon.toUri().toURL().toExternalForm()));
         
         stage.setScene(scene);
@@ -282,6 +282,14 @@ public class Narvaro extends Application {
         }
         Scene subScene = new Scene(subRoot);
         subStage.setScene(subScene);
+        try {
+            // add icon
+            Path icon = Paths.get(ConfigurationManager.NARVARO.getHomeDirectory() 
+                    + File.separator + "resources" + File.separator + "moneybeets_logo.png");
+            subStage.getIcons().add(new Image(icon.toUri().toURL().toExternalForm()));
+        } catch (Exception e) {
+            LOG.warn(e.getMessage(), e);
+        }
         subStage.showAndWait();
     }
 
