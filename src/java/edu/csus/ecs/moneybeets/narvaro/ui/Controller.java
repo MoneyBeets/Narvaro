@@ -1322,10 +1322,15 @@ public class Controller {
                     }
                 }
             }
-            // enable buttons again
-            submitButton.setDisable(false);
-            clearButton.setDisable(false);
-            browseFileButton.setDisable(false);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    // enable buttons again
+                    submitButton.setDisable(false);
+                    clearButton.setDisable(false);
+                    browseFileButton.setDisable(false);
+                }
+            });
         }
     }
 }
