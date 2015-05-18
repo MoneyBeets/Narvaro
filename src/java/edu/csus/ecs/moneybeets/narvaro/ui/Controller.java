@@ -345,8 +345,7 @@ public class Controller {
 			DataManager.Narvaro.insertParkName(parkName);
 			addParkTF.setText("Park Added");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    LOG.error(e.getMessage(), e);
 		}
     	
     }
