@@ -345,6 +345,7 @@ public class Controller {
     	    showBusyOnSubmit(); // display busy spinner in case this takes longer than a second
     	    showValid(addParkTF); // display green area on text field
     	    DataManager.Narvaro.insertParkName(parkName);
+    	    updateSelectAParkDropDownMenu();
     	    showOKOnSubmit(); // display green OK checkmark
     	    addParkTF.clear(); // clear this field on success
     	    resetValid(addParkTF); // reset back to default
