@@ -246,6 +246,17 @@ public enum DataManager {
             + "JOIN forms ON data.form449 = forms.id "
             + "WHERE parks.name = ? AND data.month = ?";
     
+    private static final String selectMonthDataByParkNameAndRange = "SELECT parks.name, data.month, data.pduConversionFactor, "
+            + "data.pduTotals, data.pduSpecialEvents, data.pduAnnualDayUse, data.pduDayUse, data.pduSenior, "
+            + "data.pduDisabled, data.pduGoldenBear, data.pduDisabledVeteran, data.pduNonResOHVPass, "
+            + "data.pduAnnualPassSale, data.pduCamping, data.pduSeniorCamping, data.pduDisabledCamping, "
+            + "data.fduConversionFactor, data.fduTotals, data.fscTotalVehicles, data.fscTotalPeople, "
+            + "data.fscRatio, data.oMC, data.oATV, data.o4X4, data.oROV, data.oAQMA, data.oAllStarKarting, "
+            + "data.oHangtown, data.oOther, data.comment, forms.id "
+            + "FROM data JOIN parks ON data.park = parks.id "
+            + "JOIN forms ON data.form449 = forms.id "
+            + "WHERE parks.name = ? AND data.month >= ? AND data.month <= ?";
+    
     /*******************************************************************************************
      * Insertion queries
      */
@@ -398,6 +409,7 @@ public enum DataManager {
     private PreparedStatement psSelectAllMonthDataByRange = null;
     private PreparedStatement psSelectMonthDataByPark = null;
     private PreparedStatement psSelectMonthDataByParkAndYearMonth = null;
+    private PreparedStatement psSelectMonthDataByParkNameAndRange = null;
     // insert statements
     private PreparedStatement psInsertPark = null;
     private PreparedStatement psInsertForm = null;
@@ -425,6 +437,7 @@ public enum DataManager {
             psSelectAllMonthDataByRange = con.prepareStatement(selectAllMonthDataByRange);
             psSelectMonthDataByPark = con.prepareStatement(selectMonthDataByPark);
             psSelectMonthDataByParkAndYearMonth = con.prepareStatement(selectMonthDataByParkAndYearMonth);
+            psSelectMonthDataByParkNameAndRange = con.prepareStatement(selectMonthDataByParkNameAndRange);
             psInsertPark = con.prepareStatement(insertPark);
             psInsertForm = con.prepareStatement(insertForm);
             psInsertMonthData = con.prepareStatement(insertMonthData);
@@ -450,6 +463,7 @@ public enum DataManager {
         DatabaseManager.Narvaro.closeStatement(psSelectAllMonthDataByRange);
         DatabaseManager.Narvaro.closeStatement(psSelectMonthDataByPark);
         DatabaseManager.Narvaro.closeStatement(psSelectMonthDataByParkAndYearMonth);
+        DatabaseManager.Narvaro.closeStatement(psSelectMonthDataByParkNameAndRange);
         DatabaseManager.Narvaro.closeStatement(psInsertPark);
         DatabaseManager.Narvaro.closeStatement(psInsertForm);
         DatabaseManager.Narvaro.closeStatement(psInsertMonthData);
@@ -586,16 +600,52 @@ public enum DataManager {
         }
     }
     
-    // TODO implement these convenience methods
-    //public final TimeSpan getTimeSpanForPark(
-    //        final YearMonth start, final YearMonth end, final String parkName) {
-    //    
-    //}
-    
-    //public final TimeSpan getTimeSpanForParks(
-    //        final YearMonth start, final YearMonth end, final String ... parkNames) {
-    //    
-    //}
+    /**
+     * Returns a <code>TimeSpan</code> for the specified range and park by name.
+     * 
+     * @param start Staring <code>YearMonth</code>.
+     * @param end Ending <code>YearMonth</code>.
+     * @param parkName The park name.
+     * @return <code>TimeSpan</code> for the specified range and park by name.
+     * @throws SQLException If an SQLException occurs.
+     */
+    public final TimeSpan getTimeSpanForPark(
+            final YearMonth start, final YearMonth end, final String parkName) throws SQLException {
+        TimeSpan ts = new TimeSpan(start, end);
+        ParkMonth pm = new ParkMonth(parkName);
+        ts.putParkMonth(parkName, pm);
+        psSelectMonthDataByParkNameAndRange.setString(1, parkName);
+        psSelectMonthDataByParkNameAndRange.setDate(2, yearMonthToDate(start));
+        psSelectMonthDataByParkNameAndRange.setDate(3, yearMonthToDate(end));
+        try {
+            rs = psSelectMonthDataByParkNameAndRange.executeQuery();
+            if (rs != null) {
+                while (rs.next()) {
+                    YearMonth ym = dateToYearMonth(rs.getDate(2));
+                    MonthData md = new MonthData(ym, rs.getBigDecimal(3), rs.getLong(4), 
+                            rs.getLong(5), rs.getLong(6), rs.getLong(7), rs.getLong(8), rs.getLong(9), rs.getLong(10), 
+                            rs.getLong(11), rs.getLong(12), rs.getLong(13), rs.getLong(14), rs.getLong(15), rs.getLong(16), 
+                            rs.getBigDecimal(17), rs.getLong(18), rs.getLong(19), rs.getLong(20), rs.getBigDecimal(21), 
+                            rs.getLong(22), rs.getLong(23), rs.getLong(24), rs.getLong(25), rs.getLong(26), rs.getLong(27), 
+                            rs.getLong(28), rs.getLong(29), rs.getString(30), rs.getInt(31), null);
+                    pm.putMonthData(ym, md);
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new SQLException(e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                LOG.warn(e.getMessage(), e);
+            }
+            rs = null;
+        }
+        return ts;
+    }
     
     /**
      * Stores a <code>ParkMonth</code> into the database.
