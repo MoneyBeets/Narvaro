@@ -133,6 +133,10 @@ public class Controller {
     private Button browseFileButton;
     @FXML
     private TextField browseFileTF;
+    @FXML
+    private Button addParkButton1;
+    @FXML
+    private TextField addParkTF;
     /* Enter Data Tab End */
 
     /* View Data Tab Start */
@@ -330,6 +334,27 @@ public class Controller {
         // Submit processing to background task so we
         //   don't block the UI thread and freeze the window
         TaskEngine.INSTANCE.submit(new StoreParkMonthTask());
+    }
+    
+    @FXML
+    public void handleAddParkButton1(final ActionEvent event) {
+    	
+    	String parkName = addParkTF.getText();
+    	
+    	try {
+    	    showBusyOnSubmit(); // display busy spinner in case this takes longer than a second
+    	    showValid(addParkTF); // display green area on text field
+    	    DataManager.Narvaro.insertParkName(parkName);
+    	    updateSelectAParkDropDownMenu();
+    	    showOKOnSubmit(); // display green OK checkmark
+    	    addParkTF.clear(); // clear this field on success
+    	    resetValid(addParkTF); // reset back to default
+    	} catch (SQLException e) {
+    	    LOG.error(e.getMessage(), e);
+    	    showError(addParkTF); // show error on field
+    	    showErrorOnSubmit(); // display error red X
+    	}
+    	
     }
     
     private boolean validateEnteredData() {
