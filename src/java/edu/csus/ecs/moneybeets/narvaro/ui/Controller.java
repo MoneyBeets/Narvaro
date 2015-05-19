@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -38,16 +37,26 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
-import javafx.scene.chart.LineChart;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-
 import javafx.util.Callback;
+
 import org.apache.log4j.Logger;
 
 public class Controller {
@@ -162,29 +171,21 @@ public class Controller {
 
     /* Graph Data Tab Start */
     @FXML
-    private Tab graphDataTab;
+    private ListView<String> selectParksGraphData;
     @FXML
-    private DatePicker selectDateX;
+    private ComboBox<Month> startingMonthGraphData;
     @FXML
-    private DatePicker selectDateY;
+    private ComboBox<Integer> startingYearGraphData;
     @FXML
-    private ToggleGroup graphType;
+    private ComboBox<Month> endingMonthGraphData;
     @FXML
-    private Button viewDataButton;
+    private ComboBox<Integer> endingYearGraphData;
     @FXML
-    private Button view449FormButton;
+    private ListView<String> selectAFieldGraphData;
     @FXML
     private Button graphButton;
     @FXML
-    private Button printButton;
-    @FXML
-    private LineChart<?, ?> graphArea;
-    @FXML
-    private MenuButton selectParkOne;
-    @FXML
-    private MenuButton selectParkTwo;
-    @FXML
-    private MenuButton selectCategory;
+    private HBox graphViewPane;
     /* Graph Data Tab End */
     
     private Image okImage;
