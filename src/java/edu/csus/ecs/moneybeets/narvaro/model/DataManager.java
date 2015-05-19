@@ -929,12 +929,13 @@ public enum DataManager {
         sb.append(field);
         sb.append(", month");
         sb.append(" FROM data JOIN parks ON data.park = parks.id WHERE ");
-        sb.append("month >= ");
+        sb.append("month >= '");
         sb.append(yearMonthToDate(start));
-        sb.append(" AND month <= ");
+        sb.append("' AND month <= '");
         sb.append(yearMonthToDate(end));
-        sb.append(" AND parks.name = ");
+        sb.append("' AND parks.name = '");
         sb.append(parkName);
+        sb.append("'");
         return sb.toString();
     }
     
@@ -965,9 +966,13 @@ public enum DataManager {
                 results = statement.executeQuery();
                 if (results != null) {
                     while (results.next()) {
-                        HashMap<YearMonth, Long> m = new HashMap<YearMonth, Long>();
-                        m.put(dateToYearMonth(results.getDate(2)), results.getLong(1));
-                        map.put(parkName, m);
+                        if (map.containsKey(parkName)) {
+                            map.get(parkName).put(dateToYearMonth(results.getDate(2)), results.getLong(1));
+                        } else {
+                            HashMap<YearMonth, Long> m = new HashMap<YearMonth, Long>();
+                            m.put(dateToYearMonth(results.getDate(2)), results.getLong(1));
+                            map.put(parkName, m);
+                        }
                     }
                 }
             } catch (Exception e) {
