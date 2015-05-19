@@ -1,5 +1,7 @@
 package edu.csus.ecs.moneybeets.narvaro.model;
 
+import java.math.BigDecimal;
+
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -34,58 +36,58 @@ public class SimpleDataProperty {
     private SimpleStringProperty other;
 
     public SimpleDataProperty(final String park,
-                              final String paidConversionFactor,
-                              final String paidTotals,
-                              final String specialEvents,
-                              final String dayUse,
-                              final String senior,
-                              final String disabled,
-                              final String goldenBear,
-                              final String disabledVeteran,
-                              final String nonResOHVPass,
-                              final String annualPassSale,
-                              final String camping,
-                              final String seniorCamping,
-                              final String disabledCamping,
-                              final String freeConversionFactor,
-                              final String freeTotals,
-                              final String classVehicles,
-                              final String classPeople,
-                              final String mc,
-                              final String atv,
-                              final String fourByFour,
-                              final String rov,
-                              final String aqma,
-                              final String allStarKarting,
-                              final String hangtown,
-                              final String other) {
+            final BigDecimal paidConversionFactor,
+            final long paidTotals,
+            final long specialEvents,
+            final long dayUse,
+            final long senior,
+            final long disabled,
+            final long goldenBear,
+            final long disabledVeteran,
+            final long nonResOHVPass,
+            final long annualPassSale,
+            final long camping,
+            final long seniorCamping,
+            final long disabledCamping,
+            final BigDecimal freeConversionFactor,
+            final long freeTotals,
+            final long classVehicles,
+            final long classPeople,
+            final long mc,
+            final long atv,
+            final long fourByFour,
+            final long rov,
+            final long aqma,
+            final long allStarKarting,
+            final long hangtown,
+            final long other) {
         this.park = new SimpleStringProperty(park);
-        this.paidConversionFactor = new SimpleStringProperty(paidConversionFactor);
-        this.paidTotals = new SimpleStringProperty(paidTotals);
-        this.specialEvents = new SimpleStringProperty(specialEvents);
-        this.dayUse = new SimpleStringProperty(dayUse);
-        this.senior = new SimpleStringProperty(senior);
-        this.disabled = new SimpleStringProperty(disabled);
-        this.goldenBear = new SimpleStringProperty(goldenBear);
-        this.disabledVeteran = new SimpleStringProperty(disabledVeteran);
-        this.nonResOHVPass = new SimpleStringProperty(nonResOHVPass);
-        this.annualPassSale = new SimpleStringProperty(annualPassSale);
-        this.camping = new SimpleStringProperty(camping);
-        this.seniorCamping = new SimpleStringProperty(seniorCamping);
-        this.disabled = new SimpleStringProperty(disabled);
-        this.disabledCamping = new SimpleStringProperty(disabledCamping);
-        this.freeConversionFactor = new SimpleStringProperty(freeConversionFactor);
-        this.freeTotals = new SimpleStringProperty(freeTotals);
-        this.classVehicles = new SimpleStringProperty(classVehicles);
-        this.classPeople = new SimpleStringProperty(classPeople);
-        this.mc = new SimpleStringProperty(mc);
-        this.atv = new SimpleStringProperty(atv);
-        this.fourByFour = new SimpleStringProperty(fourByFour);
-        this.rov = new SimpleStringProperty(rov);
-        this.aqma = new SimpleStringProperty(aqma);
-        this.allStarKarting = new SimpleStringProperty(allStarKarting);
-        this.hangtown = new SimpleStringProperty(hangtown);
-        this.other = new SimpleStringProperty(other);
+        this.paidConversionFactor = new SimpleStringProperty(paidConversionFactor.toString());
+        this.paidTotals = new SimpleStringProperty(String.valueOf(paidTotals));
+        this.specialEvents = new SimpleStringProperty(String.valueOf(specialEvents));
+        this.dayUse = new SimpleStringProperty(String.valueOf(dayUse));
+        this.senior = new SimpleStringProperty(String.valueOf(senior));
+        this.disabled = new SimpleStringProperty(String.valueOf(disabled));
+        this.goldenBear = new SimpleStringProperty(String.valueOf(goldenBear));
+        this.disabledVeteran = new SimpleStringProperty(String.valueOf(disabledVeteran));
+        this.nonResOHVPass = new SimpleStringProperty(String.valueOf(nonResOHVPass));
+        this.annualPassSale = new SimpleStringProperty(String.valueOf(annualPassSale));
+        this.camping = new SimpleStringProperty(String.valueOf(camping));
+        this.seniorCamping = new SimpleStringProperty(String.valueOf(seniorCamping));
+        this.disabled = new SimpleStringProperty(String.valueOf(disabled));
+        this.disabledCamping = new SimpleStringProperty(String.valueOf(disabledCamping));
+        this.freeConversionFactor = new SimpleStringProperty(freeConversionFactor.toString());
+        this.freeTotals = new SimpleStringProperty(String.valueOf(freeTotals));
+        this.classVehicles = new SimpleStringProperty(String.valueOf(classVehicles));
+        this.classPeople = new SimpleStringProperty(String.valueOf(classPeople));
+        this.mc = new SimpleStringProperty(String.valueOf(mc));
+        this.atv = new SimpleStringProperty(String.valueOf(atv));
+        this.fourByFour = new SimpleStringProperty(String.valueOf(fourByFour));
+        this.rov = new SimpleStringProperty(String.valueOf(rov));
+        this.aqma = new SimpleStringProperty(String.valueOf(aqma));
+        this.allStarKarting = new SimpleStringProperty(String.valueOf(allStarKarting));
+        this.hangtown = new SimpleStringProperty(String.valueOf(hangtown));
+        this.other = new SimpleStringProperty(String.valueOf(other));
     }
 
     public String getPark() {

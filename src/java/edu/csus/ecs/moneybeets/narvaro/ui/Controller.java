@@ -172,7 +172,7 @@ public class Controller {
     @FXML
     private AnchorPane viewDataPane;
     @FXML
-    private TableView viewDataTable;
+    private TableView<SimpleDataProperty> viewDataTable;
     @FXML
     private TableColumn<SimpleDataProperty, String> parkCol;
     @FXML
@@ -249,15 +249,13 @@ public class Controller {
     private Image okImage;
     private Image errorImage;
     private Image busyImage;
-    private ObservableList<Integer> row;
+    private ObservableList<SimpleDataProperty> tableData = FXCollections.observableArrayList();
     
     @FXML
     public void initialize() {
-
-        row = FXCollections.observableArrayList();
-        viewDataTable.setItems(row);
         updateParkLists();
         initializeColumns();
+        viewDataTable.setItems(tableData);
 
         // populate year field on enter data tab and view data tab
         LocalDateTime ldt = LocalDateTime.now();
@@ -989,10 +987,8 @@ public class Controller {
 
     @FXML
     public void handleSearchButton(final ActionEvent event) {
-
-        ObservableList<ObservableList<Integer>> entries = FXCollections.observableArrayList();
-        viewDataTable.setItems(entries);
-        entries.clear();
+        
+        clearTable();
 
         int startYear = yearSelectionOne.getValue();
         Month startMonth = monthSelectionOne.getValue();
@@ -1021,16 +1017,35 @@ public class Controller {
                 LOG.error(e.getMessage(), e);
             }
             pm = ts.getParkMonth(parkName);
-            int[] totalsArray = new int[5];
             for (MonthData md : pm.getAllMonthData()) {
-                // Accumulate all the ints here
+                SimpleDataProperty sdp = new SimpleDataProperty(parkName, md.getPduConversionFactor(), 
+                        md.getPduTotals(), md.getPduSpecialEvents(), md.getPduDayUse(), md.getPduSenior(), 
+                        md.getPduDisabled(), md.getPduGoldenBear(), md.getPduDisabledVeteran(), md.getPduNonResOHVPass(), 
+                        md.getPduAnnualPassSale(), md.getPduCamping(), md.getPduSeniorCamping(), md.getPduDisabledCamping(), 
+                        md.getFduConversionFactor(), md.getFduTotals(), md.getFscTotalVehicles(), md.getFscTotalPeople(), 
+                        md.getoMC(), md.getoATV(), md.getO4X4(), md.getoROV(), md.getoAQMA(), md.getoAllStarKarting(), 
+                        md.getoHangtown(), md.getoOther());
+                addTableRow(sdp);
             }
-            // use totals and constants to make a SimpleDataProperty, then add to entries
-            for (int i : totalsArray) {
-                row.add(totalsArray[i]);
-            }
-            entries.add(row);
         }
+    }
+    
+    public void clearTable() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                tableData.clear();
+            }
+        });
+    }
+    
+    public void addTableRow(final SimpleDataProperty data) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                tableData.add(data);
+            }
+        });
     }
 
     private void initializeColumns() {
