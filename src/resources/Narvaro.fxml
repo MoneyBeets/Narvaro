@@ -139,58 +139,19 @@
               <content>
                 <AnchorPane fx:id="graphDataPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label layoutX="40.0" layoutY="59.0" text="Select a Date" />
-                        <DatePicker fx:id="selectDateX" layoutX="42.0" layoutY="76.0" prefHeight="26.0" prefWidth="135.0" />
-                        <Label layoutX="40.0" layoutY="36.0" text="X" />
-                        <Label layoutX="204.0" layoutY="36.0" text="Y" />
-                        <Label layoutX="204.0" layoutY="59.0" text="Select a Date" />
-                        <DatePicker fx:id="selectDateY" layoutX="206.0" layoutY="76.0" prefHeight="26.0" prefWidth="135.0" />
-                        <Label layoutX="204.0" layoutY="122.0" text="Select a Park" />
-                        <Label layoutX="40.0" layoutY="122.0" text="Select a Park" />
-                        <Label layoutX="136.0" layoutY="211.0" text="Select a Category" />
-                        <Label layoutX="136.0" layoutY="272.0" text="Graph Type" />
-                        <Group>
-                           <children>
-                              <RadioButton layoutX="137.0" layoutY="315.0" mnemonicParsing="false" text="Line">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="graphType" />
-                                 </toggleGroup>
-                              </RadioButton>
-                              <RadioButton layoutX="137.0" layoutY="349.0" mnemonicParsing="false" toggleGroup="$graphType" />
-                              <RadioButton layoutX="137.0" layoutY="332.0" mnemonicParsing="false" toggleGroup="$graphType" />
-                              <RadioButton layoutX="137.0" layoutY="298.0" mnemonicParsing="false" selected="true" text="Bar" toggleGroup="$graphType" />
-                           </children>
-                        </Group>
-                        <Button fx:id="viewDataButton" layoutX="42.0" layoutY="407.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="View Data" />
-                        <Button fx:id="view449FormButton" layoutX="42.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="View 449" />
-                        <Button fx:id="graphButton" layoutX="229.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Graph" />
-                        <Button fx:id="printButton" layoutX="671.0" layoutY="487.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Print" />
-                        <LineChart fx:id="graphArea" layoutX="347.0" layoutY="63.0" prefHeight="436.0" prefWidth="441.0">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </LineChart>
-                        <MenuButton fx:id="selectParkOne" layoutX="40.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Park 1">
-                          <items>
-                            <MenuItem mnemonicParsing="false" text="Action 1" />
-                            <MenuItem mnemonicParsing="false" text="Action 2" />
-                          </items>
-                        </MenuButton>
-                        <MenuButton fx:id="selectParkTwo" layoutX="205.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Park 1">
-                           <items>
-                              <MenuItem mnemonicParsing="false" text="Action 1" />
-                              <MenuItem mnemonicParsing="false" text="Action 2" />
-                           </items>
-                        </MenuButton>
-                        <MenuButton fx:id="selectCategory" layoutX="136.0" layoutY="228.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Category 1">
-                           <items>
-                              <MenuItem mnemonicParsing="false" text="Action 1" />
-                              <MenuItem mnemonicParsing="false" text="Action 2" />
-                           </items>
-                        </MenuButton>
+                        <Group />
+                        <Button fx:id="graphButton" layoutX="58.0" layoutY="501.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Graph" />
+                        <HBox fx:id="graphViewPane" alignment="CENTER" layoutX="221.0" layoutY="13.0" prefHeight="513.0" prefWidth="579.0" />
+                        <ListView fx:id="selectParksGraphData" layoutX="14.0" layoutY="25.0" prefHeight="145.0" prefWidth="200.0" />
+                        <Label layoutX="65.0" layoutY="10.0" text="Select Park(s)" />
+                        <Label layoutX="65.0" layoutY="300.0" text="Select a Field" />
+                        <ListView fx:id="selectAFieldGraphData" layoutX="14.0" layoutY="315.0" prefHeight="179.0" prefWidth="200.0" />
+                        <ComboBox fx:id="startingMonthGraphData" layoutX="14.0" layoutY="202.0" prefHeight="25.0" prefWidth="95.0" promptText="Month" />
+                        <ComboBox fx:id="startingYearGraphData" layoutX="122.0" layoutY="202.0" prefHeight="25.0" prefWidth="95.0" promptText="Year" />
+                        <ComboBox fx:id="endingYearGraphData" layoutX="122.0" layoutY="258.0" prefHeight="25.0" prefWidth="95.0" promptText="Year" />
+                        <ComboBox fx:id="endingMonthGraphData" layoutX="14.0" layoutY="258.0" prefHeight="25.0" prefWidth="95.0" promptText="Month" />
+                        <Label layoutX="74.0" layoutY="237.0" text="Ending Date" />
+                        <Label layoutX="71.0" layoutY="180.0" text="Starting Date" />
                      </children></AnchorPane>
               </content>
             </Tab>
