@@ -125,12 +125,42 @@
                         <ListView fx:id="parkView" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" />
                         <Button id="searchButton" fx:id="removeParkButton" cancelButton="true" layoutX="224.0" layoutY="189.0" mnemonicParsing="false" onAction="#handleSearchButton" text="Search" />
                         <ScrollPane fx:id="scrollPane" layoutX="14.0" layoutY="227.0" prefHeight="306.0" prefWidth="787.0">
-                          <content>
-                            <AnchorPane fx:id="dataPane" minHeight="0.0" minWidth="0.0" prefHeight="5000.0" prefWidth="12000.0">
+                           <content>
+                              <AnchorPane fx:id="dataPane" minHeight="0.0" minWidth="0.0" prefHeight="1094.0" prefWidth="2684.0">
                                  <children>
-                                    <TableView fx:id="viewDataTable" prefHeight="5000.0" prefWidth="12000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                 </children></AnchorPane>
-                          </content>
+                                    <TableView fx:id="viewDataTable" prefHeight="5000.0" prefWidth="12000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columns>
+                                          <TableColumn fx:id="parkCol" minWidth="150.0" prefWidth="102.0" text="Park" />
+                                          <TableColumn fx:id="paidConversionFactorCol" minWidth="150.0" prefWidth="75.0" text="Paid Conversion Factor" />
+                                          <TableColumn fx:id="paidTotalsCol" editable="false" minWidth="100.0" prefWidth="-1.0" sortable="false" text="Paid Totals" />
+                                          <TableColumn fx:id="specialEventsCol" minWidth="100.0" prefWidth="-1.0" text="Special Events" />
+                                          <TableColumn fx:id="dayUseCol" minWidth="100.0" prefWidth="-1.0" text="Day Use" />
+                                          <TableColumn fx:id="seniorCol" minWidth="100.0" prefWidth="-1.0" text="Senior" />
+                                          <TableColumn fx:id="disabledCol" minWidth="100.0" prefWidth="-1.0" text="Disabled" />
+                                          <TableColumn fx:id="goldenBearCol" editable="false" minWidth="100.0" prefWidth="79.0" sortable="false" text="Golden Bear" />
+                                          <TableColumn fx:id="disabledVeteranCol" minWidth="150.0" prefWidth="-1.0" text="Disabled Veteran" />
+                                          <TableColumn fx:id="nonResOHVPassCol" minWidth="150.0" prefWidth="103.0" text="Non-Res OHV Pass" />
+                                          <TableColumn fx:id="annualPassSale" minWidth="100.0" prefWidth="47.0" text="Annual Pass Sale" />
+                                          <TableColumn fx:id="campingCol" prefWidth="75.0" text="Camping" />
+                                          <TableColumn fx:id="seniorCampingCol" minWidth="100.0" prefWidth="75.0" text="Senior Camping" />
+                                          <TableColumn fx:id="disabledCampingCol" minWidth="150.0" prefWidth="75.0" text="Disabled Camping" />
+                                          <TableColumn fx:id="freeConversionFactorCol" minWidth="150.0" prefWidth="75.0" text="Free Conversion Factor" />
+                                          <TableColumn fx:id="freeTotalsCol" minWidth="100.0" prefWidth="75.0" text="Free Totals" />
+                                          <TableColumn fx:id="classVehiclesCol" minWidth="100.0" prefWidth="75.0" text="Class Vehicles" />
+                                          <TableColumn fx:id="classPeopleCol" prefWidth="75.0" text="Class People" />
+                                          <TableColumn fx:id="mcCol" prefWidth="75.0" text="MC" />
+                                          <TableColumn fx:id="atvCol" prefWidth="75.0" text="ATV" />
+                                          <TableColumn fx:id="fourByFourCol" prefWidth="75.0" text="4x4" />
+                                          <TableColumn fx:id="rovCol" prefWidth="75.0" text="ROV" />
+                                          <TableColumn fx:id="aqmaCol" prefWidth="75.0" text="AQMA" />
+                                          <TableColumn fx:id="allStarKartingCol" minWidth="100.0" prefWidth="75.0" text="All Star Karting" />
+                                          <TableColumn fx:id="hangtownCol" prefWidth="75.0" text="Hangtown" />
+                                          <TableColumn fx:id="otherCol" prefWidth="75.0" text="Other" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </content>
                         </ScrollPane>
                      </children></AnchorPane>
             </content>

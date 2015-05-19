@@ -162,7 +162,7 @@ public class Narvaro extends Application {
             }
             
         });
-        
+        stage.setResizable(false);
         stage.show();
         
         started = true;
@@ -290,6 +290,7 @@ public class Narvaro extends Application {
         } catch (Exception e) {
             LOG.warn(e.getMessage(), e);
         }
+        subStage.setResizable(false);
         subStage.showAndWait();
     }
 
