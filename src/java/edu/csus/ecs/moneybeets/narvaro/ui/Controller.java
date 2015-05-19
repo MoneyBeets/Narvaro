@@ -204,6 +204,8 @@ public class Controller {
             enterYear.getItems().add(year);
             yearSelectionOne.getItems().add(year);
             yearSelectionTwo.getItems().add(year);
+            startingYearGraphData.getItems().add(year);
+            endingYearGraphData.getItems().add(year);
         }
         // populate month field on enter data tab
         enterMonth.getItems().addAll(Arrays.asList(Month.values()));
@@ -211,9 +213,18 @@ public class Controller {
         // populate month fields on view data tab
         monthSelectionOne.getItems().addAll(Arrays.asList(Month.values()));
         monthSelectionTwo.getItems().addAll(Arrays.asList(Month.values()));
+        
+        // populate month fields on graph data tab
+        startingMonthGraphData.getItems().addAll(Arrays.asList(Month.values()));
+        endingMonthGraphData.getItems().addAll(Arrays.asList(Month.values()));
 
         // permit multiple selection on park listview
         parkView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        selectParksGraphData.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        
+        // permit only single selection for graphing a field
+        selectAFieldGraphData.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        
         
         // add change listener to all drop-downs in view data tab
         selectAParkDropDownMenu.valueProperty().addListener(new ChangeListener<String>() {
@@ -838,6 +849,7 @@ public class Controller {
         for (String parkName : parkNames) {
             selectAParkDropDownMenu.getItems().add(parkName);
             parkView.getItems().add(parkName);
+            selectParksGraphData.getItems().add(parkName);
         }
     }
 
