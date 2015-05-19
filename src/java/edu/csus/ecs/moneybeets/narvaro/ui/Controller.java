@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -23,10 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.TimerTask;
 
-import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
-import edu.csus.ecs.moneybeets.narvaro.model.MonthData;
-import edu.csus.ecs.moneybeets.narvaro.model.ParkMonth;
-import edu.csus.ecs.moneybeets.narvaro.model.TimeSpan;
+import edu.csus.ecs.moneybeets.narvaro.model.*;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
 import javafx.application.Platform;
@@ -40,14 +36,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-
 import javafx.util.Callback;
+
 import org.apache.log4j.Logger;
 
 public class Controller {
@@ -158,6 +156,58 @@ public class Controller {
     private AnchorPane viewDataPane;
     @FXML
     private TableView viewDataTable;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> parkCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> paidConversionFactorCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> paidTotalsCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> specialEventsCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> dayUseCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> seniorCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> disabledCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> goldenBearCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> disabledVeteranCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> nonResOHVPassCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> annualPassSaleCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> campingCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> seniorCampingCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> disabledCampingCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> freeConversionFactorCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> freeTotalsCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> classVehiclesCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> classPeopleCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> mcCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> atvCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> fourByFourCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> rovCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> aqmaCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> allStarKartingCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String>  hangtownCol;
+    @FXML
+    private TableColumn<SimpleDataProperty, String> otherCol;
     /* View Data Tab End */
 
     /* Graph Data Tab Start */
@@ -190,11 +240,15 @@ public class Controller {
     private Image okImage;
     private Image errorImage;
     private Image busyImage;
+    private ObservableList<Integer> row;
     
     @FXML
     public void initialize() {
-        
+
+        row = FXCollections.observableArrayList();
+        viewDataTable.setItems(row);
         updateParkLists();
+        initializeColumns();
 
         // populate year field on enter data tab and view data tab
         LocalDateTime ldt = LocalDateTime.now();
@@ -225,14 +279,14 @@ public class Controller {
         enterYear.valueProperty().addListener(new ChangeListener<Integer>() {
             @Override
             public void changed(ObservableValue<? extends Integer> ov,
-                    Integer old_val, Integer new_val) {
+                                Integer old_val, Integer new_val) {
                 displayStoredData();
             }
         });
         enterMonth.valueProperty().addListener(new ChangeListener<Month>() {
             @Override
             public void changed(ObservableValue<? extends Month> ov,
-                    Month old_val, Month new_val) {
+                                Month old_val, Month new_val) {
                 displayStoredData();
             }
         });
@@ -270,11 +324,11 @@ public class Controller {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                
+
                 MonthData md = null;
                 try {
                     md = DataManager.Narvaro.getMonthDataForParkAndYearMonth(YearMonth.of(getEnterYear(), getEnterMonth()), getEnterPark());
-                    
+
                     // set data on view data tab
                     conversionFactorPaidDayUseTF.setText(md.getPduConversionFactor().toString());
                     paidDayUseTotalsTF.setText(String.valueOf(md.getPduTotals()));
@@ -305,7 +359,7 @@ public class Controller {
                     hangtownTF.setText(String.valueOf(md.getoHangtown()));
                     otherTF.setText(String.valueOf(md.getoOther()));
                     browseFileTF.setText(md.getForm449File().toPath().toString());
-                    
+
                     showOKOnSubmit();
                     resetValidation();
                 } catch (Exception e) {
@@ -320,7 +374,7 @@ public class Controller {
                     }
                     resetValidation();
                 }
-                
+
                 // enable buttons again
                 clearSubmitButtonStatusIndicator();
                 submitButton.setDisable(false);
@@ -842,44 +896,120 @@ public class Controller {
 
     @FXML
     public void handleSearchButton(final ActionEvent event) {
+
+        ObservableList<ObservableList<Integer>> entries = FXCollections.observableArrayList();
+        viewDataTable.setItems(entries);
+        entries.clear();
+
         int startYear = yearSelectionOne.getValue();
         Month startMonth = monthSelectionOne.getValue();
         int endYear = yearSelectionTwo.getValue();
         Month endMonth = monthSelectionTwo.getValue();
         TimeSpan ts = null;
-        try {
-            ts = DataManager.Narvaro.getTimeSpan(YearMonth.of(startYear, startMonth), YearMonth.of(endYear, endMonth));
-        } catch (SQLException e) {
-            LOG.error(e.getMessage(), e);
-        }
+        ParkMonth pm;
 
-        ObservableList<ObservableList> entries;
-        entries = FXCollections.observableArrayList();
-
-        Collection tempData;
         List<String> parkNames = parkView.getSelectionModel().getSelectedItems();
 
-        for(String parkName : parkNames) {
-            TableColumn col = new TableColumn();
-            col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures, ObservableValue>() {
-                @Override
-                public ObservableValue call(TableColumn.CellDataFeatures param) {
-                    return new SimpleStringProperty();
-                }
-            });
-            viewDataTable.getColumns().addAll(col);
-        }
-        for(String parkName : parkNames) {
-            tempData = ts.getParkMonth(parkName).getAllMonthData();
-            Object data[] = tempData.toArray();
-            ObservableList<String> row = FXCollections.observableArrayList();
-            for(int i = 1; i < data.length; i++) {
-                row.add(data[i].toString());
-                System.out.print(data[i].toString());
+//        for (String parkName : parkNames) {
+//            TableColumn col = new TableColumn();
+//            col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures, ObservableValue>() {
+//                @Override
+//                public ObservableValue call(TableColumn.CellDataFeatures param) {
+//                    return new SimpleDataProperty();
+//                }
+//            });
+//            viewDataTable.getColumns().addAll(col);
+//        }
+
+        for (String parkName : parkNames) {
+            try {
+                ts = DataManager.Narvaro.getTimeSpanForPark(YearMonth.of(startYear, startMonth), YearMonth.of(endYear, endMonth), parkName);
+            } catch (SQLException e) {
+                LOG.error(e.getMessage(), e);
+            }
+            pm = ts.getParkMonth(parkName);
+            int[] totalsArray = new int[5];
+            for (MonthData md : pm.getAllMonthData()) {
+                // Accumulate all the ints here
+            }
+            // use totals and constants to make a SimpleDataProperty, then add to entries
+            for (int i : totalsArray) {
+                row.add(totalsArray[i]);
             }
             entries.add(row);
         }
-        viewDataTable.setItems(entries);
+    }
+
+    private void initializeColumns() {
+        parkCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("park")
+        );
+        paidConversionFactorCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("paidConversionFactor")
+        );
+        paidTotalsCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("paidTotals")
+        );
+        specialEventsCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("specialEvents")
+        );
+        dayUseCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("dayUse")
+        );
+        seniorCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("senior")
+        );
+        disabledCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("disabled")
+        );
+        nonResOHVPassCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("annualPassSale")
+        );
+        campingCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("camping")
+        );
+        seniorCampingCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("seniorCamping")
+        );
+        disabledVeteranCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("disabledVeteran")
+        );
+        freeConversionFactorCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("freeConversionFactor")
+        );
+        freeTotalsCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("freeTotals")
+        );
+        classVehiclesCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("classVehicles")
+        );
+        classPeopleCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("classPeople")
+        );
+        mcCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("mc")
+        );
+        atvCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("atv")
+        );
+        fourByFourCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("fourByFour")
+        );
+        rovCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("rov")
+        );
+        aqmaCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("aqma")
+        );
+        allStarKartingCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("allStarKarting")
+        );
+        hangtownCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("hangtown")
+        );
+        otherCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("other")
+        );
     }
 
     /* Getter and Setter Forest. Abandon all hope, ye who enter */
