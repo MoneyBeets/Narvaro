@@ -248,6 +248,33 @@ public class Controller {
                 displayStoredData();
             }
         });
+        
+        // populate graph table field list
+        List<String> columns = DataManager.Narvaro.getSchemaColumnNamesFromData();
+        for (String column : columns) {
+            
+            switch (column) {
+            case "id":
+                break;
+            case "park":
+                break;
+            case "month":
+                break;
+            case "pduConversionFactor":
+                break;
+            case "fduConversionFactor":
+                break;
+            case "fscRatio":
+                break;
+            case "comment":
+                break;
+            case "form449":
+                break;
+            default:
+                selectAFieldGraphData.getItems().add(column);
+                break;
+            }
+        }
     }
     
     /**

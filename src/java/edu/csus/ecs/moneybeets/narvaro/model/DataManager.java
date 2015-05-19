@@ -96,6 +96,12 @@ public enum DataManager {
     private static final String selectAllParkNames = "SELECT name FROM parks";
     
     /**
+     * Returns all column names from the `data` table of the schema.
+     */
+    private static final String selectSchemaColumnNamesFromData = "SELECT `COLUMN_NAME` FROM "
+            + "`INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` = 'narvaro' AND `TABLE_NAME` = 'data'";
+    
+    /**
      * Gets all park id's and names.
      * 
      * Input:
@@ -401,6 +407,7 @@ public enum DataManager {
     private PreparedStatement psSelectParkIdByName = null;
     private PreparedStatement psSelectParkNameById = null;
     private PreparedStatement psSelectAllParkNames = null;
+    private PreparedStatement psSelectSchemaColumnNamesFromData = null;
     private PreparedStatement psSelectAllParkNamesAndIds = null;
     private PreparedStatement psSelectAllParkNamesAndIdsExistInRange = null;
     private PreparedStatement psSelectForm449FileNameById = null;
@@ -429,6 +436,7 @@ public enum DataManager {
             psSelectParkIdByName = con.prepareStatement(selectParkIdByName);
             psSelectParkNameById = con.prepareStatement(selectParkNameById);
             psSelectAllParkNames = con.prepareStatement(selectAllParkNames);
+            psSelectSchemaColumnNamesFromData = con.prepareStatement(selectSchemaColumnNamesFromData);
             psSelectAllParkNamesAndIds = con.prepareStatement(selectAllParkNamesAndIds);
             psSelectAllParkNamesAndIdsExistInRange = con.prepareStatement(selectAllParkNamesAndIdsExistInRange);
             psSelectForm449FileNameById = con.prepareStatement(selectForm449FileNameById);
@@ -455,6 +463,7 @@ public enum DataManager {
         DatabaseManager.Narvaro.closeStatement(psSelectParkIdByName);
         DatabaseManager.Narvaro.closeStatement(psSelectParkNameById);
         DatabaseManager.Narvaro.closeStatement(psSelectAllParkNames);
+        DatabaseManager.Narvaro.closeStatement(psSelectSchemaColumnNamesFromData);
         DatabaseManager.Narvaro.closeStatement(psSelectAllParkNamesAndIds);
         DatabaseManager.Narvaro.closeStatement(psSelectAllParkNamesAndIdsExistInRange);
         DatabaseManager.Narvaro.closeStatement(psSelectForm449FileNameById);
@@ -899,6 +908,33 @@ public enum DataManager {
             rs = null;
         }
         return false;
+    }
+    
+    /**
+     * @return a List of all column names in the data table.
+     */
+    public List<String> getSchemaColumnNamesFromData() {
+        List<String> s = new ArrayList<String>();
+        try {
+            rs = psSelectSchemaColumnNamesFromData.executeQuery();
+            if (rs != null) {
+                while(rs.next()) {
+                    s.add(rs.getString(1));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                LOG.warn(e.getMessage(), e);
+            }
+            rs = null;
+        }
+        return s;
     }
     
     /**
