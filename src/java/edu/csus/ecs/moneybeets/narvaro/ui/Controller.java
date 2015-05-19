@@ -1026,6 +1026,16 @@ public class Controller {
             int[] itotals = new int[100];
 // Prints summed lines, one per park
             for (MonthData md : pm.getAllMonthData()) {
+                SimpleDataProperty sdp = new SimpleDataProperty(parkName, md.getPduConversionFactor(),
+                        md.getPduTotals(), md.getPduSpecialEvents(), md.getPduDayUse(), md.getPduSenior(),
+                        md.getPduDisabled(), md.getPduGoldenBear(), md.getPduDisabledVeteran(), md.getPduNonResOHVPass(),
+                        md.getPduAnnualPassSale(), md.getPduCamping(), md.getPduSeniorCamping(), md.getPduDisabledCamping(),
+                        md.getFduConversionFactor(), md.getFduTotals(), md.getFscTotalVehicles(), md.getFscTotalPeople(),
+                        md.getoMC(), md.getoATV(), md.getO4X4(), md.getoROV(), md.getoAQMA(), md.getoAllStarKarting(),
+                        md.getoHangtown(), md.getoOther());
+                addTableRow(sdp);
+            }
+            for (MonthData md : pm.getAllMonthData()) {
                 recordCount = recordCount.add(BigDecimal.ONE);
                 bdtotals[0] = bdtotals[0].add(md.getPduConversionFactor());
                 itotals[1] += md.getPduTotals();
@@ -1055,7 +1065,7 @@ public class Controller {
             }
             bdtotals[0] = bdtotals[0].divide(recordCount, 4, RoundingMode.HALF_UP);
             bdtotals[13] = bdtotals[13].divide(recordCount, 4, RoundingMode.HALF_UP);
-            SimpleDataProperty sdp = new SimpleDataProperty(parkName, bdtotals[0], itotals[1],
+            SimpleDataProperty sdp = new SimpleDataProperty("TOTALS: " + parkName, bdtotals[0], itotals[1],
                     itotals[2], itotals[3], itotals[4], itotals[5], itotals[6], itotals[7], itotals[8], itotals[9],
                     itotals[10], itotals[11], itotals[12], bdtotals[13], itotals[14], itotals[15],
                     itotals[16], itotals[17], itotals[18], itotals[19], itotals[20], itotals[21], itotals[22],
