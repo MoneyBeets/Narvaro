@@ -18,7 +18,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
 
 import edu.csus.ecs.moneybeets.narvaro.model.DataManager;
@@ -28,7 +30,6 @@ import edu.csus.ecs.moneybeets.narvaro.model.SimpleDataProperty;
 import edu.csus.ecs.moneybeets.narvaro.model.TimeSpan;
 import edu.csus.ecs.moneybeets.narvaro.util.ConfigurationManager;
 import edu.csus.ecs.moneybeets.narvaro.util.TaskEngine;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -38,6 +39,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -458,6 +463,51 @@ public class Controller {
     	    showErrorOnSubmit(); // display error red X
     	}
     	
+    }
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @FXML void handleGraphButton(final ActionEvent event) {
+        try {
+            // get fields
+            YearMonth start = YearMonth.of(
+                    startingYearGraphData.getSelectionModel().getSelectedItem(), 
+                    startingMonthGraphData.getSelectionModel().getSelectedItem());
+            YearMonth end = YearMonth.of(
+                    endingYearGraphData.getSelectionModel().getSelectedItem(), 
+                    endingMonthGraphData.getSelectionModel().getSelectedItem());
+            List<String> parkNames = selectParksGraphData.getSelectionModel().getSelectedItems();
+            String field = selectAFieldGraphData.getSelectionModel().getSelectedItem();
+            
+            // get data
+            Map<String, HashMap<YearMonth, Long>> data = DataManager.Narvaro.getGraphData(field, start, end, parkNames);
+            
+            // blank out any existing graph
+            graphViewPane.getChildren().clear();
+            
+            // start graph construction
+            CategoryAxis xAxis = new CategoryAxis();
+            NumberAxis yAxis = new NumberAxis();
+            xAxis.setLabel("Year-Month");
+            LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
+            
+            for (String parkName : data.keySet()) {
+                Map<YearMonth, Long> m = data.get(parkName);
+                
+                XYChart.Series series = new XYChart.Series();
+                series.setName(parkName);
+                
+                for (Map.Entry<YearMonth, Long> entry : m.entrySet()) {
+                    series.getData().add(new XYChart.Data(entry.getKey().toString(), entry.getValue()));
+                }
+                
+                lineChart.getData().addAll(series);
+            }
+
+            graphViewPane.getChildren().addAll(lineChart);
+            
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
     }
     
     private boolean validateEnteredData() {
