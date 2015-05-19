@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -38,16 +37,26 @@ import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
-import javafx.scene.chart.LineChart;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-
 import javafx.util.Callback;
+
 import org.apache.log4j.Logger;
 
 public class Controller {
@@ -162,29 +171,21 @@ public class Controller {
 
     /* Graph Data Tab Start */
     @FXML
-    private Tab graphDataTab;
+    private ListView<String> selectParksGraphData;
     @FXML
-    private DatePicker selectDateX;
+    private ComboBox<Month> startingMonthGraphData;
     @FXML
-    private DatePicker selectDateY;
+    private ComboBox<Integer> startingYearGraphData;
     @FXML
-    private ToggleGroup graphType;
+    private ComboBox<Month> endingMonthGraphData;
     @FXML
-    private Button viewDataButton;
+    private ComboBox<Integer> endingYearGraphData;
     @FXML
-    private Button view449FormButton;
+    private ListView<String> selectAFieldGraphData;
     @FXML
     private Button graphButton;
     @FXML
-    private Button printButton;
-    @FXML
-    private LineChart<?, ?> graphArea;
-    @FXML
-    private MenuButton selectParkOne;
-    @FXML
-    private MenuButton selectParkTwo;
-    @FXML
-    private MenuButton selectCategory;
+    private HBox graphViewPane;
     /* Graph Data Tab End */
     
     private Image okImage;
@@ -203,6 +204,8 @@ public class Controller {
             enterYear.getItems().add(year);
             yearSelectionOne.getItems().add(year);
             yearSelectionTwo.getItems().add(year);
+            startingYearGraphData.getItems().add(year);
+            endingYearGraphData.getItems().add(year);
         }
         // populate month field on enter data tab
         enterMonth.getItems().addAll(Arrays.asList(Month.values()));
@@ -210,9 +213,18 @@ public class Controller {
         // populate month fields on view data tab
         monthSelectionOne.getItems().addAll(Arrays.asList(Month.values()));
         monthSelectionTwo.getItems().addAll(Arrays.asList(Month.values()));
+        
+        // populate month fields on graph data tab
+        startingMonthGraphData.getItems().addAll(Arrays.asList(Month.values()));
+        endingMonthGraphData.getItems().addAll(Arrays.asList(Month.values()));
 
         // permit multiple selection on park listview
         parkView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        selectParksGraphData.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        
+        // permit only single selection for graphing a field
+        selectAFieldGraphData.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        
         
         // add change listener to all drop-downs in view data tab
         selectAParkDropDownMenu.valueProperty().addListener(new ChangeListener<String>() {
@@ -236,6 +248,33 @@ public class Controller {
                 displayStoredData();
             }
         });
+        
+        // populate graph table field list
+        List<String> columns = DataManager.Narvaro.getSchemaColumnNamesFromData();
+        for (String column : columns) {
+            
+            switch (column) {
+            case "id":
+                break;
+            case "park":
+                break;
+            case "month":
+                break;
+            case "pduConversionFactor":
+                break;
+            case "fduConversionFactor":
+                break;
+            case "fscRatio":
+                break;
+            case "comment":
+                break;
+            case "form449":
+                break;
+            default:
+                selectAFieldGraphData.getItems().add(column);
+                break;
+            }
+        }
     }
     
     /**
@@ -837,6 +876,7 @@ public class Controller {
         for (String parkName : parkNames) {
             selectAParkDropDownMenu.getItems().add(parkName);
             parkView.getItems().add(parkName);
+            selectParksGraphData.getItems().add(parkName);
         }
     }
 

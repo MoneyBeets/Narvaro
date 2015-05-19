@@ -22,7 +22,9 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -94,6 +96,12 @@ public enum DataManager {
      *     1) parkName
      */
     private static final String selectAllParkNames = "SELECT name FROM parks";
+    
+    /**
+     * Returns all column names from the `data` table of the schema.
+     */
+    private static final String selectSchemaColumnNamesFromData = "SELECT `COLUMN_NAME` FROM "
+            + "`INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` = 'narvaro' AND `TABLE_NAME` = 'data'";
     
     /**
      * Gets all park id's and names.
@@ -401,6 +409,7 @@ public enum DataManager {
     private PreparedStatement psSelectParkIdByName = null;
     private PreparedStatement psSelectParkNameById = null;
     private PreparedStatement psSelectAllParkNames = null;
+    private PreparedStatement psSelectSchemaColumnNamesFromData = null;
     private PreparedStatement psSelectAllParkNamesAndIds = null;
     private PreparedStatement psSelectAllParkNamesAndIdsExistInRange = null;
     private PreparedStatement psSelectForm449FileNameById = null;
@@ -429,6 +438,7 @@ public enum DataManager {
             psSelectParkIdByName = con.prepareStatement(selectParkIdByName);
             psSelectParkNameById = con.prepareStatement(selectParkNameById);
             psSelectAllParkNames = con.prepareStatement(selectAllParkNames);
+            psSelectSchemaColumnNamesFromData = con.prepareStatement(selectSchemaColumnNamesFromData);
             psSelectAllParkNamesAndIds = con.prepareStatement(selectAllParkNamesAndIds);
             psSelectAllParkNamesAndIdsExistInRange = con.prepareStatement(selectAllParkNamesAndIdsExistInRange);
             psSelectForm449FileNameById = con.prepareStatement(selectForm449FileNameById);
@@ -455,6 +465,7 @@ public enum DataManager {
         DatabaseManager.Narvaro.closeStatement(psSelectParkIdByName);
         DatabaseManager.Narvaro.closeStatement(psSelectParkNameById);
         DatabaseManager.Narvaro.closeStatement(psSelectAllParkNames);
+        DatabaseManager.Narvaro.closeStatement(psSelectSchemaColumnNamesFromData);
         DatabaseManager.Narvaro.closeStatement(psSelectAllParkNamesAndIds);
         DatabaseManager.Narvaro.closeStatement(psSelectAllParkNamesAndIdsExistInRange);
         DatabaseManager.Narvaro.closeStatement(psSelectForm449FileNameById);
@@ -899,6 +910,100 @@ public enum DataManager {
             rs = null;
         }
         return false;
+    }
+    
+    /**
+     * Returns a query string for the specified input.
+     * 
+     * Used to build a custom query for graphing data.
+     * 
+     * @param field The column to graph.
+     * @param start The starting <code>YearMonth</code>.
+     * @param end The ending <code>YearMonth</code>.
+     * @param parkName The park name.
+     * @return The custom query.
+     */
+    private String getCustomGraphQuery(final String field, 
+            final YearMonth start, final YearMonth end, final String parkName) {
+        StringBuilder sb = new StringBuilder("SELECT ");
+        sb.append(field);
+        sb.append(", month");
+        sb.append(" FROM data JOIN parks ON data.park = parks.id WHERE ");
+        sb.append("month >= ");
+        sb.append(yearMonthToDate(start));
+        sb.append(" AND month <= ");
+        sb.append(yearMonthToDate(end));
+        sb.append(" AND parks.name = ");
+        sb.append(parkName);
+        return sb.toString();
+    }
+    
+    /**
+     * Returns a Map of Maps, which represent graph data.
+     * 
+     * Map has key of ParkName, 
+     *   and value of a Map, which has key of YearMonth and value of field data.
+     * 
+     * @param field The field to query data from.
+     * @param start The starting <code>YearMonth</code>.
+     * @param end The ending <code>YearMonth</code>.
+     * @param parkNames The list of park names.
+     * @return A map of data.
+     */
+    public final Map<String, HashMap<YearMonth, Long>> getGraphData(
+            final String field, final YearMonth start, final YearMonth end, final List<String> parkNames) {
+        
+        Map<String, HashMap<YearMonth, Long>> map = 
+                new HashMap<String, HashMap<YearMonth, Long>>();
+        
+        for (String parkName : parkNames) {
+            String query = getCustomGraphQuery(field, start, end, parkName);
+            PreparedStatement statement = null;
+            ResultSet results = null;
+            try {
+                statement = con.prepareStatement(query);
+                results = statement.executeQuery();
+                if (results != null) {
+                    while (results.next()) {
+                        HashMap<YearMonth, Long> m = new HashMap<YearMonth, Long>();
+                        m.put(dateToYearMonth(results.getDate(2)), results.getLong(1));
+                        map.put(parkName, m);
+                    }
+                }
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            } finally {
+                DatabaseManager.Narvaro.closeStatement(results, statement);
+            }
+        }
+        return map;
+    }
+    
+    /**
+     * @return a List of all column names in the data table.
+     */
+    public List<String> getSchemaColumnNamesFromData() {
+        List<String> s = new ArrayList<String>();
+        try {
+            rs = psSelectSchemaColumnNamesFromData.executeQuery();
+            if (rs != null) {
+                while(rs.next()) {
+                    s.add(rs.getString(1));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                LOG.warn(e.getMessage(), e);
+            }
+            rs = null;
+        }
+        return s;
     }
     
     /**
