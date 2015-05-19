@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -1017,16 +1018,62 @@ public class Controller {
                 LOG.error(e.getMessage(), e);
             }
             pm = ts.getParkMonth(parkName);
+            BigDecimal recordCount;
+            recordCount = BigDecimal.ZERO;
+            BigDecimal[] bdtotals = new BigDecimal[14];
+            bdtotals[0] = BigDecimal.ZERO;
+            bdtotals[13] = BigDecimal.ZERO;
+            int[] itotals = new int[100];
+// Prints summed lines, one per park
             for (MonthData md : pm.getAllMonthData()) {
-                SimpleDataProperty sdp = new SimpleDataProperty(parkName, md.getPduConversionFactor(), 
-                        md.getPduTotals(), md.getPduSpecialEvents(), md.getPduDayUse(), md.getPduSenior(), 
-                        md.getPduDisabled(), md.getPduGoldenBear(), md.getPduDisabledVeteran(), md.getPduNonResOHVPass(), 
-                        md.getPduAnnualPassSale(), md.getPduCamping(), md.getPduSeniorCamping(), md.getPduDisabledCamping(), 
-                        md.getFduConversionFactor(), md.getFduTotals(), md.getFscTotalVehicles(), md.getFscTotalPeople(), 
-                        md.getoMC(), md.getoATV(), md.getO4X4(), md.getoROV(), md.getoAQMA(), md.getoAllStarKarting(), 
-                        md.getoHangtown(), md.getoOther());
-                addTableRow(sdp);
+                recordCount = recordCount.add(BigDecimal.ONE);
+                bdtotals[0] = bdtotals[0].add(md.getPduConversionFactor());
+                itotals[1] += md.getPduTotals();
+                itotals[2] += md.getPduSpecialEvents();
+                itotals[3] += md.getPduDayUse();
+                itotals[4] += md.getPduSenior();
+                itotals[5] += md.getPduDisabled();
+                itotals[6] += md.getPduGoldenBear();
+                itotals[7] += md.getPduDisabledVeteran();
+                itotals[8] += md.getPduNonResOHVPass();
+                itotals[9] += md.getPduAnnualPassSale();
+                itotals[10] += md.getPduCamping();
+                itotals[11] += md.getPduSeniorCamping();
+                itotals[12] += md.getPduDisabledCamping();
+                bdtotals[13] = bdtotals[13].add(md.getFduConversionFactor());
+                itotals[14] += md.getFduTotals();
+                itotals[15] += md.getFscTotalVehicles();
+                itotals[16] += md.getFscTotalPeople();
+                itotals[17] += md.getoMC();
+                itotals[18] += md.getoATV();
+                itotals[19] += md.getO4X4();
+                itotals[20] += md.getoROV();
+                itotals[21] += md.getoAQMA();
+                itotals[22] += md.getoAllStarKarting();
+                itotals[23] += md.getoHangtown();
+                itotals[24] += md.getoOther();
             }
+            bdtotals[0] = bdtotals[0].divide(recordCount, 4, RoundingMode.HALF_UP);
+            bdtotals[13] = bdtotals[13].divide(recordCount, 4, RoundingMode.HALF_UP);
+            SimpleDataProperty sdp = new SimpleDataProperty(parkName, bdtotals[0], itotals[1],
+                    itotals[2], itotals[3], itotals[4], itotals[5], itotals[6], itotals[7], itotals[8], itotals[9],
+                    itotals[10], itotals[11], itotals[12], bdtotals[13], itotals[14], itotals[15],
+                    itotals[16], itotals[17], itotals[18], itotals[19], itotals[20], itotals[21], itotals[22],
+                    itotals[23], itotals[24]);
+            addTableRow(sdp);
+
+
+// Prints one line per park per parkmonth
+//            for (MonthData md : pm.getAllMonthData()) {
+//                SimpleDataProperty sdp = new SimpleDataProperty(parkName, md.getPduConversionFactor(),
+//                        md.getPduTotals(), md.getPduSpecialEvents(), md.getPduDayUse(), md.getPduSenior(),
+//                        md.getPduDisabled(), md.getPduGoldenBear(), md.getPduDisabledVeteran(), md.getPduNonResOHVPass(),
+//                        md.getPduAnnualPassSale(), md.getPduCamping(), md.getPduSeniorCamping(), md.getPduDisabledCamping(),
+//                        md.getFduConversionFactor(), md.getFduTotals(), md.getFscTotalVehicles(), md.getFscTotalPeople(),
+//                        md.getoMC(), md.getoATV(), md.getO4X4(), md.getoROV(), md.getoAQMA(), md.getoAllStarKarting(),
+//                        md.getoHangtown(), md.getoOther());
+//                addTableRow(sdp);
+
         }
     }
     
@@ -1070,7 +1117,16 @@ public class Controller {
         disabledCol.setCellValueFactory(
                 new PropertyValueFactory<SimpleDataProperty, String>("disabled")
         );
+        goldenBearCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("goldenBear")
+        );
+        disabledVeteranCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("disabledVeteran")
+        );
         nonResOHVPassCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("nonResOHVPass")
+        );
+        annualPassSaleCol.setCellValueFactory(
                 new PropertyValueFactory<SimpleDataProperty, String>("annualPassSale")
         );
         campingCol.setCellValueFactory(
@@ -1079,8 +1135,8 @@ public class Controller {
         seniorCampingCol.setCellValueFactory(
                 new PropertyValueFactory<SimpleDataProperty, String>("seniorCamping")
         );
-        disabledVeteranCol.setCellValueFactory(
-                new PropertyValueFactory<SimpleDataProperty, String>("disabledVeteran")
+        disabledCampingCol.setCellValueFactory(
+                new PropertyValueFactory<SimpleDataProperty, String>("disabledCamping")
         );
         freeConversionFactorCol.setCellValueFactory(
                 new PropertyValueFactory<SimpleDataProperty, String>("freeConversionFactor")

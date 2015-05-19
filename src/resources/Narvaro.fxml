@@ -140,7 +140,7 @@
                                           <TableColumn fx:id="goldenBearCol" editable="false" minWidth="100.0" prefWidth="79.0" sortable="false" text="Golden Bear" />
                                           <TableColumn fx:id="disabledVeteranCol" minWidth="150.0" prefWidth="-1.0" text="Disabled Veteran" />
                                           <TableColumn fx:id="nonResOHVPassCol" minWidth="150.0" prefWidth="103.0" text="Non-Res OHV Pass" />
-                                          <TableColumn fx:id="annualPassSale" minWidth="100.0" prefWidth="47.0" text="Annual Pass Sale" />
+                                          <TableColumn fx:id="annualPassSaleCol" minWidth="100.0" prefWidth="47.0" text="Annual Pass Sale" />
                                           <TableColumn fx:id="campingCol" prefWidth="75.0" text="Camping" />
                                           <TableColumn fx:id="seniorCampingCol" minWidth="100.0" prefWidth="75.0" text="Senior Camping" />
                                           <TableColumn fx:id="disabledCampingCol" minWidth="150.0" prefWidth="75.0" text="Disabled Camping" />
